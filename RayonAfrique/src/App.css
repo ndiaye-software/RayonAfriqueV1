@@ -1,0 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&family=Poppins:ital,wght@0,300;0,400;1,100&display=swap');
+
+* {
+  font-family: 'DM Sans', 'Poppins', sans-serif;
+  margin: 0;
+  text-decoration: none;
+  background-color: "#f8f9fc";
+  list-style-type: none;
+  list-style: none;
+}
