@@ -1,8 +1,8 @@
 import React from "react";
-import Navbar from "../../components/epicerie/navbarEpicerie";
-import Footer from "../../components/main/footer";
+import Navbar from "../../../components/epicerie/navbarEpicerie";
+import Footer from "../../../components/main/footer";
 import backgroundImage from "../../images/background.jpg";
-import Pricing from "../../components/epicerie/pricing";
+import Pricing from "../../../components/epicerie/pricing";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
 import market from "../../images/logoMarket.png";

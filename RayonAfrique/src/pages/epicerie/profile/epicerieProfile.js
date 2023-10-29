@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Stack } from "@mui/material";
 import Box from "@mui/material/Box";
-import Navbar from "../../components/fournisseur/navbarFournisseur";
-import Footer from "../../components/main/footer";
+import Navbar from "../../../components/epicerie/navbarEpicerie";
+import Footer from "../../../components/main/footer";
 import { InsertPhoto, Save } from "@material-ui/icons";
 import { TextField, Button, Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -10,7 +10,7 @@ import InsertImage from "../../images/insertimage.png";
 import backgroundImage from "../../images/background.jpg";
 import { Typography } from "@material-ui/core";
 import { useParams } from "react-router-dom";
-import hostname from "../../hostname";
+import hostname from "../../../hostname";
 
 const useStyles = makeStyles((theme) => ({
   section1_div_h1: {
@@ -106,7 +106,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function FournisseurProfile() {
+function EpicerieProfile() {
   const classes = useStyles();
 
   const { idUser } = useParams();
@@ -208,14 +208,7 @@ function FournisseurProfile() {
         </section>
         <Box sx={{ backgroundColor: "#f9fafb" }}>
           <Stack direction="row" justifyContent="space-between">
-            <Box
-              flex={4}
-              p={{ xs: 0, md: 2 }}
-              sx={{ marginBottom: "60px" }}
-              onSubmit={handleSubmit}
-              component="form"
-              noValidate
-            >
+            <Box flex={4} p={{ xs: 0, md: 2 }} sx={{ marginBottom: "60px" }} onSubmit={handleSubmit}>
               <Box
                 flexWrap="wrap"
                 justifyContent="space-evenly"
@@ -327,6 +320,12 @@ function FournisseurProfile() {
                 </Box>
               </Box>
 
+              {errorMessage && (
+                <Typography variant="body1" color="error" gutterBottom>
+                  {errorMessage}
+                </Typography>
+              )}
+
               <Box justifyContent="center" display="flex">
                 <Box
                   sx={{
@@ -346,17 +345,9 @@ function FournisseurProfile() {
                   />
                 </Box>
               </Box>
-              {errorMessage && (
-                <Typography variant="body1" color="error" gutterBottom>
-                  {errorMessage}
-                </Typography>
-              )}
+
               <Box justifyContent="center" display="flex" marginTop="30px">
-                <Button
-                  type="submit"
-                  className={classes.Button}
-                  endIcon={<Save />}
-                >
+                <Button className={classes.Button} endIcon={<Save />}>
                   Enregistrer
                 </Button>
               </Box>
@@ -369,4 +360,4 @@ function FournisseurProfile() {
   );
 }
 
-export default FournisseurProfile;
+export default EpicerieProfile;
