@@ -7,16 +7,11 @@ const readProfile = asyncHandler(async (req, res) => {
       const { idEpicerie } = req.params; // Obtenez l'ID de l'épicerie à partir des paramètres de la requête
   
       // Recherchez l'épicerie dans la base de données en utilisant son ID
-      const epicerie = await Epicerie.findById(idEpicerie);
+      const epicerie = await Epicerie.findById(idEpicerie).select('name mail nameCompany image description phone');;
   
       if (!epicerie) {
         // Si l'épicerie n'est pas trouvée, renvoyez une réponse appropriée
         return res.status(404).json({ message: "Épicerie non trouvée." });
-      }
-  
-      // Vérifiez si le compte utilisateur correspond à l'épicerie
-      if (req.user.idEpicerie.toString() !== idEpicerie) {
-        return res.status(403).json({ message: "Accès non autorisé à cette épicerie." });
       }
   
       // Si l'épicerie est trouvée et que le compte correspond, renvoyez ses informations au client
@@ -43,20 +38,38 @@ const updateProfile = asyncHandler(async (req, res) => {
         return res.status(404).json({ message: "Épicerie non trouvée." });
       }
   
-      // Vérifiez si le compte utilisateur correspond à l'épicerie
-      if (req.user.idEpicerie.toString() !== idEpicerie) {
-        return res.status(403).json({ message: "Accès non autorisé à cette épicerie." });
-      }
-  
       // Mettez à jour les champs de l'épicerie avec les valeurs fournies
-      epicerie.name = name;
-      epicerie.mail = mail;
-      epicerie.nameCompany = nameCompany;
-      epicerie.image = image;
-      epicerie.description = description;
-      epicerie.phone = phone;
-      epicerie.latitude = latitude;
-      epicerie.longitude = longitude;
+      if(name){
+        epicerie.name = name;
+      }
+
+      if(mail){
+        epicerie.mail = mail;        
+      }
+
+      if(nameCompany){
+        epicerie.nameCompany = nameCompany;        
+      }
+
+      if(image){
+        epicerie.image = image;        
+      }
+
+      if(description){
+        epicerie.description = description;        
+      }
+
+      if(phone){
+        epicerie.phone = phone;        
+      }
+
+      if(latitude){
+        epicerie.latitude = latitude;        
+      }
+
+      if(longitude){
+        epicerie.longitude = longitude;        
+      }
   
       // Sauvegardez les modifications dans la base de données
       await epicerie.save();
