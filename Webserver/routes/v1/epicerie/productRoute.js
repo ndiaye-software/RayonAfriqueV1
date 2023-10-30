@@ -9,9 +9,9 @@ router.route('/create/:idEpicerie')
     .post(productController.createEpicerieProduct)
 
 router.route('/update/:idProduct')
-    .post(productController.updateEpicerieProduct)
+    .patch(productController.updateEpicerieProduct)
 
 router.route('/delete/:idProduct')
-    .post(productController.deleteEpicerieProduct)
+    .delete(productController.deleteEpicerieProduct)
     
 module.exports = router

@@ -72,7 +72,7 @@ const createEpicerieProduct = asyncHandler(async (req, res) => {
   
 
   const updateEpicerieProduct = asyncHandler(async (req, res) => {
-    const { id } = req.params;
+    const { idProduct } = req.params;
     const {
       name,
       reference,
@@ -86,21 +86,48 @@ const createEpicerieProduct = asyncHandler(async (req, res) => {
     } = req.body;
   
     try {
-      const epicerieProduct = await EpicerieProduct.findById(id);
+      const epicerieProduct = await EpicerieProduct.findById(idProduct);
   
       if (!epicerieProduct) {
         return res.status(404).json({ error: "Produit d'épicerie non trouvé." });
       }
-  
-      epicerieProduct.name = name;
-      epicerieProduct.reference = reference;
-      epicerieProduct.price = price;
-      epicerieProduct.ingredients = ingredients;
-      epicerieProduct.description = description;
-      epicerieProduct.image = image;
-      epicerieProduct.available = available;
-      epicerieProduct.category = category;
-      epicerieProduct.country = country;
+
+      if(name){
+        epicerieProduct.name = name;
+      }
+
+      if(reference){
+        epicerieProduct.reference = reference;
+      }
+
+      if(price){
+        epicerieProduct.price = price;       
+      }
+
+      if(ingredients){
+        epicerieProduct.ingredients = ingredients;        
+      }
+
+      if(description){
+        epicerieProduct.description = description;       
+      }
+
+      if(image){
+        epicerieProduct.image = image;        
+      }
+
+      if(available){
+        epicerieProduct.available = available;       
+      }
+
+      if(category){
+        epicerieProduct.category = category;       
+      }
+
+      if(country){
+        epicerieProduct.country = country;       
+      }
+
   
       await epicerieProduct.save();
       res.status(200).json(epicerieProduct);
@@ -111,17 +138,25 @@ const createEpicerieProduct = asyncHandler(async (req, res) => {
   });
 
   const deleteEpicerieProduct = asyncHandler(async (req, res) => {
-    const { id } = req.params;
+    const { idProduct } = req.params;
+
+    if (!idProduct) {
+      return res.status(400).json({ message: "product ID Required" });
+    }
   
     try {
-      const epicerieProduct = await EpicerieProduct.findById(id);
+      const epicerieProduct = await EpicerieProduct.findById(idProduct);
   
       if (!epicerieProduct) {
         return res.status(404).json({ error: "Produit d'épicerie non trouvé." });
       }
   
-      await epicerieProduct.remove();
-      res.status(200).json({ message: "Produit d'épicerie supprimé avec succès." });
+      const result = await EpicerieProduct.deleteOne();
+
+      const reply = `Product with ID ${result._id} deleted`
+    
+      res.status(200).json(reply);
+
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Erreur lors de la suppression du produit d'épicerie." });
