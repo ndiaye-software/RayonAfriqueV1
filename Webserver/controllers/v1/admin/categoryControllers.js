@@ -77,19 +77,19 @@ const deleteCategory = asyncHandler(async (req, res) => {
 
   // Confirm data
   if (!id) {
-    return res.status(400).json({ message: "Brand ID Required" });
+    return res.status(400).json({ message: "category ID Required" });
   }
 
   // Does the user exist to delete?
   const categoryName = await Category.findById(id).exec();
 
   if (!categoryName) {
-    return res.status(400).json({ message: "Brand not found" });
+    return res.status(400).json({ message: "category not found" });
   }
 
   const result = await categoryName.deleteOne();
 
-  const reply = `brand ${result.categoryName} with ID ${result._id} deleted`
+  const reply = `category ${result.categoryName} with ID ${result._id} deleted`
 
   res.json(reply);
 });

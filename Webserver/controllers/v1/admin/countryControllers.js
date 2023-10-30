@@ -82,12 +82,12 @@ const deleteCountry = asyncHandler(async (req, res) => {
   const countryName = await Country.findById(id).exec();
 
   if (!countryName) {
-    return res.status(400).json({ message: "Brand not found" });
+    return res.status(400).json({ message: "country not found" });
   }
 
   const result = await countryName.deleteOne();
 
-  const reply = `brand ${result.countryName} with ID ${result._id} deleted`
+  const reply = `country ${result.countryName} with ID ${result._id} deleted`
 
   res.json(reply);
 });
