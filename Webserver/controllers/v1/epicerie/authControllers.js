@@ -1,4 +1,4 @@
-const User = require("../../../models/User"); // Assurez-vous que le chemin vers votre modèle User est correct
+const Epicerie = require("../../../models/Epicerie"); // Assurez-vous que le chemin vers votre modèle Epicerie est correct
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
@@ -18,15 +18,15 @@ const login = async (req, res) => {
   }
 
   try {
-    const foundUser = await User.findOne({ mail }).exec();
+    const foundEpicerie = await Epicerie.findOne({ mail }).exec();
 
-    if (!foundUser) {
+    if (!foundEpicerie) {
       return res
         .status(401)
         .json({ message: "Email ou mot de passe incorrect" });
     }
 
-    const match = await bcrypt.compare(password, foundUser.password);
+    const match = await bcrypt.compare(password, foundEpicerie.password);
 
     if (!match)
       return res
@@ -35,8 +35,8 @@ const login = async (req, res) => {
 
     const accessToken = jwt.sign(
       {
-        UserInfo: {
-          mail: foundUser.mail,
+        EpicerieInfo: {
+          mail: foundEpicerie.mail,
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
@@ -44,7 +44,7 @@ const login = async (req, res) => {
     );
 
     const refreshToken = jwt.sign(
-      { mail: foundUser.mail },
+      { mail: foundEpicerie.mail },
       process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: "7d" }
     );
@@ -82,15 +82,15 @@ const refresh = (req, res) => {
   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err) => {
     if (err) return res.status(403).json({ message: "Interdit" });
 
-    const foundUser = await User.findOne({ mail }).exec();
+    const foundEpicerie = await Epicerie.findOne({ mail }).exec();
 
-    if (!foundUser)
-      return res.status(401).json({ message: "Non autorisé user not found" });
+    if (!foundEpicerie)
+      return res.status(401).json({ message: "Non autorisé Epicerie not found" });
 
     const accessToken = jwt.sign(
       {
-        UserInfo: {
-          mail: foundUser.mail,
+        EpicerieInfo: {
+          mail: foundEpicerie.mail,
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
@@ -114,16 +114,16 @@ const logout = (req, res) => {
 const transporter = nodemailer.createTransport({
   service: "Gmail",
   auth: {
-    user: "mouhamadoundiaye1290@gmail.com",
+    Epicerie: "mouhamadoundiaye1290@gmail.com",
     pass: process.env.PASSWORD_EMAIL,
   },
 });
 
 //Inscription
 const signUp = asyncHandler(async (req, res) => {
-  const { name, mail, phone, password1, password2 } = req.body;
+  const { name, mail, phone, password1, password2, nameCompany, image, description, longitude, latitude } = req.body;
 
-  if (!name || !phone || !password1 || !password2 || !mail) {
+  if (!name || !phone || !password1 || !password2 || !mail || !nameCompany || !longitude || !latitude) {
     return res.status(400).json({ message: "Tous les champs sont requis" });
   }
 
@@ -135,7 +135,7 @@ const signUp = asyncHandler(async (req, res) => {
         .json({ message: "Les mots de passe ne sont pas identiques." });
     }
 
-    const phoneDuplicate = await User.findOne({ phone })
+    const phoneDuplicate = await Epicerie.findOne({ phone })
       .collation({ locale: "en", strength: 2 })
       .lean()
       .exec();
@@ -146,7 +146,7 @@ const signUp = asyncHandler(async (req, res) => {
         .json({ message: "Numéro de téléphone déjà utilisé." });
     }
     // Check for duplicate mail
-    const duplicate = await User.findOne({ mail })
+    const duplicate = await Epicerie.findOne({ mail })
       .collation({ locale: "en", strength: 2 })
       .lean()
       .exec();
@@ -169,22 +169,27 @@ const signUp = asyncHandler(async (req, res) => {
     const hashedPwd = await bcrypt.hash(password1, 10); // salt rounds
 
     // Créer un nouvel utilisateur
-    const newUser = new User({
+    const newEpicerie = new Epicerie({
       name,
       mail,
       phone,
+      nameCompany,
+      longitude,
+      latitude,
+      image,
+      description,
       password: hashedPwd,
     });
 
     // Sauvegarder l'utilisateur dans la base de données
-    await newUser.save();
+    await newEpicerie.save();
 
     // Envoyer un e-mail de bienvenue
     const mailOptions = {
       from: "mouhamadoundiaye1290@gmail.com",
       to: "mouhamadoundiaye1290@gmail.com",
       subject: "Une nouvelle inscription",
-      text: `nom : ${name}, mail : ${mail}, phone : ${phone}`,
+      text: `nom : ${name}, mail : ${mail}, phone : ${phone}, epicerie : ${nameCompany}`,
     };
 
     const info = await transporter.sendMail(mailOptions);

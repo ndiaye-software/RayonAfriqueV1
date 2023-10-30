@@ -18,8 +18,11 @@ const PORT = process.env.PORT || 3500;
 const categoryRoute = require("./routes/v1/user/categoryRoute");
 const countryRoute = require("./routes/v1/user/countryRoute");
 const contactRoute = require("./routes/v1/user/contactRoute");
-const authRoute = require("./routes/v1/user/authRoute");
+const authRouteUser = require("./routes/v1/user/authRoute");
 const shopRoute = require("./routes/v1/user/shopRoute");
+
+// Epicerie
+const authRouteEpicerie = require("./routes/v1/epicerie/authRoute");
 
 console.log("You are on:", colors.blue(process.env.NODE_ENV));
 
@@ -42,7 +45,10 @@ app.use("/api/v1/user/category", categoryRoute);
 app.use("/api/v1/user/country", countryRoute);
 app.use("/api/v1/user/shop", shopRoute);
 app.use("/api/v1/user/contact", contactRoute);
-app.use("/api/v1/user/auth", authRoute);
+app.use("/api/v1/user/auth", authRouteUser);
+
+// UserRoute
+app.use("/api/v1/epicerie/auth", authRouteEpicerie);
 
 app.use("/", require("./routes/root"));
 
