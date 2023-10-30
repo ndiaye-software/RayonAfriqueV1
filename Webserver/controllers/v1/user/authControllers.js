@@ -57,8 +57,7 @@ const login = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000, // expiration du cookie : réglée pour correspondre au rT
     });
 
-    // Envoyer accessToken contenant le nom d'utilisateur et les rôles
-    res.json({ accessToken, idUser: foundUser._id, statut: foundUser.statut });
+    res.json({ accessToken });
   } catch (error) {
     console.error("Erreur lors de la connexion :", error);
     res
@@ -72,6 +71,8 @@ const login = async (req, res) => {
 // @access Public - car le jeton d'accès a expiré
 const refresh = (req, res) => {
   const cookies = req.cookies;
+
+  const { mail } = req.body;
 
   if (!cookies?.jwt)
     return res.status(401).json({ message: "Non autorisé cookies" });
@@ -119,27 +120,9 @@ const transporter = nodemailer.createTransport({
 });
 
 const signUp = asyncHandler(async (req, res) => {
-  const {
-    name,
-    nameCompany,
-    mail,
-    phone,
-    statut,
-    address,
-    password1,
-    password2,
-  } = req.body;
+  const { name, mail, phone, password1, password2 } = req.body;
 
-  if (
-    !name ||
-    !nameCompany ||
-    !phone ||
-    !statut ||
-    !address ||
-    !password1 ||
-    !password2 ||
-    !mail
-  ) {
+  if (!name || !phone || !password1 || !password2 || !mail) {
     return res.status(400).json({ message: "Tous les champs sont requis" });
   }
 
@@ -149,12 +132,6 @@ const signUp = asyncHandler(async (req, res) => {
       return res
         .status(400)
         .json({ message: "Les mots de passe ne sont pas identiques." });
-    }
-
-    if (statut !== 1 && statut !== 2) {
-      return res
-        .status(400)
-        .json({ message: "Le statut doit être 1 ou 2 uniquement." });
     }
 
     const phoneDuplicate = await User.findOne({ phone })
@@ -193,11 +170,8 @@ const signUp = asyncHandler(async (req, res) => {
     // Créer un nouvel utilisateur
     const newUser = new User({
       name,
-      nameCompany,
       mail,
       phone,
-      statut,
-      address,
       password: hashedPwd,
     });
 
@@ -209,12 +183,7 @@ const signUp = asyncHandler(async (req, res) => {
       from: "mouhamadoundiaye1290@gmail.com",
       to: "mouhamadoundiaye1290@gmail.com",
       subject: "Une nouvelle inscription",
-      text: `nom : ${name}, \n
-               nom de la compagnie : ${nameCompany},\n
-               statut : ${statut},\n
-               adresse :  ${address},\n
-               mail : ${mail} ,\n
-               phone : ${phone}`,
+      text: `nom : ${name}, mail : ${mail}, phone : ${phone}`,
     };
 
     const info = await transporter.sendMail(mailOptions);
