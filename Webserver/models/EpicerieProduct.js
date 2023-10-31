@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 const Epicerie = require("./Epicerie.js");
-const CountryProducts = require("./Country.js");
-const CategoryProducts = require("./Category.js");
+const Country = require("./Country.js");
+const Category = require("./Category.js");
+const Label = require("./Label.js");
 
 const epicerieProductSchema = new mongoose.Schema({
   idEpicerie: {
@@ -38,12 +39,17 @@ const epicerieProductSchema = new mongoose.Schema({
   },
   category: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "CategoryProducts",
+    ref: "Category",
     required: true,
   },
   country: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "CountryProducts",
+    ref: "Country",
+    required: true,
+  },
+  label: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Label",
     required: true,
   }
 });

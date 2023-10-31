@@ -20,15 +20,18 @@ const countryRouteUser = require("./routes/v1/user/countryRoute");
 const contactRoute = require("./routes/v1/user/contactRoute");
 const authRouteUser = require("./routes/v1/user/authRoute");
 const shopRoute = require("./routes/v1/user/shopRoute");
+const labelRouteUser = require("./routes/v1/user/labelRoute");
 
 // Epicerie
 const authRouteEpicerie = require("./routes/v1/epicerie/authRoute");
 const profileRouteEpicerie = require("./routes/v1/epicerie/profileRoute");
 const productRouteEpicerie = require("./routes/v1/epicerie/productRoute");
+const labelRouteEpicerie = require("./routes/v1/epicerie/labelRoute");
 
 // Admin
 const categoryRouteAdmin = require("./routes/v1/admin/categoryRoute");
 const countryRouteAdmin = require("./routes/v1/admin/countryRoute");
+const labelRouteAdmin = require("./routes/v1/admin/labelRoute");
 
 console.log("You are on:", colors.blue(process.env.NODE_ENV));
 
@@ -52,15 +55,18 @@ app.use("/api/v1/user/country", countryRouteUser);
 app.use("/api/v1/user/shop", shopRoute);
 app.use("/api/v1/user/contact", contactRoute);
 app.use("/api/v1/user/auth", authRouteUser);
+app.use("/api/v1/user/label", labelRouteUser);
 
 // EpicerieRoute
 app.use("/api/v1/epicerie/auth", authRouteEpicerie);
 app.use("/api/v1/epicerie/profile", profileRouteEpicerie);
 app.use("/api/v1/epicerie/product", productRouteEpicerie);
+app.use("/api/v1/epicerie/label", labelRouteEpicerie);
 
 // AdminRoute
 app.use("/api/v1/admin/category", categoryRouteAdmin);
 app.use("/api/v1/admin/country", countryRouteAdmin);
+app.use("/api/v1/admin/label", labelRouteAdmin);
 
 app.use("/", require("./routes/root"));
 

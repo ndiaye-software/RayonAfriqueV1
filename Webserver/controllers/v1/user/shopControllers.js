@@ -6,10 +6,7 @@ const asyncHandler = require("express-async-handler");
 //Lister les produits des épiceries
 const getGroceryProducts = asyncHandler(async (req, res) => {
   try {
-    const groceryProducts = await Product.find({ available: true })
-      .populate("idEpicerie")
-      .populate("category")
-      .populate("country");
+    const groceryProducts = await Product.find({ available: true }, 'name image description price ingredients')
 
     res.status(200).json(groceryProducts);
   } catch (error) {
@@ -19,6 +16,7 @@ const getGroceryProducts = asyncHandler(async (req, res) => {
     });
   }
 });
+
 
 //Chercher un produit à travers son :nom ou son :référence
 const getProductByName = asyncHandler(async (req, res) => {
