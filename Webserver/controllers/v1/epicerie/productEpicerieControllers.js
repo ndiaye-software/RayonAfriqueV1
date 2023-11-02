@@ -24,9 +24,10 @@ const createEpicerieProduct = asyncHandler(async (req, res) => {
       available,
       category,
       country,
+      label
     } = req.body;
 
-    if (!name || !price || !category || !country || !image || !available ) {
+    if (!name || !price || !category || !country || !image || !available || !label) {
         return res.status(400).json({ message: "Tous les champs sont requis" });
       }
   
@@ -42,6 +43,7 @@ const createEpicerieProduct = asyncHandler(async (req, res) => {
         available,
         category,
         country,
+        label
       });
   
       await newEpicerieProduct.save();
@@ -83,6 +85,7 @@ const createEpicerieProduct = asyncHandler(async (req, res) => {
       available,
       category,
       country,
+      label
     } = req.body;
   
     try {
@@ -126,6 +129,10 @@ const createEpicerieProduct = asyncHandler(async (req, res) => {
 
       if(country){
         epicerieProduct.country = country;       
+      }
+
+      if(label){
+        epicerieProduct.label = label;       
       }
 
   

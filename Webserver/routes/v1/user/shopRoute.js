@@ -10,7 +10,7 @@ const {
 const router = express.Router();
 
 router.get("/product", getGroceryProducts);
-router.get("/product/:name", getProductByName);
+router.post("/product/", getProductByName);
 router.get("/epicerie/product/:name", getGroceryByProduct);
 router.get("/epicerie/product/:name/:position", getGroceryByProductByPosition);
 

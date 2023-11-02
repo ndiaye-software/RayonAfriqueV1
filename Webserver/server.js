@@ -32,6 +32,8 @@ const labelRouteEpicerie = require("./routes/v1/epicerie/labelRoute");
 const categoryRouteAdmin = require("./routes/v1/admin/categoryRoute");
 const countryRouteAdmin = require("./routes/v1/admin/countryRoute");
 const labelRouteAdmin = require("./routes/v1/admin/labelRoute");
+const productRouteAdmin = require("./routes/v1/admin/productRoute");
+const productEpicerieRouteAdmin = require("./routes/v1/admin/productEpicerieRoute");
 
 console.log("You are on:", colors.blue(process.env.NODE_ENV));
 
@@ -67,6 +69,8 @@ app.use("/api/v1/epicerie/label", labelRouteEpicerie);
 app.use("/api/v1/admin/category", categoryRouteAdmin);
 app.use("/api/v1/admin/country", countryRouteAdmin);
 app.use("/api/v1/admin/label", labelRouteAdmin);
+app.use("/api/v1/admin/product", productRouteAdmin);
+app.use("/api/v1/admin/productEpicerie", productEpicerieRouteAdmin);
 
 app.use("/", require("./routes/root"));
 

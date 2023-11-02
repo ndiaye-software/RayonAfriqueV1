@@ -1,5 +1,8 @@
 const Product = require("../../../models/EpicerieProduct");
 const Epicerie = require("../../../models/Epicerie");
+const Label = require("../../../models/Label");
+const Category = require("../../../models/Category");
+const Country = require("../../../models/Country");
 const geolib = require('geolib');
 const asyncHandler = require("express-async-handler");
 
@@ -7,8 +10,36 @@ const asyncHandler = require("express-async-handler");
 const getGroceryProducts = asyncHandler(async (req, res) => {
   try {
     const groceryProducts = await Product.find({ available: true }, 'name image description price ingredients')
+      .populate({
+        path: 'country',
+        select: 'countryName',
+        options: { lean: true }
+      }) 
+      .populate({
+        path: 'category',
+        select: 'categoryName',
+        options: { lean: true }
+      }) 
+      .populate({
+        path: 'label',
+        select: 'labelName',
+        options: { lean: true }
+      })
+      .lean();
 
-    res.status(200).json(groceryProducts);
+    const formattedProducts = groceryProducts.map(product => ({
+      id: product._id,
+      name: product.name,
+      price: product.price,
+      ingredients: product.ingredients,
+      description: product.description,
+      image: product.image,
+      categoryName: product.category ? product.category.categoryName : null,
+      countryName: product.country ? product.country.countryName : null,
+      labelName: product.label ? product.label.labelName : null,
+    }));
+
+    res.status(200).json(formattedProducts);
   } catch (error) {
     console.error(error);
     res.status(500).json({
@@ -17,38 +48,57 @@ const getGroceryProducts = asyncHandler(async (req, res) => {
   }
 });
 
-
 //Chercher un produit à travers son :nom ou son :référence
 const getProductByName = asyncHandler(async (req, res) => {
   try {
-    const { searchTerm } = req.params;
+    const { name } = req.body;
 
     // Recherchez le produit par nom ou référence (utilisez des expressions régulières pour une recherche insensible à la casse)
-    const products = await EpicerieProduct.find({
+    const products = await Product.find({
       $or: [
-        { name: { $regex: searchTerm, $options: "i" } }, // Recherche par nom (insensible à la casse)
-        { reference: { $regex: searchTerm, $options: "i" } }, // Recherche par référence (insensible à la casse)
+        { name: { $regex: name, $options: "i" } }, // Recherche par nom (insensible à la casse)
+        { reference: { $regex: name, $options: "i" } }, // Recherche par référence (insensible à la casse)
       ],
     })
-      .populate("idEpicerie")
       .populate("category")
-      .populate("country");
+      .populate("country")
+      .lean(); // Utilisez lean() pour obtenir un objet JavaScript au lieu d'un objet Mongoose
 
-    res.status(200).json(products);
+    const formattedProducts = products.map(product => ({
+      _id: product._id,
+      name: product.name,
+      reference: product.reference,
+      // Formatez les champs country, category et label de la même manière que dans l'exemple précédent
+      categoryName: product.category ? product.category.categoryName : null,
+      countryName: product.country ? product.country.countryName : null,
+      labelName: product.label ? product.label.labelName : null,
+    }));
+
+    res.status(200).json(formattedProducts);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Erreur lors de la recherche du produit." });
   }
 });
 
+
 //Lister les épiceries vendant un :produit
 const getGroceryByProduct = asyncHandler(async (req, res) => {
   try {
-    const { productId } = req.params; // Supposons que le paramètre d'URL contient l'ID du produit que vous cherchez
+    const { name } = req.params; // Supposons que le paramètre d'URL contient le nom du produit que vous cherchez
 
-    // Recherchez l'épicerie où le produit est disponible
+    // Recherchez le produit par nom pour obtenir son ID
+    const product = await Product.findOne({
+      name: name,
+    });
+
+    if (!product) {
+      return res.status(404).json({ error: "Produit non disponible." });
+    }
+
+    // Recherchez l'épicerie où le produit est disponible en utilisant l'ID du produit
     const groceries = await Product.find({
-      idEpicerie: productId, // ID du produit
+      idEpicerie: product.idEpicerie, // ID du produit
       available: true, // Vérifiez si le produit est disponible
     })
       .populate("idEpicerie", "name image description phone")
@@ -58,13 +108,11 @@ const getGroceryByProduct = asyncHandler(async (req, res) => {
     res.status(200).json(groceries);
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({ error: "Erreur lors de la recherche des épiceries." });
+    res.status(500).json({ error: "Erreur lors de la recherche des épiceries." });
   }
 });
-//Trouver l'épicerie la plus proche à travers la :distance du client et de l'épicerie et le :produit recherché
 
+//Trouver l'épicerie la plus proche à travers la :distance du client et de l'épicerie et le :produit recherché
 const getGroceryByProductByPosition = asyncHandler(async (req, res) => {
   try {
     const { latitude, longitude, productId } = req.body;
