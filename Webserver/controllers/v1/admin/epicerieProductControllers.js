@@ -24,6 +24,7 @@ const createEpicerieProduct = asyncHandler(async (req, res) => {
     res.status(500).json({ error: "Erreur lors de la création du produit" });
   }
 });
+
 const createEpicerieProductNotExist = asyncHandler(async (req, res) => {
   try {
     const {
@@ -37,12 +38,28 @@ const createEpicerieProductNotExist = asyncHandler(async (req, res) => {
       label,
       epicerieId, // ID de l'épicerie liée au produit
       price,
+      available,
     } = req.body;
 
     // Vérifier si le produit existe déjà par son nom ou sa référence
     let existingProduct = await Product.findOne({
       $or: [{ name }, { reference }],
     });
+
+    if (
+      !name ||
+      !category ||
+      !country ||
+      !image ||
+      !label ||
+      !ingredients ||
+      !description ||
+      !price ||
+      !epicerieId ||
+      !available
+    ) {
+      return res.status(400).json({ message: "Tous les champs sont requis" });
+    }
 
     if (existingProduct) {
       // Si le produit existe déjà, renvoyer un message approprié
@@ -67,19 +84,17 @@ const createEpicerieProductNotExist = asyncHandler(async (req, res) => {
         idEpicerie: epicerieId,
         idProduct: existingProduct._id,
         price,
-        available: true, // Le produit est disponible par défaut lorsqu'il est créé
+        available: available,
       });
 
       res.status(201).json(epicerieProduct);
     }
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({
-        error:
-          "Erreur lors de la création du produit ou du lien avec l'épicerie.",
-      });
+    res.status(500).json({
+      error:
+        "Erreur lors de la création du produit ou du lien avec l'épicerie.",
+    });
   }
 });
 
@@ -104,11 +119,11 @@ const getEpicerieProduct = asyncHandler(async (req, res) => {
 });
 
 const updateEpicerieProduct = asyncHandler(async (req, res) => {
-  const { idEpicerieProduct } = req.params;
+  const { id } = req.params;
   const { idEpicerie, idProduct, price, available } = req.body;
 
   try {
-    const epicerieProduct = await EpicerieProduct.findById(idEpicerieProduct);
+    const epicerieProduct = await EpicerieProduct.findById(id);
 
     if (!epicerieProduct) {
       return res.status(404).json({ error: "Produit d'épicerie non trouvé." });
@@ -141,22 +156,22 @@ const updateEpicerieProduct = asyncHandler(async (req, res) => {
 });
 
 const deleteEpicerieProduct = asyncHandler(async (req, res) => {
-  const { idEpicerieProduct } = req.params;
+  const { id } = req.params;
 
-  if (!idEpicerieProduct) {
+  if (!id) {
     return res.status(400).json({ message: "product ID Required" });
   }
 
   try {
-    const product = await EpicerieProduct.findById(idEpicerieProduct);
+    const product = await EpicerieProduct.findById(id);
 
     if (!product) {
       return res.status(404).json({ error: "Produit d'épicerie non trouvé." });
     }
 
-    const result = await Product.deleteOne();
+    await EpicerieProduct.deleteOne();
 
-    const reply = `Product with ID ${result._id} deleted`;
+    const reply = `Product deleted`;
 
     res.status(200).json(reply);
   } catch (error) {

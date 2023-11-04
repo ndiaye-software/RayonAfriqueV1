@@ -11,7 +11,6 @@ const productSchema = new mongoose.Schema({
   },
   reference: {
     type: String,
-    unique: true,
   },
   ingredients: {
     type: String,
