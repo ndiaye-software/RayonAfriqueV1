@@ -114,7 +114,7 @@ const logout = (req, res) => {
 const transporter = nodemailer.createTransport({
   service: "Gmail",
   auth: {
-    Epicerie: "mouhamadoundiaye1290@gmail.com",
+    user: "mouhamadoundiaye1290@gmail.com",
     pass: process.env.PASSWORD_EMAIL,
   },
 });

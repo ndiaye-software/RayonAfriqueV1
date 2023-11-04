@@ -1,4 +1,4 @@
-const Product = require("../../../models/EpicerieProduct");
+const Product = require("../../../models/Product");
 const Epicerie = require("../../../models/Epicerie");
 const Label = require("../../../models/Label");
 const Category = require("../../../models/Category");
@@ -48,7 +48,7 @@ const getGroceryProducts = asyncHandler(async (req, res) => {
   }
 });
 
-//Chercher un produit à travers son :nom ou son :référence
+//Chercher un produit à travers son :nom ou son :référence, catgeory, country, label
 const searchProduct = asyncHandler(async (req, res) => {
   try {
     const { name } = req.body;
@@ -68,11 +68,14 @@ const searchProduct = asyncHandler(async (req, res) => {
       .populate("label")
       .lean();
 
+    if (products.length === 0) {
+      return res.status(404).json({ message: "Produit non trouvé." });
+    }
+
     const formattedProducts = products.map(product => ({
       _id: product._id,
       name: product.name,
       reference: product.reference,
-      // Formatez les champs country, category et label de la même manière que dans l'exemple précédent
       categoryName: product.category ? product.category.categoryName : null,
       countryName: product.country ? product.country.countryName : null,
       labelName: product.label ? product.label.labelName : null,
@@ -84,6 +87,7 @@ const searchProduct = asyncHandler(async (req, res) => {
     res.status(500).json({ error: "Erreur lors de la recherche du produit." });
   }
 });
+
 
 
 //Lister les épiceries vendant un :produit
