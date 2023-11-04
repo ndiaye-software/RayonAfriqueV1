@@ -49,20 +49,24 @@ const getGroceryProducts = asyncHandler(async (req, res) => {
 });
 
 //Chercher un produit à travers son :nom ou son :référence
-const getProductByName = asyncHandler(async (req, res) => {
+const searchProduct = asyncHandler(async (req, res) => {
   try {
     const { name } = req.body;
 
-    // Recherchez le produit par nom ou référence (utilisez des expressions régulières pour une recherche insensible à la casse)
+    // Recherchez le produit par nom, référence, label, country ou category
     const products = await Product.find({
       $or: [
         { name: { $regex: name, $options: "i" } }, // Recherche par nom (insensible à la casse)
         { reference: { $regex: name, $options: "i" } }, // Recherche par référence (insensible à la casse)
+        { 'label.labelName': { $regex: name, $options: "i" } }, // Recherche par label (insensible à la casse)
+        { 'country.countryName': { $regex: name, $options: "i" } }, // Recherche par country (insensible à la casse)
+        { 'category.categoryName': { $regex: name, $options: "i" } }, // Recherche par category (insensible à la casse)
       ],
     })
       .populate("category")
       .populate("country")
-      .lean(); // Utilisez lean() pour obtenir un objet JavaScript au lieu d'un objet Mongoose
+      .populate("label")
+      .lean();
 
     const formattedProducts = products.map(product => ({
       _id: product._id,
@@ -140,6 +144,6 @@ const getGroceryByProductByPosition = asyncHandler(async (req, res) => {
 module.exports = {
   getGroceryProducts,
   getGroceryByProduct,
-  getProductByName,
+  searchProduct,
   getGroceryByProductByPosition,
 };

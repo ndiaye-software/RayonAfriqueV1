@@ -5,6 +5,9 @@ const productController = require('../../../controllers/v1/admin/productControll
 router.route('/read')
     .get(productController.getProduct)
 
+router.route('/read/:idProduct')
+    .get(productController.getProductById)
+
 router.route('/create')
     .post(productController.createProduct)
 
