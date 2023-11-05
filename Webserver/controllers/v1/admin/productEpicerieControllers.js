@@ -25,6 +25,46 @@ const createEpicerieProduct = asyncHandler(async (req, res) => {
   }
 });
 
+const getEpicerieProduct = asyncHandler(async (req, res) => {
+  try {
+    const epicerieProduct = await EpicerieProduct.find()
+      .populate({
+        path: "idProduct",
+        select: "name category label country description image reference", // Sélectionnez les champs que vous voulez afficher
+      })
+      .lean();
+
+    if (!epicerieProduct) {
+      return res
+        .status(404)
+        .json({ message: "Aucun produit trouvé pour cette épicerie." });
+    }
+
+    const formattedProducts = epicerieProduct.map((epicerieProduct) => ({
+      _id: epicerieProduct._id,
+      idEpicerie: epicerieProduct.idEpicerie,
+      idEpicerieProduct: epicerieProduct.idProduct._id,
+      name: epicerieProduct.idProduct.name,
+      reference: epicerieProduct.idProduct.reference,
+      description: epicerieProduct.idProduct.description,
+      image: epicerieProduct.idProduct.image,
+      category: epicerieProduct.idProduct.category ? epicerieProduct.idProduct.category.categoryName: null,
+      country: epicerieProduct.idProduct.country ? epicerieProduct.idProduct.country.countryName : null,
+      label: epicerieProduct.idProduct.label ? epicerieProduct.idProduct.label.labelName : null,
+      price: epicerieProduct.price,
+      available: epicerieProduct.available,
+    }));
+
+    res.status(200).json(formattedProducts);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({
+        error: "Erreur lors de la récupération des produits d'épicerie.",
+      });
+  }
+});
 
 const getEpicerieProductByIdEpicerie = asyncHandler(async (req, res) => {
   try {
@@ -137,6 +177,7 @@ const deleteEpicerieProduct = asyncHandler(async (req, res) => {
 
 module.exports = {
   createEpicerieProduct,
+  getEpicerieProduct,
   getEpicerieProductByIdEpicerie,
   updateEpicerieProduct,
   deleteEpicerieProduct,

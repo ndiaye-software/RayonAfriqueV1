@@ -1,17 +1,17 @@
 const express = require('express')
 const router = express.Router()
-const productController = require('../../../controllers/v1/epicerie/productEpicerieControllers')
+const productController = require('../../../controllers/v1/epicerie/productControllers')
 
-router.route('/read/:idEpicerie')
-    .get(productController.getEpicerieProducts)
+router.route('/read/')
+    .get(productController.getProduct)
+
+router.route('/read/:idProduct')
+    .get(productController.getProductById)
+
+router.route('/search/')
+    .post(productController.searchProduct)
 
 router.route('/create/:idEpicerie')
-    .post(productController.createEpicerieProduct)
-
-router.route('/update/:idProduct')
-    .patch(productController.updateEpicerieProduct)
-
-router.route('/delete/:idProduct')
-    .delete(productController.deleteEpicerieProduct)
+    .post(productController.createProduct)
     
 module.exports = router

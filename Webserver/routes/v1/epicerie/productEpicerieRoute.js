@@ -1,10 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const epicerieroductController = require("../../../controllers/v1/admin/productEpicerieControllers");
-
-router
-    .route("/read")
-    .get(epicerieroductController.getEpicerieProduct);
+const epicerieroductController = require("../../../controllers/v1/epicerie/productEpicerieControllers");
 
 
 router

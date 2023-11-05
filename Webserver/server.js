@@ -26,6 +26,7 @@ const labelRouteUser = require("./routes/v1/user/labelRoute");
 const authRouteEpicerie = require("./routes/v1/epicerie/authRoute");
 const profileRouteEpicerie = require("./routes/v1/epicerie/profileRoute");
 const productRouteEpicerie = require("./routes/v1/epicerie/productRoute");
+const productEpicerieRouteEpicerie = require("./routes/v1/epicerie/productEpicerieRoute");
 const labelRouteEpicerie = require("./routes/v1/epicerie/labelRoute");
 
 // Admin
@@ -64,6 +65,7 @@ app.use("/api/v1/epicerie/auth", authRouteEpicerie);
 app.use("/api/v1/epicerie/profile", profileRouteEpicerie);
 app.use("/api/v1/epicerie/product", productRouteEpicerie);
 app.use("/api/v1/epicerie/label", labelRouteEpicerie);
+app.use("/api/v1/epicerie/productEpicerie", productEpicerieRouteEpicerie);
 
 // AdminRoute
 app.use("/api/v1/admin/category", categoryRouteAdmin);
