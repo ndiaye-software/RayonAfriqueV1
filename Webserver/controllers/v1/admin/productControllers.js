@@ -55,11 +55,14 @@ const createProduct = asyncHandler(async (req, res) => {
   }
 });
 
-
 const getProduct = asyncHandler(async (req, res) => {
   try {
     // Recherche des produits de l'épicerie spécifiée par idEpicerie
-    const product = await Product.find();
+    const product = await Product.find()
+      .populate("category")
+      .populate("country")
+      .populate("label")
+      .lean();
 
     if (!Product) {
       return res
@@ -67,14 +70,23 @@ const getProduct = asyncHandler(async (req, res) => {
         .json({ message: "Aucun produit trouvé pour cette épicerie." });
     }
 
-    res.status(200).json(product);
+    const formattedProduct = product.map(product => ({
+      _id: product._id,
+      name: product.name,
+      reference: product.reference,
+      image: product.image,
+      description: product.description,
+      categoryName: product.category ? product.category.categoryName : null,
+      countryName: product.country ? product.country.countryName : null,
+      labelName: product.label ? product.label.labelName : null,
+    }));
+
+    res.status(200).json(formattedProduct);
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({
-        error: "Erreur lors de la récupération des produits d'épicerie.",
-      });
+    res.status(500).json({
+      error: "Erreur lors de la récupération des produits d'épicerie.",
+    });
   }
 });
 
@@ -90,7 +102,9 @@ const getProductById = asyncHandler(async (req, res) => {
       .lean(); // Utilisez lean() pour obtenir un objet JavaScript au lieu d'un objet Mongoose
 
     if (!product) {
-      return res.status(404).json({ message: "Aucun produit trouvé avec cet ID." });
+      return res
+        .status(404)
+        .json({ message: "Aucun produit trouvé avec cet ID." });
     }
 
     // Formatez les champs country, category et label de la même manière que dans les exemples précédents
@@ -98,18 +112,19 @@ const getProductById = asyncHandler(async (req, res) => {
       _id: product._id,
       name: product.name,
       reference: product.reference,
-      image : product.image,
-      description : product.description,
+      image: product.image,
+      description: product.description,
       categoryName: product.category ? product.category.categoryName : null,
       countryName: product.country ? product.country.countryName : null,
       labelName: product.label ? product.label.labelName : null,
-      // Ajoutez d'autres champs de produit que vous souhaitez renvoyer ici
     };
 
     res.status(200).json(formattedProduct);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Erreur lors de la récupération du produit." });
+    res
+      .status(500)
+      .json({ error: "Erreur lors de la récupération du produit." });
   }
 });
 

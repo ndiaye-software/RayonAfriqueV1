@@ -53,14 +53,22 @@ const searchProduct = asyncHandler(async (req, res) => {
   try {
     const { name } = req.body;
 
+    const category = await Category.findOne({ categoryName: name });
+    const label = await Label.findOne({ labelName: name });
+    const country = await Country.findOne({ countryName: name });
+
+    const categoryId = category ? category._id : null;
+    const labelId = label ? label._id : null;
+    const countryId = country ? country._id : null;
+
     // Recherchez le produit par nom, référence, label, country ou category
     const products = await Product.find({
       $or: [
         { name: { $regex: name, $options: "i" } }, // Recherche par nom (insensible à la casse)
         { reference: { $regex: name, $options: "i" } }, // Recherche par référence (insensible à la casse)
-        { 'label.labelName': { $regex: name, $options: "i" } }, // Recherche par label (insensible à la casse)
-        { 'country.countryName': { $regex: name, $options: "i" } }, // Recherche par country (insensible à la casse)
-        { 'category.categoryName': { $regex: name, $options: "i" } }, // Recherche par category (insensible à la casse)
+        { 'label': labelId }, // Utilisez l'ID de label pour la recherche
+        { 'country': countryId }, // Utilisez l'ID de country pour la recherche
+        { 'category': categoryId }, // Utilisez l'ID de category pour la recherche
       ],
     })
       .populate("category")
@@ -76,6 +84,8 @@ const searchProduct = asyncHandler(async (req, res) => {
       _id: product._id,
       name: product.name,
       reference: product.reference,
+      image: product.image,
+      description: product.description,
       categoryName: product.category ? product.category.categoryName : null,
       countryName: product.country ? product.country.countryName : null,
       labelName: product.label ? product.label.labelName : null,
