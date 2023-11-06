@@ -40,6 +40,7 @@ const productEpicerieRouteAdmin = require("./routes/v1/admin/productEpicerieRout
 const epicerieRouteAdmin = require("./routes/v1/admin/epicerieRoute");
 const cartRouteAdmin = require("./routes/v1/admin/cartRoute");
 const userRouteAdmin = require("./routes/v1/admin/userRoute");
+const kpiRouteAdmin = require("./routes/v1/admin/kpiRoute");
 
 console.log("You are on:", colors.blue(process.env.NODE_ENV));
 
@@ -83,6 +84,7 @@ app.use("/api/v1/admin/productEpicerie", productEpicerieRouteAdmin);
 app.use("/api/v1/admin/epicerie", epicerieRouteAdmin);
 app.use("/api/v1/admin/cart", cartRouteAdmin);
 app.use("/api/v1/admin/user", userRouteAdmin);
+app.use("/api/v1/admin/kpi", kpiRouteAdmin);
 
 app.use("/", require("./routes/root"));
 
