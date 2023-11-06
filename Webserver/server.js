@@ -22,6 +22,7 @@ const authRouteUser = require("./routes/v1/user/authRoute");
 const shopRoute = require("./routes/v1/user/shopRoute");
 const labelRouteUser = require("./routes/v1/user/labelRoute");
 const epicerieRouteUser = require("./routes/v1/user/epicerieRoute");
+const cartRouteUser = require("./routes/v1/user/cartRoute");
 
 // Epicerie
 const authRouteEpicerie = require("./routes/v1/epicerie/authRoute");
@@ -37,6 +38,8 @@ const labelRouteAdmin = require("./routes/v1/admin/labelRoute");
 const productRouteAdmin = require("./routes/v1/admin/productRoute");
 const productEpicerieRouteAdmin = require("./routes/v1/admin/productEpicerieRoute");
 const epicerieRouteAdmin = require("./routes/v1/admin/epicerieRoute");
+const cartRouteAdmin = require("./routes/v1/admin/cartRoute");
+const userRouteAdmin = require("./routes/v1/admin/userRoute");
 
 console.log("You are on:", colors.blue(process.env.NODE_ENV));
 
@@ -62,6 +65,7 @@ app.use("/api/v1/user/contact", contactRoute);
 app.use("/api/v1/user/auth", authRouteUser);
 app.use("/api/v1/user/label", labelRouteUser);
 app.use("/api/v1/user/epicerie", epicerieRouteUser);
+app.use("/api/v1/user/cart", cartRouteUser);
 
 // EpicerieRoute
 app.use("/api/v1/epicerie/auth", authRouteEpicerie);
@@ -77,6 +81,8 @@ app.use("/api/v1/admin/label", labelRouteAdmin);
 app.use("/api/v1/admin/product", productRouteAdmin);
 app.use("/api/v1/admin/productEpicerie", productEpicerieRouteAdmin);
 app.use("/api/v1/admin/epicerie", epicerieRouteAdmin);
+app.use("/api/v1/admin/cart", cartRouteAdmin);
+app.use("/api/v1/admin/user", userRouteAdmin);
 
 app.use("/", require("./routes/root"));
 

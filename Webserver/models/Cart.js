@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const EpicerieProduct = require("./EpicerieProduct.js");
+const Product = require("./Product.js");
 const User = require("./User.js");
 
 const cartSchema = new mongoose.Schema({
@@ -8,9 +8,9 @@ const cartSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  idEpicerieProduct: {
+  idProduct: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "EpicerieProduct",
+    ref: "Product",
     required: true,
   },
 });
