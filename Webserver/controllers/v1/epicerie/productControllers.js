@@ -1,4 +1,7 @@
 const Product = require("../../../models/Product");
+const Label = require("../../../models/Label");
+const Category = require("../../../models/Category");
+const Country = require("../../../models/Country");
 const asyncHandler = require("express-async-handler");
 
 const createProduct = asyncHandler(async (req, res) => {

@@ -8,16 +8,16 @@ router
     .get(epicerieroductController.getEpicerieProductByIdEpicerie);
 
 router
-    .route("/create")
+    .route("/create/:idEpicerie")
     .post(epicerieroductController.createEpicerieProduct);
 
 
 router
-  .route("/update/:id")
+  .route("/update/:idEpicerie/:id")
   .patch(epicerieroductController.updateEpicerieProduct);
 
 router
-  .route("/delete/:id")
+  .route("/delete/:idEpicerie/:id")
   .delete(epicerieroductController.deleteEpicerieProduct);
 
 module.exports = router;

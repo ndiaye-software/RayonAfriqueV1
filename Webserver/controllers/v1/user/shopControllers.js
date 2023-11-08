@@ -9,7 +9,7 @@ const asyncHandler = require("express-async-handler");
 //Lister les produits des épiceries
 const getGroceryProducts = asyncHandler(async (req, res) => {
   try {
-    const groceryProducts = await Product.find({ available: true }, 'name image description price ingredients')
+    const groceryProducts = await Product.find({ available: true }).select('name image description price ingredients available')
       .populate({
         path: 'country',
         select: 'countryName',
@@ -34,6 +34,7 @@ const getGroceryProducts = asyncHandler(async (req, res) => {
       ingredients: product.ingredients,
       description: product.description,
       image: product.image,
+      available: product.available,
       categoryName: product.category ? product.category.categoryName : null,
       countryName: product.country ? product.country.countryName : null,
       labelName: product.label ? product.label.labelName : null,
@@ -47,6 +48,7 @@ const getGroceryProducts = asyncHandler(async (req, res) => {
     });
   }
 });
+
 
 //Chercher un produit à travers son :nom ou son :référence, catgeory, country, label
 const searchProduct = asyncHandler(async (req, res) => {

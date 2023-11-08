@@ -11,7 +11,7 @@ router.route('/read/:idProduct')
 router.route('/search/')
     .post(productController.searchProduct)
 
-router.route('/create/:idEpicerie')
+router.route('/create')
     .post(productController.createProduct)
     
 module.exports = router
