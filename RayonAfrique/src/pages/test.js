@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import {
   APIProvider,
@@ -8,8 +7,9 @@ import {
   Pin,
   InfoWindow,
 } from "@vis.gl/react-google-maps";
-
 export default function Intro() {
+  console.log(process.env.REACT_APP_MAPS_ID)
+  
   const position = { lat: 53.54, lng: 10 };
   const [open, setOpen] = useState(false);
 

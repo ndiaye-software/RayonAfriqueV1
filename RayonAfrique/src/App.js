@@ -27,6 +27,7 @@ import EpicerieContact from "./pages/epicerie/contact/epicerieContact";
 import MessageEnvoyéEpicerie from "./pages/epicerie/contact/message_sent";
 import MessageNonEnvoyéEpicerie from "./pages/epicerie/contact/message_not_sent";
 import Test from "./pages/test";
+import Test2 from "./pages/test2";
 
 function App() {
 
@@ -34,9 +35,11 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
+          
           {/* Main */}
           <Route path="/" element={<Home />} />
           <Route path="/test" element={<Test />}/>
+          <Route path="/test2" element={<Test2 />}/>
           <Route path="/business/connexion/reinitialisation-mdp" element={<Reinitialisation />}/>
           <Route path="/business/connexion/reinitialisation-mdp/modification-mdp" element={<Modification />}/>
           <Route path="/business/connexion/authentification" element={<Authentification />}/>

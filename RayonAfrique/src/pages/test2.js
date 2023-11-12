@@ -14,9 +14,10 @@ import {
 import "@reach/combobox/styles.css";
 
 export default function Places() {
+  const libraries = useMemo(() => ["places"], []);  // Utilisez useMemo pour éviter un rechargement inutile
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.MAPS_API,
-    libraries: ["places"],
+    googleMapsApiKey: process.env.REACT_APP_MAPS_API,
+    libraries: libraries,
   });
 
   if (!isLoaded) return <div>Loading...</div>;
