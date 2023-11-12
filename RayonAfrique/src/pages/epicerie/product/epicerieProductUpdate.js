@@ -1,8 +1,8 @@
 import React from "react";
 import { Stack } from "@mui/material";
 import Box from "@mui/material/Box";
-import Navbar from "../../components/epicerie/navbarEpicerie";
-import Footer from "../../components/main/footer";
+import Navbar from "../../../components/epicerie/navbarEpicerie";
+import Footer from "../../../components/main/footer";
 import { InsertPhoto, Save } from "@material-ui/icons";
 import { TextField, Button, Grid } from "@material-ui/core";
 import { FormControl, InputLabel, Select } from "@material-ui/core";

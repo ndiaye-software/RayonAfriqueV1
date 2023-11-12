@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from "react";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -10,15 +10,59 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Navbar from "../../../components/main/navbar";
 import Footer from "../../../components/main/footer";
+import hostname from "../../../hostname";
 
 export default function Connexion() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
+  
+  const [formData, setFormData] = useState({
+    mail: "",
+    password: "",
+  });
+
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({
+      ...formData,
+      [name]: value,
     });
+  };
+
+  const handleLogin = async (event) => {
+    event.preventDefault();
+
+    try {
+      const response = await fetch(`${hostname}/api/v1/auth`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.statut === 1) {
+          // Rediriger vers la page de l'Epicerie
+          window.location.href = `/business/epicerie/${data.idUser}`;
+        } else if (data.statut === 2) {
+          // Rediriger vers la page du Fournisseur
+          window.location.href = `/business/fournisseur/${data.idUser}`;
+        } else {
+          // Type d'utilisateur non géré, gérer en conséquence
+        }
+      } else {
+        const data = await response.json();
+        if (data.message) {
+          setErrorMessage(data.message);
+        } else {
+          setErrorMessage("Erreur d'authentification");
+        }
+      }
+    } catch (error) {
+      console.error("Erreur lors de la connexion :", error);
+    }
   };
 
   return (
@@ -41,14 +85,16 @@ export default function Connexion() {
           <Typography component="h1" variant="h5">
             Connexion
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box component="form" onSubmit={handleLogin} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
               fullWidth
               id="email"
               label="Adresse mail"
-              name="email"
+              name="mail"
+              value={formData.mail}
+              onChange={handleChange}
               autoComplete="email"
               autoFocus
             />
@@ -60,8 +106,15 @@ export default function Connexion() {
               label="Mot de passe"
               type="password"
               id="password"
+              value={formData.password}
+              onChange={handleChange}
               autoComplete="current-password"
             />
+             {errorMessage && (
+                <Typography variant="body1" color="error" gutterBottom>
+                  {errorMessage}
+                </Typography>
+              )}
             <Button
               type="submit"
               fullWidth

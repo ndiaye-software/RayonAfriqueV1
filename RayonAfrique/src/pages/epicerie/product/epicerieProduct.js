@@ -1,10 +1,10 @@
 import React from "react";
-import Navbar from "../../components/epicerie/navbarEpicerie";
-import Footer from "../../components/main/footer";
-import backgroundImage from "../../images/background.jpg";
+import Navbar from "../../../components/epicerie/navbarEpicerie";
+import Footer from "../../../components/main/footer";
+import backgroundImage from "../../../images/background.jpg";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Typography } from "@material-ui/core";
-import TableProduct from "../../components/epicerie/tableProductEpicerie";
+import TableProduct from "../../../components/epicerie/tableProductEpicerie";
 import { Box, Stack } from "@mui/material";
 import { Add } from "@material-ui/icons";
 

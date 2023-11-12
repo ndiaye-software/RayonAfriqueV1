@@ -14,6 +14,10 @@ import Drawer from "@mui/material/Drawer";
 import Divider from "@mui/material/Divider";
 import { makeStyles } from "@material-ui/core/styles";
 import logo from "../../images/logo.png";
+import { BookmarkBorderOutlined, PersonOutline } from "@material-ui/icons";
+import { FmdGoodOutlined } from "@mui/icons-material";
+import Badge from "@mui/material/Badge";
+import Tooltip from "@mui/material/Tooltip";
 
 const drawerWidth = 300;
 
@@ -93,6 +97,30 @@ export default function PrimarySearchAppBar(props) {
             </ListItemButton>
           </ListItem>
         </a>
+
+        <a href="/epicerie">
+          <ListItem disablePadding>
+            <ListItemButton sx={{ textAlign: "left" }}>
+              <FmdGoodOutlined />
+            </ListItemButton>
+          </ListItem>
+        </a>
+
+        <a href="/connexion">
+          <ListItem disablePadding>
+            <ListItemButton sx={{ textAlign: "left" }}>
+              <PersonOutline />
+            </ListItemButton>
+          </ListItem>
+        </a>
+
+        <a href="/cart">
+          <ListItem disablePadding>
+            <ListItemButton sx={{ textAlign: "left" }}>
+              <BookmarkBorderOutlined />
+            </ListItemButton>
+          </ListItem>
+        </a>
       </List>
     </Box>
   );
@@ -164,6 +192,35 @@ export default function PrimarySearchAppBar(props) {
             >
               Business
             </Button>
+            <IconButton
+              className={classes.button}
+              href="/epicerie"
+              sx={{ color: "black" }}
+            >
+              <Tooltip title="Trouvez une épicerie" arrow>
+                <FmdGoodOutlined />
+              </Tooltip>
+            </IconButton>
+            <IconButton
+              className={classes.button}
+              href="/connexion"
+              sx={{ color: "black" }}
+            >
+              <Tooltip title="Connexion" arrow>
+                <PersonOutline />
+              </Tooltip>
+            </IconButton>
+            <IconButton
+              className={classes.button}
+              href="/cart"
+              sx={{ color: "black" }}
+            >
+              <Tooltip title="Produits enregistrés" arrow>
+                <Badge badgeContent="0" color="error">
+                  <BookmarkBorderOutlined />
+                </Badge>
+              </Tooltip>
+            </IconButton>
           </Box>
         </Toolbar>
       </AppBar>

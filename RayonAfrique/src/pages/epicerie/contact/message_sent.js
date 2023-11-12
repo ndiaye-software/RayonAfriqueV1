@@ -1,7 +1,7 @@
 import React from "react";
 import Navbar from "../../../components/epicerie/navbarEpicerie";
 import Footer from "../../../components/main/footer";
-import MailSent from "../../images/mail_sent.svg";
+import MailSent from "../../../images/mail_sent.svg";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles(() => ({

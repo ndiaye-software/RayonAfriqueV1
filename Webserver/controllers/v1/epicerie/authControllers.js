@@ -6,6 +6,25 @@ const asyncHandler = require("express-async-handler");
 const dotenv = require("dotenv");
 const emailvalidator = require("email-validator");
 const phonevalidator = require("validator");
+const axios = require('axios');
+
+const geocodeAddress = async (address) => {
+  const apiKey = process.env.MAPS_API;
+  const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;
+
+  try {
+    const response = await axios.get(apiUrl);
+    if (response.data.results && response.data.results.length > 0) {
+      const location = response.data.results[0].geometry.location;
+      return { latitude: location.lat, longitude: location.lng };
+    } else {
+      throw new Error('Adresse introuvable');
+    }
+  } catch (error) {
+    throw new Error('Erreur lors de la récupération des coordonnées');
+  }
+};
+
 
 // @desc Login
 // @route POST /auth
@@ -121,9 +140,9 @@ const transporter = nodemailer.createTransport({
 
 //Inscription
 const signUp = asyncHandler(async (req, res) => {
-  const { name, mail, phone, password1, password2, nameCompany, image, description, longitude, latitude } = req.body;
+  const { name, mail, phone, password1, password2, nameCompany, image, description,   address } = req.body;
 
-  if (!name || !phone || !password1 || !password2 || !mail || !nameCompany || !longitude || !latitude) {
+  if (!name || !phone || !password1 || !password2 || !mail || !nameCompany || !address) {
     return res.status(400).json({ message: "Tous les champs sont requis" });
   }
 
@@ -168,14 +187,18 @@ const signUp = asyncHandler(async (req, res) => {
     // Hash password
     const hashedPwd = await bcrypt.hash(password1, 10); // salt rounds
 
+    const coordinates = await geocodeAddress(address);
+    const latitude = coordinates.latitude;
+    const longitude = coordinates.longitude;
+
     // Créer un nouvel utilisateur
     const newEpicerie = new Epicerie({
       name,
       mail,
       phone,
       nameCompany,
-      longitude,
-      latitude,
+      longitude : longitude,
+      latitude : latitude,
       image,
       description,
       password: hashedPwd,

@@ -1,18 +1,19 @@
 import React from "react";
 import Home from "./pages/main/home/home";
-import ConnexionBusiness from "././pages/main/log/connexionBusiness";
+import Connexion from "././pages/main/log/connexion";
+import ConnexionEpicerie from "././pages/main/log/connexionEpicerie";
 import Reinitialisation from "././pages/main/log/reinitialisation_mdp";
 import Modification from "././pages/main/log/modification_mdp";
 import Contact from "././pages/main/contact/contact";
 import MessageEnvoyé from "./pages/main/contact/message_sent";
 import About from "././pages/main/about/about";
 import Authentification from "././pages/main/log/authentification";
-import MaterialUI from "././pages/test/test";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Business from "./pages/main/business/business";
 import Shop from "./pages/main/product/shop";
 import ShopDetail from "./pages/main/product/shopDetail";
-import InscriptionBusiness from "./pages/main/log/inscription_business";
+import InscriptionEpicerie from "./pages/main/log/inscription_epicerie";
+import InscriptionClient from "./pages/main/log/inscription_client";
 import ValidationBusiness from "./pages/main/log/business_validation";
 import TermsAndConditions from "./pages/main/terms/termsAndConditions";
 import MessageNonEnvoyé from "./pages/main/contact/message_not_sent";
@@ -25,7 +26,7 @@ import EpicerieProfile from "./pages/epicerie/profile/epicerieProfile";
 import EpicerieContact from "./pages/epicerie/contact/epicerieContact";
 import MessageEnvoyéEpicerie from "./pages/epicerie/contact/message_sent";
 import MessageNonEnvoyéEpicerie from "./pages/epicerie/contact/message_not_sent";
-
+import Test from "./pages/test";
 
 function App() {
 
@@ -35,6 +36,7 @@ function App() {
         <Routes>
           {/* Main */}
           <Route path="/" element={<Home />} />
+          <Route path="/test" element={<Test />}/>
           <Route path="/business/connexion/reinitialisation-mdp" element={<Reinitialisation />}/>
           <Route path="/business/connexion/reinitialisation-mdp/modification-mdp" element={<Modification />}/>
           <Route path="/business/connexion/authentification" element={<Authentification />}/>
@@ -42,9 +44,10 @@ function App() {
           <Route path="/contact/sent" element={<MessageEnvoyé/>} />
           <Route path="/contact/notsent" element={<MessageNonEnvoyé/>} />
           <Route path="/about-us" element={<About />} />
-          <Route path="/materialui" element={<MaterialUI />} />
-          <Route path="business/connexion" element={<ConnexionBusiness />} />
-          <Route path="business/inscription" element={<InscriptionBusiness />}/>
+          <Route path="/connexion" element={<Connexion />} />
+          <Route path="/epicerie/connexion" element={<ConnexionEpicerie />} />
+          <Route path="/inscription/epicerie" element={<InscriptionEpicerie />}/>
+          <Route path="/inscription/client" element={<InscriptionClient />}/>
           <Route path="business/inscription/validation" element={<ValidationBusiness />}/>
           <Route path="business" element={<Business />} />
           <Route path="terms-and-conditions" element={<TermsAndConditions />} />

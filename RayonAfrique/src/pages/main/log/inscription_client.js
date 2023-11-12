@@ -9,14 +9,12 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { FormControl, InputLabel, Select } from "@material-ui/core";
-import { MenuItem } from "@mui/material";
+import { FormControl } from "@material-ui/core";
 import InputAdornment from "@mui/material/InputAdornment";
 import EmailIcon from "@mui/icons-material/Email";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import Navbar from "../../../components/main/navbar";
 import Footer from "../../../components/main/footer";
-import { LocationOn } from "@mui/icons-material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -62,8 +60,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const options = [{ label: "Fournisseur" }, { label: "Epicerie" }];
-
 export default function SignUp() {
   const navigate = useNavigate();
 
@@ -91,11 +87,8 @@ export default function SignUp() {
 
   const [formData, setFormData] = useState({
     name: "",
-    nameCompany: "",
     mail: "",
     phone: "",
-    statut: "",
-    address: "",
     password1: "",
     password2: "",
   });
@@ -118,22 +111,15 @@ export default function SignUp() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    let processedStatut = formData.statut;
-    if (formData.statut === "Epicerie") {
-      processedStatut = 1;
-    } else if (formData.statut === "Fournisseur") {
-      processedStatut = 2;
-    }
-
     try {
       const response = await fetch(
-        `${hostname}/api/v1/inscription/SignUp`,
+        `${hostname}/api/v1/user/auth/SignUp`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({...formData, statut : processedStatut}),
+          body: JSON.stringify({...formData}),
         }
       );
 
@@ -181,7 +167,7 @@ export default function SignUp() {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Inscription professionnel
+              Inscription client
             </Typography>
             <Box
               component="form"
@@ -190,24 +176,12 @@ export default function SignUp() {
               sx={{ mt: 3 }}
             >
               <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <TextField
-                    required
-                    fullWidth
-                    id="nameCompany"
-                    label="Nom de votre entreprise"
-                    name="nameCompany"
-                    autoComplete="name"
-                    value={formData.nameCompany}
-                    onChange={handleChange}
-                  />
-                </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12}>
                   <TextField
                     required
                     fullWidth
                     id="name"
-                    label="Nom du gérant"
+                    label="Votre nom"
                     name="name"
                     autoComplete="name"
                     value={formData.name}
@@ -219,7 +193,7 @@ export default function SignUp() {
                     required
                     fullWidth
                     id="mail"
-                    label="Mail de votre entreprise"
+                    label="Votre mail"
                     name="mail"
                     autoComplete="mail"
                     value={formData.mail}
@@ -235,30 +209,7 @@ export default function SignUp() {
                 </Grid>
 
                 <Grid item xs={12}>
-                  <FormControl fullWidth variant="outlined">
-                    <InputLabel>Votre business</InputLabel>
-                    <Select
-                      id="statut"
-                      name="statut"
-                      value={formData.statut}
-                      label="Votre business"
-                      onChange={handleChange}
-                      required
-                    >
-                      {options?.map((option) => {
-                        return (
-                          <MenuItem key={option.label} value={option.label}>
-                            {option.label ?? option.label}
-                          </MenuItem>
-                        );
-                      })}
-                    </Select>
-                  </FormControl>
-                </Grid>
-
-                <Grid item xs={12}>
                   <TextField
-                    required
                     fullWidth
                     name="phone"
                     label="Téléphone"
@@ -272,27 +223,6 @@ export default function SignUp() {
                       startAdornment: (
                         <InputAdornment position="start">
                           <LocalPhoneIcon />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </Grid>
-
-                <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    name="address"
-                    label="Adresse"
-                    type="adresse"
-                    id="address"
-                    placeholder="Adresse"
-                    value={formData.address}
-                    onChange={handleChange}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <LocationOn />
                         </InputAdornment>
                       ),
                     }}
@@ -379,8 +309,8 @@ export default function SignUp() {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="/inscription/client" variant="body2">
-                    Vous êtes client ?
+                  <Link href="/inscription/epicerie" variant="body2">
+                    Vous êtes une épicerie ?
                   </Link>
                 </Grid>
               </Grid>

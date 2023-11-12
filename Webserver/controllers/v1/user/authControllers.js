@@ -123,8 +123,19 @@ const transporter = nodemailer.createTransport({
 const signUp = asyncHandler(async (req, res) => {
   const { name, mail, phone, password1, password2 } = req.body;
 
-  if (!name || !phone || !password1 || !password2 || !mail) {
-    return res.status(400).json({ message: "Tous les champs sont requis" });
+  // Liste des champs requis
+  const requiredFields = ["name", "mail", "password1", "password2"];
+
+  // Vérification si tous les champs requis sont présents
+  const missingFields = requiredFields.filter((field) => !req.body[field]);
+  if (missingFields.length > 0) {
+    return res
+      .status(400)
+      .json({
+        message: `Les champs suivants sont requis : ${missingFields.join(
+          ", "
+        )}`,
+      });
   }
 
   try {
