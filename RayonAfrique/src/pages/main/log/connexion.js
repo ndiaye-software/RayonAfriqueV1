@@ -11,8 +11,11 @@ import Container from '@mui/material/Container';
 import Navbar from "../../../components/main/navbar";
 import Footer from "../../../components/main/footer";
 import hostname from "../../../hostname";
+import { useNavigate } from "react-router-dom";
 
 export default function Connexion() {
+
+  const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
     mail: "",
@@ -33,7 +36,7 @@ export default function Connexion() {
     event.preventDefault();
 
     try {
-      const response = await fetch(`${hostname}/api/v1/auth`, {
+      const response = await fetch(`${hostname}/api/v1/user/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -42,16 +45,7 @@ export default function Connexion() {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        if (data.statut === 1) {
-          // Rediriger vers la page de l'Epicerie
-          window.location.href = `/business/epicerie/${data.idUser}`;
-        } else if (data.statut === 2) {
-          // Rediriger vers la page du Fournisseur
-          window.location.href = `/business/fournisseur/${data.idUser}`;
-        } else {
-          // Type d'utilisateur non géré, gérer en conséquence
-        }
+        navigate("validation");
       } else {
         const data = await response.json();
         if (data.message) {

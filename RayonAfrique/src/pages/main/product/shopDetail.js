@@ -10,14 +10,14 @@ import { useParams } from "react-router-dom";
 import hostname from "../../../hostname";
 
 function ShopDetail() {
-  const { idProducts } = useParams();
+  const { name } = useParams();
 
   const [data, setData] = useState([])
   useEffect(()=> {
-    fetch(`${hostname}/api/v1/shopDetail/read/${idProducts}`)
+    fetch(`${hostname}/api/v1/shopDetail/read/${name}`)
     .then(res => res.json())
     .then(data => setData(data))
-  }, [idProducts])
+  }, [name])
 
   const productFournisseur = [
     {

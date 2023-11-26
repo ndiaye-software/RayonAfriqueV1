@@ -3,7 +3,6 @@ import Navbar from "../../../components/main/navbar";
 import Footer from "../../../components/main/footer";
 import backgroundImage from "../../../images/background.jpg";
 import Caissier from "../../../images/Caissier.jpg";
-import Business from "../../../images/business.jpg";
 import Searching from "../../../images/market.jpg";
 import Madd from "../../../images/five_star.jpg";
 import { makeStyles } from "@material-ui/core/styles";
@@ -13,6 +12,7 @@ import { Grid } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
+import business from "../../../images/business.svg";
 
 const useStyles = makeStyles((theme) => ({
   section1: {
@@ -303,22 +303,8 @@ const Home = () => {
           Business
         </Typography>
         <div className={classes.section2}>
-          <Card sx={{ maxWidth: 425 }}>
-            <CardMedia component="img" height="400" image={`${Business}`} />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                Fournisseur
-              </Typography>
-              <Typography variant="body2" color="inherit">
-                Vous avez votre marque de produits alimentaires ? Partagez-la
-                sur notre plateforme et trouvez également des partenaires pour
-                développer votre entreprise !
-              </Typography>
-            </CardContent>
-          </Card>
-
-          <Card sx={{ maxWidth: 425 }}>
-            <CardMedia component="img" height="400" image={`${Caissier}`} />
+        <Card sx={{ maxWidth: 425 }}>
+            <CardMedia component="img" height="350" image={`${Caissier}`} />
             <CardContent>
               <Typography gutterBottom variant="h5" component="div">
                 Epicerie
@@ -330,18 +316,20 @@ const Home = () => {
               </Typography>
             </CardContent>
           </Card>
+          <div>
+            <img src={`${business}`} height="325" width="350" alt="team" />
+            <Grid className={classes.buttonBusinessContainer}>
+              {" "}
+              <Button
+                className={classes.ButtonBusiness}
+                href="/business"
+                variant="contained"
+              >
+                Découvrir RayonAfrique+
+              </Button>{" "}
+            </Grid>
+          </div>
         </div>
-
-        <Grid className={classes.buttonBusinessContainer}>
-          {" "}
-          <Button
-            className={classes.ButtonBusiness}
-            href="/business"
-            variant="contained"
-          >
-            Découvrir RayonAfrique+
-          </Button>{" "}
-        </Grid>
       </div>
 
       <Footer />

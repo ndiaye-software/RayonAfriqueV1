@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.get("/product", getGroceryProducts);
 router.post("/product", searchProduct);
-router.get("/epicerie/product/:name", getGroceryByProduct);
-router.get("/epicerie/product/:name/:position", getGroceryByProductByPosition);
+router.get("/product/:name", getGroceryByProduct);
+router.get("/product/:name/:position", getGroceryByProductByPosition);
 
 module.exports = router;

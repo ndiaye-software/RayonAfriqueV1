@@ -22,7 +22,7 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export default function Product({ idProducts, image, name, description}) {
+export default function Product({ image, name, description}) {
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
@@ -30,7 +30,7 @@ export default function Product({ idProducts, image, name, description}) {
   };
   return (
     <Card sx={{ width: 230, height: "fit-content" }}>
-      <CardActionArea component={Link} to={`/produit/${idProducts}`}>
+      <CardActionArea component={Link} to={`/produit/${name}`}>
         <CardMedia
           component="img"
           height="150"

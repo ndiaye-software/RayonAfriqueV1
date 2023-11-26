@@ -1,4 +1,5 @@
-const User = require("../../../models/User"); // Assurez-vous que le chemin vers votre modèle User est correct
+const User = require("../../../models/User");
+const Epicerie = require("../../../models/Epicerie");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
@@ -18,12 +19,51 @@ const login = async (req, res) => {
   }
 
   try {
+    // Recherche dans le modèle User
     const foundUser = await User.findOne({ mail }).exec();
 
+    // Si l'utilisateur n'est pas trouvé dans le modèle User, recherche dans le modèle Epicerie
     if (!foundUser) {
-      return res
-        .status(401)
-        .json({ message: "Email ou mot de passe incorrect" });
+      const foundEpicerie = await Epicerie.findOne({ mail }).exec();
+
+      if (!foundEpicerie) {
+        return res
+          .status(401)
+          .json({ message: "Email ou mot de passe incorrect" });
+      }
+
+      const match = await bcrypt.compare(password, foundEpicerie.password);
+
+      if (!match)
+        return res
+          .status(401)
+          .json({ message: "Email ou mot de passe incorrect" });
+
+      const accessToken = jwt.sign(
+        {
+          UserInfo: {
+            mail: foundEpicerie.mail,
+          },
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: "15m" }
+      );
+
+      const refreshToken = jwt.sign(
+        { mail: foundEpicerie.mail },
+        process.env.REFRESH_TOKEN_SECRET,
+        { expiresIn: "7d" }
+      );
+
+      // Créez un cookie sécurisé avec le token de rafraîchissement
+      res.cookie("jwt", refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+
+      return res.json({ accessToken });
     }
 
     const match = await bcrypt.compare(password, foundUser.password);
@@ -40,7 +80,7 @@ const login = async (req, res) => {
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "15m" } //change 15m before deployment
+      { expiresIn: "15m" }
     );
 
     const refreshToken = jwt.sign(
@@ -51,20 +91,21 @@ const login = async (req, res) => {
 
     // Créez un cookie sécurisé avec le token de rafraîchissement
     res.cookie("jwt", refreshToken, {
-      httpOnly: true, // accessible uniquement par le serveur web
-      secure: true, // https
-      sameSite: "None", // cookie cross-site
-      maxAge: 7 * 24 * 60 * 60 * 1000, // expiration du cookie : réglée pour correspondre au rT
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.json({ accessToken });
+    return res.json({ accessToken });
   } catch (error) {
     console.error("Erreur lors de la connexion :", error);
-    res
+    return res
       .status(500)
       .json({ error: "Une erreur est survenue lors de la connexion." });
   }
 };
+
 
 // @desc Refresh
 // @route GET /auth/refresh

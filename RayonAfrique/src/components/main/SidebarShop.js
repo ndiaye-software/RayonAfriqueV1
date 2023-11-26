@@ -19,7 +19,7 @@ const SidebarShop = () => {
 
   const [country, setCountry] = useState([]);
   useEffect(() => {
-    fetch(`${hostname}/api/v1/country/read`)
+    fetch(`${hostname}/api/v1/user/country/read`)
       .then((res) => res.json())
       .then((data) => setCountry(data.map((item) => item.countryName)))
       .catch((err) => console.log(err));
@@ -27,17 +27,17 @@ const SidebarShop = () => {
 
   const [marque, setMarque] = useState([]);
   useEffect(() => {
-    fetch(`${hostname}/api/v1/epicerie/readFournisseur`)
+    fetch(`${hostname}/api/v1/user/label/read`)
       .then((res) => res.json())
-      .then((data) => setMarque(data.map((item) => item.nameCompany)))
+      .then((data) => setMarque(data.map((item) => item.labelName)))
       .catch((err) => console.log(err));
   }, []);
 
   const [category, setCategory] = useState([]);
   useEffect(() => {
-    fetch(`${hostname}/api/v1/category/read`)
+    fetch(`${hostname}/api/v1/user/category/read`)
       .then((res) => res.json())
-      .then((data) => setCategory(data.map((item) => item.nameCategory)))
+      .then((data) => setCategory(data.map((item) => item.categoryName)))
       .catch((err) => console.log(err));
   }, []);
 
@@ -195,14 +195,14 @@ const SidebarShop = () => {
                   required
                   style={{ fontSize: "12px" }}
                 >
-                  {category?.map((nameCategory) => {
+                  {category?.map((categoryName) => {
                     return (
                       <MenuItem
                         sx={{ fontSize: "12px" }}
-                        key={nameCategory}
-                        value={nameCategory}
+                        key={categoryName}
+                        value={categoryName}
                       >
-                        {nameCategory}
+                        {categoryName}
                       </MenuItem>
                     );
                   })}
@@ -337,14 +337,14 @@ const SidebarShop = () => {
                   required
                   style={{ fontSize: "12px" }}
                 >
-                  {category?.map((nameCategory) => {
+                  {category?.map((categoryName) => {
                     return (
                       <MenuItem
                         sx={{ fontSize: "12px" }}
-                        key={nameCategory}
-                        value={nameCategory}
+                        key={categoryName}
+                        value={categoryName}
                       >
-                        {nameCategory}
+                        {categoryName}
                       </MenuItem>
                     );
                   })}

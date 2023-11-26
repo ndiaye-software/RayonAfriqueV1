@@ -66,7 +66,7 @@ function Shop() {
   const [data, setData] = useState([]);
   const [productNames, setProductNames] = useState([]);
   useEffect(() => {
-    fetch(`${hostname}/api/v1/shop/read`)
+    fetch(`${hostname}/api/v1/user/shop/product`)
       .then((res) => res.json())
       .then((data) => {
         setData(data); 
@@ -149,7 +149,6 @@ function Shop() {
                   <Grid className={classes.buttonContainer}>
                     <Button
                       className={classes.ButtonSearch}
-                      href="/patient"
                       variant="contained"
                       endIcon={<SearchIcon />}
                     >
@@ -177,7 +176,7 @@ function Shop() {
                       image={product.image}
                       name={product.name}
                       description={product.description}
-                      idProducts={product._id}
+                      id={product.id}
                     />
                   </Grid>
                 ))}

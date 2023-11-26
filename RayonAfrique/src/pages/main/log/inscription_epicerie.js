@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -63,8 +63,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp() {
 
-  const [autocomplete, setAutocomplete] = useState(null);
-
   const navigate = useNavigate();
 
   const classes = useStyles();
@@ -99,29 +97,6 @@ export default function SignUp() {
     password1: "",
     password2: "",
   });
-
-  useEffect(() => {
-    // Initialisez l'autocomplétion lorsque le composant est monté
-    const input = document.getElementById("address");
-    const options = {
-      types: ["address"], // Limité à des adresses seulement
-    };
-    const autocompleteInstance = new window.google.maps.places.Autocomplete(input, options);
-    setAutocomplete(autocompleteInstance);
-
-    // Écoutez l'événement de sélection d'adresse
-    autocompleteInstance.addListener("place_changed", () => {
-      const selectedPlace = autocompleteInstance.getPlace();
-      // Ici, vous pouvez extraire les détails de l'adresse sélectionnée
-      // par exemple, selectedPlace.name, selectedPlace.formatted_address, etc.
-      // Mettez à jour votre état formData avec les détails de l'adresse
-    });
-
-    // Nettoyez l'autocomplétion lorsque le composant est démonté
-    return () => {
-      autocompleteInstance.unbindAll();
-    };
-  }, []);
 
   const handleChange = (event) => {
     const { name, value } = event.target;

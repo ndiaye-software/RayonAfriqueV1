@@ -200,7 +200,7 @@ const Business = () => {
             {" "}
             <Button
               className={classes.Button}
-              href="business/connexion"
+              href="connexion"
               variant="contained"
               startIcon={<StartOutlinedIcon />}
             >
@@ -211,7 +211,7 @@ const Business = () => {
             {" "}
             <Button
               className={classes.ButtonBusiness}
-              href="business/inscription"
+              href="inscription/epicerie"
               variant="contained"
             >
               Devenir partenaire de RayonAfrique
@@ -304,7 +304,7 @@ const Business = () => {
               {" "}
               <Button
                 className={classes.Button}
-                href="/business/inscription"
+                href="/inscription/business"
                 variant="contained"
               >
                 S'inscrire sur RayonAfrique+

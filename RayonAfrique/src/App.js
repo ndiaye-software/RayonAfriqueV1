@@ -49,13 +49,13 @@ function App() {
           <Route path="/about-us" element={<About />} />
           <Route path="/connexion" element={<Connexion />} />
           <Route path="/epicerie/connexion" element={<ConnexionEpicerie />} />
-          <Route path="/inscription/epicerie" element={<InscriptionEpicerie />}/>
+          <Route path="inscription/epicerie" element={<InscriptionEpicerie />}/>
           <Route path="/inscription/client" element={<InscriptionClient />}/>
           <Route path="business/inscription/validation" element={<ValidationBusiness />}/>
           <Route path="business" element={<Business />} />
           <Route path="terms-and-conditions" element={<TermsAndConditions />} />
           <Route path="produit" element={<Shop />} />
-          <Route path="produit/:idProducts" element={<ShopDetail />} />
+          <Route path="produit/:id" element={<ShopDetail />} />
 
           {/* Epicerie */}
           <Route path="/business/epicerie/:idUser" element={<EpicerieHome />} />
