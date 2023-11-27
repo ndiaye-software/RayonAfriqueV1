@@ -10,36 +10,50 @@ const asyncHandler = require("express-async-handler");
 //Lister les produits des épiceries
 const getGroceryProducts = asyncHandler(async (req, res) => {
   try {
-    const groceryProducts = await Product.find()
-      .select("name image description price ingredients available")
+    const groceryProducts = await EpicerieProduct.find({ available: true }) // Ajoutez la condition ici
       .populate({
-        path: "country",
+        path: "idProduct",
+        select: "name image description price ingredients available", // Sélectionnez les champs que vous souhaitez
+      })
+      .populate({
+        path: "idProduct.country",
         select: "countryName",
         options: { lean: true },
       })
       .populate({
-        path: "category",
+        path: "idProduct.category",
         select: "categoryName",
         options: { lean: true },
       })
       .populate({
-        path: "label",
+        path: "idProduct.label",
         select: "labelName",
+        options: { lean: true },
+      })
+      .populate({
+        path: "idEpicerie",
+        select: "name image description phone",
         options: { lean: true },
       })
       .lean();
 
     const formattedProducts = groceryProducts.map((product) => ({
-      id: product._id,
-      name: product.name,
+      id: product.idProduct._id,
+      name: product.idProduct.name,
       price: product.price,
-      ingredients: product.ingredients,
-      description: product.description,
-      image: product.image,
+      ingredients: product.idProduct.ingredients,
+      description: product.idProduct.description,
+      image: product.idProduct.image,
       available: product.available,
-      categoryName: product.category ? product.category.categoryName : null,
-      countryName: product.country ? product.country.countryName : null,
-      labelName: product.label ? product.label.labelName : null,
+      categoryName: product.idProduct.category
+        ? product.idProduct.category.categoryName
+        : null,
+      countryName: product.idProduct.country
+        ? product.idProduct.country.countryName
+        : null,
+      labelName: product.idProduct.label
+        ? product.idProduct.label.labelName
+        : null,
     }));
 
     res.status(200).json(formattedProducts);

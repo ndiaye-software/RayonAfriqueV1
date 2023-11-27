@@ -4,7 +4,8 @@ import Footer from "../../../components/main/footer";
 import backgroundImage from "../../../images/background.jpg";
 import Caissier from "../../../images/Caissier.jpg";
 import Searching from "../../../images/market.jpg";
-import Madd from "../../../images/five_star.jpg";
+import Star from "../../../images/five_star.jpg";
+import Business from "../../../images/business.jpg";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Typography } from "@material-ui/core";
 import PresentationComponent from "../../../components/main/presentation";
@@ -12,7 +13,6 @@ import { Grid } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import business from "../../../images/business.svg";
 
 const useStyles = makeStyles((theme) => ({
   section1: {
@@ -261,7 +261,7 @@ const Home = () => {
               },
             }}
           >
-            <CardMedia component="img" height="200" image={`${Madd}`} />
+            <CardMedia component="img" height="200" image={`${Star}`} />
             <CardContent>
               <Typography gutterBottom variant="h5" component="div">
                 Qualité
@@ -303,7 +303,7 @@ const Home = () => {
           Business
         </Typography>
         <div className={classes.section2}>
-        <Card sx={{ maxWidth: 425 }}>
+          <Card sx={{ maxWidth: 425 }}>
             <CardMedia component="img" height="350" image={`${Caissier}`} />
             <CardContent>
               <Typography gutterBottom variant="h5" component="div">
@@ -316,20 +316,28 @@ const Home = () => {
               </Typography>
             </CardContent>
           </Card>
-          <div>
-            <img src={`${business}`} height="325" width="350" alt="team" />
-            <Grid className={classes.buttonBusinessContainer}>
-              {" "}
-              <Button
-                className={classes.ButtonBusiness}
-                href="/business"
-                variant="contained"
-              >
-                Découvrir RayonAfrique+
-              </Button>{" "}
-            </Grid>
-          </div>
+          <Card sx={{ maxWidth: 425 }}>
+            <CardMedia component="img" height="350" image={`${Business}`} />
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                Marque
+              </Typography>
+              <Typography variant="body2" color="inherit">
+              Prêt à faire briller votre marque de produits africains ? Partagez-la sur notre plateforme et attirez une toute nouvelle clientèle !
+              </Typography>
+            </CardContent>
+          </Card>
         </div>
+        <Grid className={classes.buttonBusinessContainer}>
+          {" "}
+          <Button
+            className={classes.ButtonBusiness}
+            href="/business"
+            variant="contained"
+          >
+            Découvrir RayonAfrique+
+          </Button>{" "}
+        </Grid>
       </div>
 
       <Footer />

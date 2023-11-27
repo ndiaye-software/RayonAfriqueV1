@@ -14,7 +14,7 @@ function ShopDetail() {
 
   const [data, setData] = useState([])
   useEffect(()=> {
-    fetch(`${hostname}/api/v1/shopDetail/read/${name}`)
+    fetch(`${hostname}/api/v1/user/shop/product/${name}`)
     .then(res => res.json())
     .then(data => setData(data))
   }, [name])

@@ -55,7 +55,7 @@ function App() {
           <Route path="business" element={<Business />} />
           <Route path="terms-and-conditions" element={<TermsAndConditions />} />
           <Route path="produit" element={<Shop />} />
-          <Route path="produit/:id" element={<ShopDetail />} />
+          <Route path="produit/:name" element={<ShopDetail />} />
 
           {/* Epicerie */}
           <Route path="/business/epicerie/:idUser" element={<EpicerieHome />} />

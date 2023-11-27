@@ -15,7 +15,6 @@ import Divider from "@mui/material/Divider";
 import { makeStyles } from "@material-ui/core/styles";
 import logo from "../../images/logo.png";
 import { BookmarkBorderOutlined, PersonOutline } from "@material-ui/icons";
-import { FmdGoodOutlined } from "@mui/icons-material";
 import Badge from "@mui/material/Badge";
 import Tooltip from "@mui/material/Tooltip";
 
@@ -94,14 +93,6 @@ export default function PrimarySearchAppBar(props) {
           <ListItem disablePadding>
             <ListItemButton sx={{ textAlign: "left" }}>
               <ListItemText sx={{ color: "black" }} primary="Business" />
-            </ListItemButton>
-          </ListItem>
-        </a>
-
-        <a href="/epicerie">
-          <ListItem disablePadding>
-            <ListItemButton sx={{ textAlign: "left" }}>
-              <FmdGoodOutlined />
             </ListItemButton>
           </ListItem>
         </a>
@@ -192,15 +183,6 @@ export default function PrimarySearchAppBar(props) {
             >
               Business
             </Button>
-            <IconButton
-              className={classes.button}
-              href="/epicerie"
-              sx={{ color: "black" }}
-            >
-              <Tooltip title="Trouvez une épicerie" arrow>
-                <FmdGoodOutlined />
-              </Tooltip>
-            </IconButton>
             <IconButton
               className={classes.button}
               href="/connexion"
