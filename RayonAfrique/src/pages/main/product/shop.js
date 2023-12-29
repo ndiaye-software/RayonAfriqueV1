@@ -66,7 +66,7 @@ function Shop() {
   const [data, setData] = useState([]);
   const [productNames, setProductNames] = useState([]);
   useEffect(() => {
-    fetch(`${hostname}/api/v1/user/shop/product`)
+    fetch(`${hostname}/api/v1/user/shop/read`)
       .then((res) => res.json())
       .then((data) => {
         setData(data); 

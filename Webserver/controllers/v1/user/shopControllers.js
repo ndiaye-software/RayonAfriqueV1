@@ -1,69 +1,57 @@
-const Product = require("../../../models/Product");
 const Epicerie = require("../../../models/Epicerie");
 const Label = require("../../../models/Label");
 const Category = require("../../../models/Category");
 const Country = require("../../../models/Country");
 const EpicerieProduct = require("../../../models/EpicerieProduct");
+const Product = require("../../../models/Product");
 const geolib = require("geolib");
 const asyncHandler = require("express-async-handler");
 
 //Lister les produits des épiceries
 const getGroceryProducts = asyncHandler(async (req, res) => {
-  try {
-    const groceryProducts = await EpicerieProduct.find({ available: true }) // Ajoutez la condition ici
-      .populate({
-        path: "idProduct",
-        select: "name image description price ingredients available", // Sélectionnez les champs que vous souhaitez
-      })
-      .populate({
-        path: "idProduct.country",
-        select: "countryName",
-        options: { lean: true },
-      })
-      .populate({
-        path: "idProduct.category",
-        select: "categoryName",
-        options: { lean: true },
-      })
-      .populate({
-        path: "idProduct.label",
-        select: "labelName",
-        options: { lean: true },
-      })
-      .populate({
-        path: "idEpicerie",
-        select: "name image description phone",
-        options: { lean: true },
-      })
-      .lean();
+  // Recherche des produits disponibles dans EpicerieProduct
+  const productsInEpicerie = await EpicerieProduct.find({ available: true });
 
-    const formattedProducts = groceryProducts.map((product) => ({
-      id: product.idProduct._id,
-      name: product.idProduct.name,
-      price: product.price,
-      ingredients: product.idProduct.ingredients,
-      description: product.idProduct.description,
-      image: product.idProduct.image,
-      available: product.available,
-      categoryName: product.idProduct.category
-        ? product.idProduct.category.categoryName
-        : null,
-      countryName: product.idProduct.country
-        ? product.idProduct.country.countryName
-        : null,
-      labelName: product.idProduct.label
-        ? product.idProduct.label.labelName
-        : null,
-    }));
+  // Récupération des IDs des produits disponibles
+  const productIds = productsInEpicerie.map(epicerieProduct => epicerieProduct.idProduct);
 
-    res.status(200).json(formattedProducts);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      error: "Erreur lors de la récupération des produits d'épicerie.",
-    });
-  }
+  // Utilisation d'un ensemble pour éliminer les doublons
+  const uniqueProductIds = new Set(productIds);
+
+  // Recherche des détails des produits correspondants dans le modèle Product
+  const availableProducts = await Product.find({ _id: { $in: [...uniqueProductIds] } })
+  .populate({
+    path: "country",
+    select: "countryName",
+    options: { lean: true },
+  })
+  .populate({
+    path: "category",
+    select: "categoryName",
+    options: { lean: true },
+  })
+  .populate({
+    path: "label",
+    select: "labelName",
+    options: { lean: true },
+  })
+  .lean();
+
+  const shopProducts = availableProducts.map((product) => ({
+    id: product._id,
+    name: product.name,
+    ingredients: product.ingredients,
+    description: product.description,
+    image: product.image,
+    categoryName: product.category ? product.category.categoryName : null,
+    countryName: product.country ? product.country.countryName : null,
+    labelName: product.label ? product.label.labelName : null,
+  }));
+
+  // Envoi des produits disponibles en réponse
+  res.json(shopProducts);
 });
+
 
 //Chercher un produit à travers son :nom ou son :référence, catgeory, country, label
 const searchProduct = asyncHandler(async (req, res) => {
@@ -138,7 +126,15 @@ const getGroceryByProduct = asyncHandler(async (req, res) => {
       })
       .exec();
 
-    res.status(200).json(groceries);
+      const formattedGroceries = groceries.map((grocery) => ({
+        nomEpicerie: grocery.idEpicerie.name,
+        adresse: grocery.idEpicerie.description,
+        image: grocery.idEpicerie.image,
+        nomProduit: name,
+        prix: grocery.price
+      }));
+
+    res.status(200).json(formattedGroceries);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Erreur lors de la recherche des épiceries." });
