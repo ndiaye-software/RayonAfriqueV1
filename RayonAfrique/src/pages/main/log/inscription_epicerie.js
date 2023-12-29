@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import Autocomplete from "@mui/material/Autocomplete";
+import usePlacesAutocomplete from "use-places-autocomplete";
 import { makeStyles } from "@material-ui/core/styles";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -62,6 +64,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignUp() {
+  const {
+    setValue,
+    suggestions: { data },
+  } = usePlacesAutocomplete({ debounce: 300 });
 
   const navigate = useNavigate();
 
@@ -117,29 +123,26 @@ export default function SignUp() {
     event.preventDefault();
 
     try {
-      const response = await fetch(
-        `${hostname}/api/v1/inscription/SignUp`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({...formData}),
-        }
-      );
+      const response = await fetch(`${hostname}/api/v1/inscription/SignUp`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...formData }),
+      });
 
       if (response.ok) {
         navigate("validation");
       } else {
-         // Gérer les erreurs d'authentification ici
-         const data = await response.json(); // Obtenir les détails de l'erreur du backend
-         if (data.message) {
-           // Si le backend renvoie un message d'erreur, l'afficher sur le frontend
-           setErrorMessage(data.message);
-         } else {
-           // Si le message d'erreur n'est pas disponible, afficher un message générique
-           setErrorMessage("Erreur lors de l'inscription");
-         }
+        // Gérer les erreurs d'authentification ici
+        const data = await response.json(); // Obtenir les détails de l'erreur du backend
+        if (data.message) {
+          // Si le backend renvoie un message d'erreur, l'afficher sur le frontend
+          setErrorMessage(data.message);
+        } else {
+          // Si le message d'erreur n'est pas disponible, afficher un message générique
+          setErrorMessage("Erreur lors de l'inscription");
+        }
       }
     } catch (error) {
       console.error("Erreur lors de l'envoi de la requête :", error);
@@ -248,23 +251,31 @@ export default function SignUp() {
                 </Grid>
 
                 <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    name="address"
-                    label="Adresse"
-                    type="adresse"
+                  <Autocomplete
+                    disablePortal
                     id="address"
-                    placeholder="Adresse"
+                    options={data}
+                    fullWidth
                     value={formData.address}
                     onChange={handleChange}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <LocationOn />
-                        </InputAdornment>
-                      ),
-                    }}
+                    getOptionLabel={(option) =>
+                      typeof option === "string" ? option : option.description
+                    }
+                    filterOptions={(x) => x}
+                    renderInput={(params) => (
+                      <TextField
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <LocationOn />
+                            </InputAdornment>
+                          ),
+                        }}
+                        {...params}
+                        label="Adresse"
+                      />
+                    )}
+                    onInputChange={(event, newValue) => setValue(newValue)}
                   />
                 </Grid>
 

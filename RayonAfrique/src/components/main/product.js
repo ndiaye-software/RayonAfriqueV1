@@ -22,7 +22,7 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export default function Product({ image, name, description}) {
+export default function Product({ image, name, description, marque}) {
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
@@ -38,8 +38,8 @@ export default function Product({ image, name, description}) {
           alt="green iguana"
         />
         <CardContent sx={{ paddingTop: "5px", paddingBottom: "5px" }}>
-          <Typography gutterBottom variant="h6" fontSize="17px" component="div">
-            {name}
+          <Typography gutterBottom variant="h6" fontSize="15px" component="div">
+            {name} - {marque}
           </Typography>
           <Box sx={{ display: "flex", flexDirection: "row" }}>
             <Typography variant="body2" color="text.secondary">

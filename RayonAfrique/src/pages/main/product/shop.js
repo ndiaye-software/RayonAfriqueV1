@@ -176,6 +176,7 @@ function Shop() {
                       image={product.image}
                       name={product.name}
                       description={product.description}
+                      marque = {product.labelName}
                       id={product.id}
                     />
                   </Grid>

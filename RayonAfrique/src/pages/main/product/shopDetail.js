@@ -16,19 +16,8 @@ function ShopDetail() {
   useEffect(()=> {
     fetch(`${hostname}/api/v1/user/shop/grocery/${name}`)
     .then(res => res.json())
-    .then(data => setData(data))
+    .then((data) => setData(data))
   }, [name])
-
-  const productFournisseur = [
-    {
-      image: "https://source.unsplash.com/random?wallpapers",
-      nomProduit: "Product 1",
-      prix: "19.99",
-      shop: "3",
-      description:
-        "Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée à titre provisoire pour calibrer une mise en page, le texte définitif venant remplacer le faux-texte dès qu'il est prêt ou que la mise en page est achevée. Généralement, on utilise un texte en faux latin, le Lorem ipsum ou Lipsum",
-    },
-  ];
 
 
   const productsPerPage = 9;
@@ -73,11 +62,7 @@ function ShopDetail() {
               <Box>
                 <Box sx={{ textAlign: "center" }}>
                   <Typography variant="h5" paddingBottom="30px">
-                    Disponible dans{" "}
-                    {productFournisseur.map((product) => (
-                      <span key={product.shop}>{product.shop}</span>
-                    ))}{" "}
-                    magasin(s)
+                    Disponible dans{" "} <span>{data.length}</span> {" "} épicerie(s)
                   </Typography>
                 </Box>
 

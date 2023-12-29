@@ -33,6 +33,7 @@
     "mongoose": "^7.5.2",
     "nodemailer": "^6.9.5",
     "phone-number-validation": "^0.1.2",
+    "react-places-autocomplete": "^7.3.0",
     "uuid": "^9.0.1",
     "validator": "^13.11.0"
   },
