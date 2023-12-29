@@ -140,7 +140,7 @@ const transporter = nodemailer.createTransport({
 
 //Inscription
 const signUp = asyncHandler(async (req, res) => {
-  const { name, mail, phone, password1, password2, nameCompany, image, description,   address } = req.body;
+  const { name, mail, phone, password1, password2, nameCompany, image, description, address } = req.body;
 
   if (!name || !phone || !password1 || !password2 || !mail || !nameCompany || !address) {
     return res.status(400).json({ message: "Tous les champs sont requis" });

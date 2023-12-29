@@ -30,6 +30,10 @@ const epicerieSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  adresse: {
+    type: String,
+    required: true,
+  },
   latitude: {
     type: Number,
     required: true,

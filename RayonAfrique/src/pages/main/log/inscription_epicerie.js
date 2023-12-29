@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import usePlacesAutocomplete from "use-places-autocomplete";
 import { makeStyles } from "@material-ui/core/styles";
@@ -17,7 +17,6 @@ import EmailIcon from "@mui/icons-material/Email";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import Navbar from "../../../components/main/navbar";
 import Footer from "../../../components/main/footer";
-import { LocationOn } from "@mui/icons-material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -98,11 +97,25 @@ export default function SignUp() {
     nameCompany: "",
     mail: "",
     phone: "",
-    longitude: "",
-    latitude: "",
+    address : "",
     password1: "",
     password2: "",
   });
+
+  
+  useEffect(() => {
+    // Update Autocomplete value when formData.address changes
+    setValue(formData.address);
+  }, [formData.address, setValue]);
+
+  const handleAddressChange = (_, newValue) => {
+    setValue(newValue);
+    // Update the address in the formData
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      address: newValue || "", // Use an empty string if newValue is undefined
+    }));
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -123,7 +136,7 @@ export default function SignUp() {
     event.preventDefault();
 
     try {
-      const response = await fetch(`${hostname}/api/v1/inscription/SignUp`, {
+      const response = await fetch(`${hostname}/api/v1/epicerie/auth/SignUp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -257,25 +270,18 @@ export default function SignUp() {
                     options={data}
                     fullWidth
                     value={formData.address}
-                    onChange={handleChange}
                     getOptionLabel={(option) =>
                       typeof option === "string" ? option : option.description
                     }
                     filterOptions={(x) => x}
                     renderInput={(params) => (
                       <TextField
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              <LocationOn />
-                            </InputAdornment>
-                          ),
-                        }}
                         {...params}
                         label="Adresse"
                       />
                     )}
                     onInputChange={(event, newValue) => setValue(newValue)}
+                    onChange={handleAddressChange}
                   />
                 </Grid>
 
