@@ -9,21 +9,28 @@ const phonevalidator = require("validator");
 const axios = require('axios');
 
 const geocodeAddress = async (address) => {
-  const apiKey = process.env.MAPS_API;
-  const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;
-
   try {
-    const response = await axios.get(apiUrl);
+    const response = await axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
+      params: {
+        address: address,
+        key: process.env.MAPS_API,
+      },
+    });
+
     if (response.data.results && response.data.results.length > 0) {
       const location = response.data.results[0].geometry.location;
-      return { latitude: location.lat, longitude: location.lng };
+      const latitude = location.lat;
+      const longitude = location.lng;
+
+      return { latitude, longitude };
     } else {
-      throw new Error('Adresse introuvable');
+      throw new Error('No results found for the given address');
     }
   } catch (error) {
-    throw new Error('Erreur lors de la récupération des coordonnées');
+    console.error('Error geocoding address:', error.message);
+    throw error;
   }
-};
+}
 
 
 // @desc Login
@@ -140,7 +147,7 @@ const transporter = nodemailer.createTransport({
 
 //Inscription
 const signUp = asyncHandler(async (req, res) => {
-  const { name, mail, phone, password1, password2, nameCompany, image, description, address } = req.body;
+  const { name, mail, phone, password1, password2, nameCompany, image, address } = req.body;
 
   if (!name || !phone || !password1 || !password2 || !mail || !nameCompany || !address) {
     return res.status(400).json({ message: "Tous les champs sont requis" });
@@ -187,7 +194,11 @@ const signUp = asyncHandler(async (req, res) => {
     // Hash password
     const hashedPwd = await bcrypt.hash(password1, 10); // salt rounds
 
-    const coordinates = await geocodeAddress(address);
+    const maps_adresse = address.description
+
+    console.log(maps_adresse)
+
+    const coordinates = await geocodeAddress(maps_adresse);
     const latitude = coordinates.latitude;
     const longitude = coordinates.longitude;
 
@@ -200,8 +211,9 @@ const signUp = asyncHandler(async (req, res) => {
       longitude : longitude,
       latitude : latitude,
       image,
-      description,
-      password: hashedPwd,
+      description : "",
+      password : hashedPwd,
+      adresse : maps_adresse
     });
 
     // Sauvegarder l'utilisateur dans la base de données

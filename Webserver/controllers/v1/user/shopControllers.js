@@ -130,12 +130,12 @@ const getGroceryByProduct = asyncHandler(async (req, res) => {
     })
       .populate({
         path: "idEpicerie",
-        select: "name image description phone",
+        select: "nameCompany image description phone",
       })
       .exec();
 
     const formattedGroceries = groceries.map((grocery) => ({
-      nomEpicerie: grocery.idEpicerie.name,
+      nomEpicerie: grocery.idEpicerie.nameCompany,
       adresse: grocery.idEpicerie.description,
       image: grocery.idEpicerie.image,
       nomProduit: name,
