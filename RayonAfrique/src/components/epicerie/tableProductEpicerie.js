@@ -21,12 +21,14 @@ import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
 import hostname from "../../hostname";
 
-export function createData(nom, marque, prix, disponibilité) {
+export function createData(nom, marque, prix, disponibilité, catégorie, origine) {
   return {
     nom,
     marque,
     prix,
     disponibilité,
+    catégorie,
+    origine
   };
 }
 
@@ -82,6 +84,18 @@ const headCells = [
     numeric: true,
     disablePadding: false,
     label: "Disponibilité",
+  },
+  {
+    id: "catégorie",
+    numeric: false,
+    disablePadding: false,
+    label: "Catégorie",
+  },
+  {
+    id: "origine",
+    numeric: false,
+    disablePadding: false,
+    label: "Origine",
   },
 ];
 
@@ -214,14 +228,14 @@ export default function EnhancedTable() {
   const [formData, setFormData] = useState([]);
 
   useEffect(()=> {
-    fetch(`${hostname}/api/v1/epicerie/product/read/${idEpicerie}`)
+    fetch(`${hostname}/api/v1/epicerie/productEpicerie/read/${idEpicerie}`)
     .then(res => res.json())
     .then(formData => setFormData(formData))
   }, [idEpicerie])
 
 
   var rows = formData.map((produit) => {
-    return createData(produit.name, produit.category, parseFloat(produit.price), produit.available ? "Oui" : "Non");
+    return createData(produit.name, produit.label, parseFloat(produit.price), produit.available ? "Oui" : "Non", produit.category, produit.country);
   });
 
   const handleRequestSort = (event, property) => {
@@ -347,6 +361,14 @@ export default function EnhancedTable() {
                     <TableCell width="200px" align="left">
                       {" "}
                       {row.disponibilité}{" "}
+                    </TableCell>
+                    <TableCell width="200px" align="left">
+                      {" "}
+                      {row.catégorie}{" "}
+                    </TableCell>
+                    <TableCell width="200px" align="left">
+                      {" "}
+                      {row.origine}{" "}
                     </TableCell>
                   </TableRow>
                 );

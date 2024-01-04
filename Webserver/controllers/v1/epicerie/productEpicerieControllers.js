@@ -4,12 +4,11 @@ const Product = require("../../../models/Product");
 const asyncHandler = require("express-async-handler");
 
 const createEpicerieProduct = asyncHandler(async (req, res) => {
-  
-  const {idEpicerie} = req.params
+  const { idEpicerie } = req.params;
 
-  const epicerie = await Epicerie.findById(idEpicerie)
+  const epicerie = await Epicerie.findById(idEpicerie);
 
-  if(!epicerie) {
+  if (!epicerie) {
     return res.status(404).json({ error: "Epicerie non trouvé." });
   }
 
@@ -35,14 +34,13 @@ const createEpicerieProduct = asyncHandler(async (req, res) => {
   }
 });
 
-
 const getEpicerieProductByIdEpicerie = asyncHandler(async (req, res) => {
   try {
     const { idEpicerie } = req.params;
 
-    const epicerie = await Epicerie.findById(idEpicerie)
+    const epicerie = await Epicerie.findById(idEpicerie);
 
-    if(!epicerie) {
+    if (!epicerie) {
       return res.status(404).json({ error: "Epicerie non trouvé." });
     }
 
@@ -51,13 +49,16 @@ const getEpicerieProductByIdEpicerie = asyncHandler(async (req, res) => {
     })
       .populate({
         path: "idProduct",
+        populate: {
+          path: "category country label",
+          select: "categoryName countryName labelName",
+        },
         select: "name category label country description image reference",
       })
       .lean();
 
     if (!epicerieProduct || epicerieProduct.length === 0) {
-      return res
-        .json({ message: "Aucun produit trouvé pour cette épicerie." });
+      return res.json({ message: "Aucun produit trouvé pour cette épicerie." });
     }
 
     const formattedProducts = epicerieProduct.map((epicerieProduct) => ({
@@ -68,23 +69,25 @@ const getEpicerieProductByIdEpicerie = asyncHandler(async (req, res) => {
       reference: epicerieProduct.idProduct.reference,
       description: epicerieProduct.idProduct.description,
       image: epicerieProduct.idProduct.image,
-      category: epicerieProduct.idProduct.category ? epicerieProduct.idProduct.category.categoryName: null,
-      country: epicerieProduct.idProduct.country ? epicerieProduct.idProduct.country.countryName : null,
-      label: epicerieProduct.idProduct.label ? epicerieProduct.idProduct.label.labelName : null,
+      category: epicerieProduct.idProduct.category
+        ? epicerieProduct.idProduct.category.categoryName
+        : null,
+      country: epicerieProduct.idProduct.country
+        ? epicerieProduct.idProduct.country.countryName
+        : null,
+      label: epicerieProduct.idProduct.label
+        ? epicerieProduct.idProduct.label.labelName
+        : null,
       price: epicerieProduct.price,
       available: epicerieProduct.available,
     }));
 
-    console.log(formattedProducts)
-
     res.status(200).json(formattedProducts);
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({
-        error: "Erreur lors de la récupération des produits d'épicerie.",
-      });
+    res.status(500).json({
+      error: "Erreur lors de la récupération des produits d'épicerie.",
+    });
   }
 });
 
@@ -167,7 +170,6 @@ const deleteEpicerieProduct = asyncHandler(async (req, res) => {
       .json({ error: "Erreur lors de la suppression du produit d'épicerie." });
   }
 });
-
 
 module.exports = {
   createEpicerieProduct,
