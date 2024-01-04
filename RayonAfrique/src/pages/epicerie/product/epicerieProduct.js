@@ -127,7 +127,7 @@ const EpicerieProduct = () => {
         <Stack backgroundColor="#f9fafb">
           <Box width="300px" marginTop="30px" marginLeft="15px">
             <Button
-              href="add"
+              href="produit/add"
               className={classes.AddButton}
               endIcon={<Add />}
             >

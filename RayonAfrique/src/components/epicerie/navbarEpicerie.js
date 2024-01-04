@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function PrimarySearchAppBar(props) {
-  const { idUser } = useParams();
+  const { idEpicerie } = useParams();
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -59,29 +59,14 @@ export default function PrimarySearchAppBar(props) {
         variant="h6"
         sx={{ padding: 2, color: "#922B21", fontWeight: "bold" }}
       >
-        <a href={`/business/epicerie/${idUser}`}>
+        <a href={`/epicerie/${idEpicerie}`}>
           <img height="50px" src={`${logo}`} alt="logo" />
         </a>
       </Typography>
       <Divider />
       <List>
-        <a href={`/business/epicerie/${idUser}/market`}>
-          <ListItem disablePadding>
-            <ListItemButton sx={{ textAlign: "left" }}>
-              <ListItemText sx={{ color: "black" }} primary="Market" />
-            </ListItemButton>
-          </ListItem>
-        </a>
 
-        <a href={`/business/epicerie/${idUser}/fournisseur`}>
-          <ListItem disablePadding>
-            <ListItemButton sx={{ textAlign: "left" }}>
-              <ListItemText sx={{ color: "black" }} primary="Fournisseur" />
-            </ListItemButton>
-          </ListItem>
-        </a>
-
-        <a href={`/business/epicerie/${idUser}/produit`}>
+        <a href={`/epicerie/${idEpicerie}/produit`}>
           <ListItem disablePadding>
             <ListItemButton sx={{ textAlign: "left" }}>
               <ListItemText sx={{ color: "black" }} primary="Produit" />
@@ -89,7 +74,7 @@ export default function PrimarySearchAppBar(props) {
           </ListItem>
         </a>
 
-        <a href={`/business/epiceries/${idUser}/profil`}>
+        <a href={`/epiceries/${idEpicerie}/profil`}>
           <ListItem disablePadding>
             <ListItemButton sx={{ textAlign: "left" }}>
               <ListItemText sx={{ color: "black" }} primary="Profil" />
@@ -97,7 +82,7 @@ export default function PrimarySearchAppBar(props) {
           </ListItem>
         </a>
 
-        <a href={`/business/epicerie/${idUser}/contact`}>
+        <a href={`/epicerie/${idEpicerie}/contact`}>
           <ListItem disablePadding>
             <ListItemButton sx={{ textAlign: "left" }}>
               <ListItemText sx={{ color: "black" }} primary="Contact" />
@@ -105,7 +90,7 @@ export default function PrimarySearchAppBar(props) {
           </ListItem>
         </a>
 
-        <a href={`/business/epicerie/${idUser}/logout`}>
+        <a href={`/epicerie/${idEpicerie}/logout`}>
           <ListItem disablePadding>
             <ListItemButton sx={{ textAlign: "left" }}>
               <ListItemText sx={{ color: "black" }} primary="Déconnexion" />
@@ -149,7 +134,7 @@ export default function PrimarySearchAppBar(props) {
             component="div"
             sx={{ display: { xs: "none", md: "flex" } }}
           >
-            <a href={`/business/epicerie/${idUser}`}>
+            <a href={`/epicerie/${idEpicerie}`}>
               <img height="50px" src={`${logo}`} alt="logo" />
             </a>
           </Typography>
@@ -157,41 +142,27 @@ export default function PrimarySearchAppBar(props) {
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <Button
               className={classes.button}
-              href={`/business/epicerie/${idUser}/market`}
-              sx={{ color: "black" }}
-            >
-              Market
-            </Button>
-            <Button
-              className={classes.button}
-              href={`/business/epicerie/${idUser}/fournisseur`}
-              sx={{ color: "black" }}
-            >
-              Fournisseur
-            </Button>
-            <Button
-              className={classes.button}
-              href={`/business/epicerie/${idUser}/produit`}
+              href={`/epicerie/${idEpicerie}/produit`}
               sx={{ color: "black" }}
             >
               Produit
             </Button>
             <Button
               className={classes.button}
-              href={`/business/epicerie/${idUser}/profil`}
+              href={`/epicerie/${idEpicerie}/profil`}
               sx={{ color: "black" }}
             >
               Profil
             </Button>
             <Button
               className={classes.button}
-              href={`/business/epicerie/${idUser}/contact`}
+              href={`/epicerie/${idEpicerie}/contact`}
               sx={{ color: "black" }}
             >
               Contact
             </Button>
             <Tooltip title="Déconnexion">
-              <IconButton href={`/business/fournisseur/${idUser}/logout`}>
+              <IconButton href={`/fournisseur/${idEpicerie}/logout`}>
                 <LogoutOutlined sx={{ "&:hover": { color: "#922B21" } }} />
               </IconButton>
             </Tooltip>
