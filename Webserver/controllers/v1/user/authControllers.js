@@ -20,10 +20,10 @@ const login = async (req, res) => {
 
   try {
     // Recherche dans le modèle User
-    const foundUser = await User.findOne({ mail }).exec();
+    const foundEpicerie = await User.findOne({ mail }).exec();
 
     // Si l'utilisateur n'est pas trouvé dans le modèle User, recherche dans le modèle Epicerie
-    if (!foundUser) {
+    if (!foundEpicerie) {
       const foundEpicerie = await Epicerie.findOne({ mail }).exec();
 
       if (!foundEpicerie) {
@@ -38,11 +38,13 @@ const login = async (req, res) => {
         return res
           .status(401)
           .json({ message: "Email ou mot de passe incorrect" });
+      
 
       const accessToken = jwt.sign(
         {
           UserInfo: {
             mail: foundEpicerie.mail,
+            id: foundEpicerie._id,
           },
         },
         process.env.ACCESS_TOKEN_SECRET,
@@ -63,10 +65,10 @@ const login = async (req, res) => {
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
-      return res.json({ accessToken });
+      return res.json({ accessToken, id: foundEpicerie._id });
     }
 
-    const match = await bcrypt.compare(password, foundUser.password);
+    const match = await bcrypt.compare(password, foundEpicerie.password);
 
     if (!match)
       return res
@@ -76,7 +78,8 @@ const login = async (req, res) => {
     const accessToken = jwt.sign(
       {
         UserInfo: {
-          mail: foundUser.mail,
+          mail: foundEpicerie.mail,
+          id: foundEpicerie._id
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
@@ -84,7 +87,7 @@ const login = async (req, res) => {
     );
 
     const refreshToken = jwt.sign(
-      { mail: foundUser.mail },
+      { mail: foundEpicerie.mail,  id: foundEpicerie._id },
       process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: "7d" }
     );
@@ -97,7 +100,7 @@ const login = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    return res.json({ accessToken });
+    return res.json({ accessToken,  id: foundEpicerie._id });
   } catch (error) {
     console.error("Erreur lors de la connexion :", error);
     return res

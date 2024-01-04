@@ -60,14 +60,14 @@ function App() {
           <Route path="produit/:name" element={<ShopDetail />} />
 
           {/* Epicerie */}
-          <Route path="/business/epicerie/:idUser" element={<EpicerieHome />} />
-          <Route path="/business/epicerie/:idUser/produit" element={<EpicerieProduct />}/>
-          <Route path="/business/epicerie/:idUser/produit/add" element={<EpicerieProductAdd />}/>
-          <Route path="/business/epicerie/:idUser/produit/update/:product" element={<EpicerieProductUpdate />}/>
-          <Route path="/business/epicerie/:idUser/profil" element={<EpicerieProfile />}/>
-          <Route path="/business/epicerie/:idUser/contact" element={<EpicerieContact />}/>
-          <Route path="/business/epicerie/:idUser/contact/sent" element={<MessageEnvoyéEpicerie />}/>
-          <Route path="/business/epicerie/:idUser/contact/notsent" element={<MessageNonEnvoyéEpicerie />}/>
+          <Route path="/epicerie/:id" element={<EpicerieHome />} />
+          <Route path="/epicerie/:idEpicerie/produit" element={<EpicerieProduct />}/>
+          <Route path="/epicerie/:id/produit/add" element={<EpicerieProductAdd />}/>
+          <Route path="/epicerie/:id/produit/update/:product" element={<EpicerieProductUpdate />}/>
+          <Route path="/epicerie/:id/profil" element={<EpicerieProfile />}/>
+          <Route path="/epicerie/:id/contact" element={<EpicerieContact />}/>
+          <Route path="/epicerie/:id/contact/sent" element={<MessageEnvoyéEpicerie />}/>
+          <Route path="/epicerie/:id/contact/notsent" element={<MessageNonEnvoyéEpicerie />}/>
 
         </Routes>
       </BrowserRouter>

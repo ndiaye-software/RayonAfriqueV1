@@ -209,15 +209,15 @@ export default function EnhancedTable() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [selected, setSelected] = useState([]);
 
-  const { idUser } = useParams();
+  const { idEpicerie } = useParams();
 
   const [formData, setFormData] = useState([]);
 
   useEffect(()=> {
-    fetch(`${hostname}/api/v1/productUser/readUser/${idUser}`)
+    fetch(`${hostname}/api/v1/epicerie/product/read/${idEpicerie}`)
     .then(res => res.json())
     .then(formData => setFormData(formData))
-  }, [idUser])
+  }, [idEpicerie])
 
 
   var rows = formData.map((produit) => {

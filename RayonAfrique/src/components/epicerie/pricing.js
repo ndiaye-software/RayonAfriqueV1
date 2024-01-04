@@ -20,7 +20,6 @@ const tiers = [
     description: [
       "Créez votre espace RayonAfrique+",
       "Poster vos produits sur RayonAfrique",
-      "Contacter les fournisseurs",
     ],
   },
 ];

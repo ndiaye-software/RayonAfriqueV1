@@ -5,10 +5,8 @@ import backgroundImage from "../../../images/background.jpg";
 import Pricing from "../../../components/epicerie/pricing";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
-import market from "../../../images/logoMarket.png";
 import profil from "../../../images/profil.jpg";
 import productEpicerie from "../../../images/productEpicerie.jpg";
-import partnership from "../../../images/partnership.jpg";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -181,30 +179,6 @@ const EpicerieHome = () => {
 
           <Card
             component={Link}
-            to={`market`}
-            sx={{
-              width: 275,
-              transition: "transform 0.3s ease",
-              "&:hover": {
-                transform: "translateY(-10px)",
-                boxShadow: "0px 6px 10px rgba(0, 0, 0, 0.1)",
-                cursor: "pointer",
-              },
-            }}
-          >
-            <CardMedia component="img" height="150" image={`${market}`} />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                MarketPlace
-              </Typography>
-              <Typography variant="body2" color="inherit">
-                Découvrez de nouveaux produits proposez par nos partenaires sur le MarketPlace B2B RayonAfrique !
-              </Typography>
-            </CardContent>
-          </Card>
-
-          <Card
-            component={Link}
             to={`profil`}
             sx={{
               width: 275,
@@ -227,29 +201,6 @@ const EpicerieHome = () => {
             </CardContent>
           </Card>
 
-          <Card
-            component={Link}
-            to={`fournisseur`}
-            sx={{
-              width: 275,
-              transition: "transform 0.3s ease",
-              "&:hover": {
-                transform: "translateY(-10px)",
-                boxShadow: "0px 6px 10px rgba(0, 0, 0, 0.1)",
-                cursor: "pointer",
-              },
-            }}
-          >
-            <CardMedia component="img" height="150" image={`${partnership}`} />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                Trouvez de nouveaux fournisseurs
-              </Typography>
-              <Typography variant="body2" color="inherit">
-                Découvrez de nouvelles marques pour diversfier vos produits !
-              </Typography>
-            </CardContent>
-          </Card>
         </div>
 
         <Typography variant="h1" className={classes.header1}>

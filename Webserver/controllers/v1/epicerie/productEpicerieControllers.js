@@ -51,13 +51,12 @@ const getEpicerieProductByIdEpicerie = asyncHandler(async (req, res) => {
     })
       .populate({
         path: "idProduct",
-        select: "name category label country description image reference", // Sélectionnez les champs que vous voulez afficher
+        select: "name category label country description image reference",
       })
       .lean();
 
     if (!epicerieProduct || epicerieProduct.length === 0) {
       return res
-        .status(404)
         .json({ message: "Aucun produit trouvé pour cette épicerie." });
     }
 
@@ -75,6 +74,8 @@ const getEpicerieProductByIdEpicerie = asyncHandler(async (req, res) => {
       price: epicerieProduct.price,
       available: epicerieProduct.available,
     }));
+
+    console.log(formattedProducts)
 
     res.status(200).json(formattedProducts);
   } catch (error) {
