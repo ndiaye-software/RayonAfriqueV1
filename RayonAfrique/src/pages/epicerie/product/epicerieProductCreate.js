@@ -3,7 +3,7 @@ import { Stack } from "@mui/material";
 import Box from "@mui/material/Box";
 import Navbar from "../../../components/epicerie/navbarEpicerie";
 import Footer from "../../../components/main/footer";
-import { Save } from "@material-ui/icons";
+import { InsertPhoto, Save } from "@material-ui/icons";
 import { TextField, Button, Grid } from "@material-ui/core";
 import { FormControl, InputLabel, Select } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -11,7 +11,7 @@ import { MenuItem } from "@mui/material";
 import InsertImage from "../../../images/insertimage.png";
 
 const useStyles = makeStyles(() => ({
-  Button: {
+  ButtonInsert: {
     fontWeight: "bolder",
     color: "white",
     backgroundColor: "#922B21",
@@ -29,7 +29,7 @@ const useStyles = makeStyles(() => ({
 
 const options = [{ label: "oui" }, { label: "non" }];
 
-function EpicerieProductAdd() {
+function EpicerieProductCreate() {
   const [disponibilité, setDispo] = React.useState("");
 
   const handleChangeDispo = (event) => {
@@ -43,14 +43,13 @@ function EpicerieProductAdd() {
       <div>
         <Navbar />
         <Box sx={{ backgroundColor: "#f9fafb" }}>
-          <Stack direction="column" justifyContent="center">
+          <Stack direction="row" justifyContent="space-between">
             <Box flex={4} p={{ xs: 0, md: 2 }} sx={{ marginBottom: "60px" }}>
               <Box
                 flexWrap="wrap"
-                justifyContent="center"
+                justifyContent="space-evenly"
                 display="flex"
-                flexDirection="column"
-                alignContent="center"
+                flexDirection="row"
                 marginBottom="35px"
                 marginTop="35px"
               >
@@ -64,6 +63,25 @@ function EpicerieProductAdd() {
                         width="350px"
                       />
                     </Box>
+                    <Box justifyContent="center" display="flex" width="350px">
+                      {" "}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        style={{ display: "none" }}
+                        id="contained-button-file"
+                      />
+                      <label htmlFor="contained-button-file">
+                        <Button
+                          fullWidth
+                          className={classes.ButtonInsert}
+                          component="span"
+                          endIcon={<InsertPhoto />}
+                        >
+                          Insérer une photo
+                        </Button>
+                      </label>
+                    </Box>
                   </div>
                 </Box>
 
@@ -74,6 +92,22 @@ function EpicerieProductAdd() {
                   display="flex"
                   gap={2}
                 >
+                  <Grid item xs={12} fullWidth>
+                    <TextField
+                      label="Nom du produit"
+                      variant="outlined"
+                      fullWidth
+                      name="name"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Marque du produit"
+                      variant="outlined"
+                      fullWidth
+                      name="label"
+                    />
+                  </Grid>
                   <Grid item xs={12}>
                     <TextField
                       label="Prix"
@@ -104,13 +138,27 @@ function EpicerieProductAdd() {
                 </Box>
               </Box>
 
-              <Box
-                justifyContent="space-evenly"
-                display="flex"
-                marginTop="30px"
-              >
-                <Button className={classes.Button} endIcon={<Save />}>
-                  Ajouter
+              <Box justifyContent="center" display="flex">
+                <Box
+                  sx={{
+                    textAlign: "center",
+                    width: { xs: "250px", sm: "500px" },
+                  }}
+                >
+                  <TextField
+                    label="Description"
+                    variant="outlined"
+                    fullWidth
+                    name="Description"
+                    multiline
+                    minRows={5}
+                  />
+                </Box>
+              </Box>
+
+              <Box justifyContent="center" display="flex" marginTop="30px">
+                <Button className={classes.ButtonRDV} endIcon={<Save />}>
+                  Enregistrer
                 </Button>
               </Box>
             </Box>
@@ -122,4 +170,4 @@ function EpicerieProductAdd() {
   );
 }
 
-export default EpicerieProductAdd;
+export default EpicerieProductCreate;

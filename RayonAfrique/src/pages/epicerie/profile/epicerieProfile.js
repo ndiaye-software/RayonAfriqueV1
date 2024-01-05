@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Stack } from "@mui/material";
-import Box from "@mui/material/Box";
+import { Box, Stack } from "@mui/material";
 import Navbar from "../../../components/epicerie/navbarEpicerie";
 import Footer from "../../../components/main/footer";
 import { InsertPhoto, Save } from "@material-ui/icons";
@@ -109,7 +108,7 @@ const useStyles = makeStyles((theme) => ({
 function EpicerieProfile() {
   const classes = useStyles();
 
-  const { idUser } = useParams();
+  const { id } = useParams();
 
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -126,7 +125,7 @@ function EpicerieProfile() {
   });
 
   useEffect(() => {
-    fetch(`${hostname}/api/v1/user/readUser/${idUser}`)
+    fetch(`${hostname}/api/v1/user/readUser/${id}`)
       .then((res) => res.json())
       .then((userData) => {
         setFormData(userData);
@@ -134,22 +133,19 @@ function EpicerieProfile() {
       .catch((err) => {
         console.log(err);
       });
-  }, [idUser]);
+  }, [id]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await fetch(
-        `${hostname}/api/v1/user/update/${idUser}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ ...formData }),
-        }
-      );
+      const response = await fetch(`${hostname}/api/v1/user/update/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...formData }),
+      });
 
       if (response.ok) {
         setResponse(true);
@@ -208,7 +204,12 @@ function EpicerieProfile() {
         </section>
         <Box sx={{ backgroundColor: "#f9fafb" }}>
           <Stack direction="row" justifyContent="space-between">
-            <Box flex={4} p={{ xs: 0, md: 2 }} sx={{ marginBottom: "60px" }} onSubmit={handleSubmit}>
+            <Box
+              flex={4}
+              p={{ xs: 0, md: 2 }}
+              sx={{ marginBottom: "60px" }}
+              onSubmit={handleSubmit}
+            >
               <Box
                 flexWrap="wrap"
                 justifyContent="space-evenly"
@@ -347,7 +348,12 @@ function EpicerieProfile() {
               </Box>
 
               <Box justifyContent="center" display="flex" marginTop="30px">
-                <Button className={classes.Button} endIcon={<Save />}>
+                <Button
+                  fullWidth
+                  className={classes.Button}
+                  component="span"
+                  endIcon={<Save />}
+                >
                   Enregistrer
                 </Button>
               </Box>
