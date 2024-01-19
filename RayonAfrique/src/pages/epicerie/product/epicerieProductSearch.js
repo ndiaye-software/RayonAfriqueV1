@@ -3,12 +3,11 @@ import Sidebar from "../../../components/main/SidebarShop";
 import Navbar from "../../../components/epicerie/navbarEpicerie";
 import Footer from "../../../components/main/footer";
 import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Stack } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
+import { Grid, Stack, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import { Button } from "@material-ui/core";
 import Autocomplete from "@mui/material/Autocomplete";
-import Product from "../../../components/main/product";
+import Product from "../../../components/epicerie/product";
 import TextField from "@mui/material/TextField";
 import hostname from "../../../hostname";
 
@@ -26,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 
-  ButtonSearch: {
+  Button: {
     fontWeight: "bolder",
     color: "white",
     backgroundColor: "#922B21",
@@ -63,10 +62,13 @@ const useStyles = makeStyles((theme) => ({
 
 function EpicerieProductSearch() {
   const [searchTerm, setSearchTerm] = useState("");
+
   const [data, setData] = useState([]);
+
   const [productNames, setProductNames] = useState([]);
+
   useEffect(() => {
-    fetch(`${hostname}/api/v1/user/shop/read`)
+    fetch(`${hostname}/api/v1/epicerie/product/read`)
       .then((res) => res.json())
       .then((data) => {
         setData(data);
@@ -126,10 +128,9 @@ function EpicerieProductSearch() {
                   <Grid>
                     <Box>
                       <Autocomplete
+                        onSelect={(event) => setSearchTerm(event.target.value)}
                         disablePortal
-                        noOptionsText="Produit non disponible, Créez le produit"
                         id="search"
-                        onChange={(event)=> setSearchTerm(event.target.value)}
                         options={productNames}
                         sx={{
                           "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
@@ -142,31 +143,30 @@ function EpicerieProductSearch() {
                           width: 300,
                         }}
                         renderInput={(params) => (
-                          <TextField {...params} label="Chercher le produit" />
+                          <TextField
+                            {...params}
+                            label="Chercher le produit"
+                            onChange={(event) =>
+                              setSearchTerm(event.target.value)
+                            }
+                          />
                         )}
                       />
                     </Box>
                   </Grid>
-                  <Grid className={classes.buttonContainer}>
-                    <Button
-                      className={classes.ButtonSearch}
-                      variant="contained"
-                      endIcon={<SearchIcon />}
-                    >
-                      Rechercher
-                    </Button>
-                  </Grid>
                 </Box>
               </Box>
               <Grid xs={12} container spacing={3}>
-                {
-                  visibleProducts
-                    .filter((val) => {
-                    if (searchTerm === "") {                  
-                      return val;
-                    }else if(val.name.toLowerCase().includes(searchTerm.toLowerCase())){
-                    return val;
-                  }
+                {visibleProducts
+                  .filter((val) => {
+                    if (searchTerm === "") {
+                      return true;
+                    } else if (val.name.includes(searchTerm)) {
+                      return true;
+                    } else {
+                      // Si le nom du produit ne contient pas le terme de recherche
+                      return false;
+                    }
                   })
                   .map((val, index) => (
                     <Grid
@@ -186,11 +186,37 @@ function EpicerieProductSearch() {
                         image={val.image}
                         name={val.name}
                         description={val.description}
-                        marque = {val.labelName}
-                        id={val.id}
+                        marque={val.labelName}
+                        id={val._id}
                       />
+                      <Typography>{val.length}</Typography>
                     </Grid>
-                  ))}
+                  ))
+                  .concat(
+                    searchTerm !== "" &&
+                      visibleProducts.every(
+                        (val) => !val.name.includes(searchTerm)
+                      ) ? (
+                      // Si aucun produit ne correspond au terme de recherche
+                      <Grid
+                        display="flex"
+                        padding="0px"
+                        flexDirection="column"
+                        alignItems="center"
+                        justifyContent="center"
+                        textAlign="center"
+                        item
+                        xs={12}
+                      >
+                        <Typography marginBottom="15px">
+                          Le produit que vous recherchez n'existe pas encore, Créez le !
+                        </Typography>
+                        <Button className={classes.Button}>
+                          Créer un produit
+                        </Button>
+                      </Grid>
+                    ) : null
+                  )}
               </Grid>
               <Box
                 sx={{

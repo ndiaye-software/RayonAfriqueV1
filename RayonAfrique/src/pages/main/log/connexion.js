@@ -48,10 +48,6 @@ export default function Connexion() {
         const data = await response.json();
         const { id } = data;
 
-        // Do something with the user ID, e.g., store it in a state or context
-        // and then redirect to the desired route
-        console.log("User ID:", id);
-
         // Redirect to the "/epicerie/:id" route
         navigate(`/epicerie/${id}`);
       } else {

@@ -30,6 +30,7 @@ import MessageNonEnvoyéEpicerie from "./pages/epicerie/contact/message_not_sent
 import Test from "./pages/test";
 import Test2 from "./pages/test2";
 import Test3 from "./pages/test3";
+import EpicerieProductPresentation from "./pages/epicerie/product/epicerieProductPresentation";
 
 
 function App() {
@@ -66,6 +67,8 @@ function App() {
           <Route path="/epicerie/:idEpicerie/produit" element={<EpicerieProduct />}/>
           <Route path="/epicerie/:id/produit/add" element={<EpicerieProductAdd />}/>
           <Route path="/epicerie/:id/produit/search" element={<EpicerieProductSearch />}/>
+          <Route path="/epicerie/:id/produit/search/:idProduct/" element={<EpicerieProductPresentation />}/>
+          <Route path="/epicerie/:id/produit/search/:idProduct/add" element={<EpicerieProductAdd/>}/>
           <Route path="/epicerie/:id/produit/update/:product" element={<EpicerieProductUpdate />}/>
           <Route path="/epicerie/:id/profil" element={<EpicerieProfile />}/>
           <Route path="/epicerie/:id/contact" element={<EpicerieContact />}/>

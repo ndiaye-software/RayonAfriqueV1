@@ -4,7 +4,6 @@ import Navbar from "../../../components/main/navbar";
 import Footer from "../../../components/main/footer";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Stack} from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import Box from "@mui/material/Box";
 import { Button } from "@material-ui/core";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -64,6 +63,7 @@ const useStyles = makeStyles((theme) => ({
 function Shop() {
 
   const [data, setData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [productNames, setProductNames] = useState([]);
   useEffect(() => {
     fetch(`${hostname}/api/v1/user/shop/read`)
@@ -126,6 +126,7 @@ function Shop() {
                   <Grid>
                     <Box>
                       <Autocomplete
+                        onSelect={(event) => setSearchTerm(event.target.value)}
                         disablePortal
                         noOptionsText="Pas de produits disponible"
                         id="search"
@@ -141,46 +142,50 @@ function Shop() {
                           width:300
                         }}
                         renderInput={(params) => (
-                          <TextField {...params} label="Produits" />
+                          <TextField {...params} label="Produits" onChange={(event) => setSearchTerm(event.target.value)}/>
                         )}
                       />
                     </Box>
                   </Grid>
-                  <Grid className={classes.buttonContainer}>
-                    <Button
-                      className={classes.ButtonSearch}
-                      variant="contained"
-                      endIcon={<SearchIcon />}
-                    >
-                      Rechercher
-                    </Button>
-                  </Grid>
                 </Box>
               </Box>
               <Grid xs={12} container spacing={3}>
-                {visibleProducts.map((product, index) => (
-                  <Grid
-                    display="flex"
-                    padding="0px"
-                    flexDirection="column"
-                    alignItems="center"
-                    item
-                    xs={12}
-                    sm={12}
-                    md={6}
-                    lg={4}
-                    key={index}
-                  >
-                    <Product
-                      key={index}
-                      image={product.image}
-                      name={product.name}
-                      description={product.description}
-                      marque = {product.labelName}
-                      id={product.id}
-                    />
-                  </Grid>
-                ))}
+                {visibleProducts
+                  .filter((val) => {
+                    if (searchTerm === "") {
+                      return true;
+                    } else if (
+                      val.name.includes(searchTerm)
+                    ) {
+                      return true;
+                    }
+                    return false;
+                  })
+                  .map((val, index) => {
+                    return (
+                      <Grid
+                        display="flex"
+                        padding="0px"
+                        flexDirection="column"
+                        alignItems="center"
+                        item
+                        xs={12}
+                        sm={12}
+                        md={6}
+                        lg={4}
+                        key={index}
+                      >
+                        <Product
+                          key={index}
+                          image={val.image}
+                          name={val.name}
+                          description={val.description}
+                          marque={val.labelName}
+                          id={val.id}
+                        />
+                      </Grid>
+                    );
+                  })}
               </Grid>
               <Box
                 sx={{

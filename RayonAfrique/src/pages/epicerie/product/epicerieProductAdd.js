@@ -1,14 +1,15 @@
-import React from "react";
-import { Stack } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Stack, Tooltip, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Navbar from "../../../components/epicerie/navbarEpicerie";
 import Footer from "../../../components/main/footer";
-import { Save } from "@material-ui/icons";
+import { Add } from "@material-ui/icons";
 import { TextField, Button, Grid } from "@material-ui/core";
-import { FormControl, InputLabel, Select } from "@material-ui/core";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
-import { MenuItem } from "@mui/material";
-import InsertImage from "../../../images/insertimage.png";
+import hostname from "../../../hostname";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles(() => ({
   Button: {
@@ -27,13 +28,94 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const options = [{ label: "oui" }, { label: "non" }];
+const options = [
+  { label: "oui", value: true },
+  { label: "non", value: false },
+];
 
 function EpicerieProductAdd() {
+  const navigate = useNavigate();
+
+  const [data, setData] = useState([]);
+
+  const { idProduct } = useParams();
+  const { idEpicerie } = useParams();
+
+  useEffect(() => {
+    fetch(`${hostname}/api/v1/epicerie/product/read/${idProduct}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setData(data);
+      })
+      .catch((err) => console.log(err));
+  }, [idProduct]);
+
   const [disponibilité, setDispo] = React.useState("");
 
   const handleChangeDispo = (event) => {
-    setDispo(event.target.value);
+    const value = event.target.value;
+    setDispo(value);
+
+    // Conversion des valeurs "oui" ou "non" en true ou false
+    const booleanValue = value === "oui";
+
+    // Appel de la fonction pour mettre à jour formData
+    updateFormData("available", booleanValue);
+  };
+
+  const [formData, setFormData] = useState({
+    idProduct: idProduct,
+    price: "",
+    available: "",
+  });
+
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const updateFormData = (name, value) => {
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const response = await fetch(
+        `${hostname}/api/v1/epicerie/productEpicerie/create/${idEpicerie}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        navigate(`/success`);
+      } else {
+        const data = await response.json();
+        if (data.message) {
+          setErrorMessage(data.message);
+        } else {
+          setErrorMessage("Erreur lors de la création du produit");
+        }
+      }
+    } catch (error) {
+      console.error("Erreur lors de la création du produit :", error);
+    }
   };
 
   const classes = useStyles();
@@ -53,13 +135,16 @@ function EpicerieProductAdd() {
                 alignContent="center"
                 marginBottom="35px"
                 marginTop="35px"
+                component="form"
+                onSubmit={handleSubmit}
+                noValidate
               >
                 <Box>
                   <div>
                     <Box>
                       <img
-                        src={InsertImage}
-                        alt="insérée"
+                        src={data.image}
+                        alt={data.name}
                         height="300px"
                         width="350px"
                       />
@@ -74,43 +159,63 @@ function EpicerieProductAdd() {
                   display="flex"
                   gap={2}
                 >
+                  <Box textAlign="center">
+                    <Typography variant="h6">
+                      {data.name} - {data.labelName}
+                    </Typography>
+                  </Box>
+
                   <Grid item xs={12}>
                     <TextField
                       label="Prix"
                       variant="outlined"
                       fullWidth
                       name="price"
+                      placeholder="ex : 1.11"
+                      id="price"
+                      value={formData.price}
+                      onChange={handleChange}
                     />
                   </Grid>
                   <Grid item xs={12}>
-                    <FormControl fullWidth variant="outlined">
-                      <InputLabel>Disponibilité</InputLabel>
-                      <Select
-                        value={disponibilité}
-                        label="Disponibilité"
-                        onChange={handleChangeDispo}
-                        required
-                      >
-                        {options?.map((option) => {
-                          return (
-                            <MenuItem key={option.label} value={option.label}>
-                              {option.label ?? option.label}
-                            </MenuItem>
-                          );
-                        })}
-                      </Select>
-                    </FormControl>
+                    <Tooltip title="Marquez comme disponible sur votre épicerie">
+                      <FormControl fullWidth variant="outlined">
+                        <InputLabel>Disponibilité</InputLabel>
+                        <Select
+                          value={disponibilité}
+                          label="Disponibilité"
+                          onChange={handleChangeDispo}
+                          required
+                        >
+                          {options?.map((option) => {
+                            return (
+                              <MenuItem key={option.label} value={option.label}>
+                                {option.label ?? option.label}
+                              </MenuItem>
+                            );
+                          })}
+                        </Select>
+                      </FormControl>
+                    </Tooltip>
                   </Grid>
                 </Box>
               </Box>
-
+              {errorMessage && (
+                <Typography variant="body1" color="error" gutterBottom>
+                  {errorMessage}
+                </Typography>
+              )}
               <Box
                 justifyContent="space-evenly"
                 display="flex"
                 marginTop="30px"
               >
-                <Button className={classes.Button} endIcon={<Save />}>
-                  Ajouter
+                <Button
+                  type="submit"
+                  className={classes.Button}
+                  endIcon={<Add />}
+                >
+                  Ajouter ce produit
                 </Button>
               </Box>
             </Box>
