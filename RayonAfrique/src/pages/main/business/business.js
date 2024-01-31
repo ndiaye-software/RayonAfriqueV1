@@ -5,17 +5,37 @@ import backgroundImage from "../../../images/background.jpg";
 import manage from "../../../images/manage.jpg";
 import popularity from "../../../images/popularity.jpg";
 import partnership from "../../../images/partnership.jpg";
-import team from "../../../images/team.svg";
 import contact from "../../../images/contact.svg";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Typography } from "@material-ui/core";
-import { Grid } from "@mui/material";
+import { Grid, Box } from "@mui/material";
 import Card from "@mui/material/Card";
 import StartOutlinedIcon from "@mui/icons-material/StartOutlined";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
+import Caissier from "../../../images/Caissier.jpg";
+import Business from "../../../images/business.jpg";
+import {
+  Accessibility,
+  Handshake,
+  KeyboardDoubleArrowDown,
+  ShareLocation,
+  Visibility,
+} from "@mui/icons-material";
 
 const useStyles = makeStyles((theme) => ({
+  header: {
+    fontSize: "3vw",
+    fontWeight: "bolder",
+    color: "black",
+    textAlign: "center",
+    backgroundColor: "#f9fafb",
+    paddingTop: "20px",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "20px",
+    },
+  },
+
   header1: {
     fontSize: "3vw",
     fontWeight: "bolder",
@@ -30,6 +50,7 @@ const useStyles = makeStyles((theme) => ({
 
   header2: {
     fontSize: "2vw",
+    backgroundColor:"#f9fafb",
     fontWeight: "bolder",
     color: "black",
     textAlign: "center",
@@ -122,9 +143,21 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bolder",
     color: "white",
     backgroundColor: "#922B21",
-    width: "80%",
-    minWidth: "300px",
-    maxWidth: "450px",
+    width: "300px",
+    marginTop: "20px",
+    padding: "20px",
+    fontSize: "12px",
+
+    "&:hover": {
+      backgroundColor: "#A63F35",
+    },
+  },
+
+  InscriptionButton: {
+    fontWeight: "bolder",
+    color: "white",
+    backgroundColor: "#922B21",
+    width: "200px",
     marginTop: "20px",
     padding: "20px",
     fontSize: "12px",
@@ -171,13 +204,13 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-evenly",
-    backgroundColor: "white",
+    backgroundColor: "#f9fafb",
     padding: "65px",
     gap: "65px",
   },
 }));
 
-const Business = () => {
+const Professionnel = () => {
   const classes = useStyles();
 
   return (
@@ -188,7 +221,7 @@ const Business = () => {
         <div className={classes.bannerImg}></div>
         <div className={classes.bannerText}>
           <Typography variant="h1" className={classes.section1_div_h1}>
-            RayonAfrique+
+            RayonAfrique
           </Typography>
           <Typography variant="h3" className={classes.section1_div_h3}>
             Lier de nouveaux partenariats.
@@ -222,7 +255,7 @@ const Business = () => {
 
       <div>
         <Typography variant="h1" className={classes.header1}>
-          RayonAfrique+
+          RayonAfrique
         </Typography>
 
         <div className={classes.section2}>
@@ -294,23 +327,268 @@ const Business = () => {
       </div>
 
       <div>
-        <Typography variant="h1" className={classes.header2}>
-          Rejoignez-nous !
+        <Typography variant="h1" className={classes.header}>
+          Professionnels
         </Typography>
-        <div className={classes.section3}>
-          <div>
-            <img src={`${team}`} height="200px" width="250px" alt="team" />
-            <Grid className={classes.buttonContainer}>
+        <div className={classes.section2}>
+          <Card sx={{ maxWidth: 425 }}>
+            <CardMedia component="img" height="250" image={`${Caissier}`} />
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                Epicerie
+              </Typography>
+              <Typography variant="body2" color="inherit">
+                Vous êtes une épicerie spécialisée sur la vente produits
+                alimentaires d'origines africains ? Faites-vous connaître et
+                attirez de nouveaux clients grâce à notre plateforme !
+                <Box paddingTop="20px" paddingLeft="20px">
+                  <Grid container>
+                    <Grid
+                      item
+                      xs={2}
+                      variant="body2"
+                      color="inherit"
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      <Accessibility
+                        sx={{
+                          backgroundColor: "#922B21",
+                          borderRadius: "50%",
+                          padding: "5px",
+                          fontSize: "35px",
+                          color: "white",
+                        }}
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      xs={10}
+                      variant="body2"
+                      color="inherit"
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      <Typography variant="body2" color="inherit">
+                        Gagner en clientèle en rendant votre épicerie plus
+                        accessible
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                  <Grid container paddingTop="20px">
+                    <Grid
+                      item
+                      xs={2}
+                      variant="body2"
+                      color="inherit"
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      <ShareLocation
+                        sx={{
+                          backgroundColor: "#922B21",
+                          borderRadius: "50%",
+                          padding: "5px",
+                          fontSize: "35px",
+                          color: "white",
+                        }}
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      xs={10}
+                      variant="body2"
+                      color="inherit"
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      <Typography variant="body2" color="inherit">
+                        Exposer votre épicerie aux amateurs de produits
+                        africains
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                  <Grid container paddingTop="20px">
+                    <Grid
+                      item
+                      xs={2}
+                      variant="body2"
+                      color="inherit"
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      <Handshake
+                        sx={{
+                          backgroundColor: "#922B21",
+                          borderRadius: "50%",
+                          padding: "5px",
+                          fontSize: "35px",
+                          color: "white",
+                        }}
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      xs={10}
+                      variant="body2"
+                      color="inherit"
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      <Typography variant="body2" color="inherit">
+                        Nouez de nouveaux partenariats avec les marques de
+                        produits africains
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Typography>
+              <Grid
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
+              alignContent="center"
+              alignItems="center"
+              paddingBottom="30px"
+            >
               {" "}
               <Button
-                className={classes.Button}
-                href="/inscription/business"
+                startIcon={<KeyboardDoubleArrowDown />}
+                className={classes.InscriptionButton}
+                href="/inscription/epicerie"
                 variant="contained"
               >
-                S'inscrire sur RayonAfrique+
+                S'inscrire
               </Button>{" "}
             </Grid>
-          </div>
+            </CardContent>
+          </Card>
+          <Card sx={{ maxWidth: 425 }}>
+            <CardMedia component="img" height="250" image={`${Business}`} />
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                Marque
+              </Typography>
+              <Typography variant="body2" color="inherit">
+                Prêt à faire briller votre marque de produits africains ?
+                Partagez-la sur notre plateforme et attirez une toute nouvelle
+                clientèle !
+                <Box paddingTop="20px" paddingLeft="20px">
+                  <Grid container>
+                    <Grid
+                      item
+                      xs={2}
+                      variant="body2"
+                      color="inherit"
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      <Accessibility
+                        sx={{
+                          backgroundColor: "#922B21",
+                          borderRadius: "50%",
+                          padding: "5px",
+                          fontSize: "35px",
+                          color: "white",
+                        }}
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      xs={10}
+                      variant="body2"
+                      color="inherit"
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      <Typography variant="body2" color="inherit">
+                        Rendez l'achat de vos produits plus facile en les
+                        rendant plus accessibles
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                  <Grid container paddingTop="20px">
+                    <Grid
+                      item
+                      xs={2}
+                      variant="body2"
+                      color="inherit"
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      <Visibility
+                        sx={{
+                          backgroundColor: "#922B21",
+                          borderRadius: "50%",
+                          padding: "5px",
+                          fontSize: "35px",
+                          color: "white",
+                        }}
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      xs={10}
+                      variant="body2"
+                      color="inherit"
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      <Typography variant="body2" color="inherit">
+                        Gangner en visibilité en promouvant vos produits
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                  <Grid container paddingTop="20px">
+                    <Grid
+                      item
+                      xs={2}
+                      variant="body2"
+                      color="inherit"
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      <Handshake
+                        sx={{
+                          backgroundColor: "#922B21",
+                          borderRadius: "50%",
+                          padding: "5px",
+                          fontSize: "35px",
+                          color: "white",
+                        }}
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      xs={10}
+                      variant="body2"
+                      color="inherit"
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      <Typography variant="body2" color="inherit">
+                        Nouez des partenariats avec nos épiceries partenaires
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Typography>
+            </CardContent>
+            <Grid
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
+              alignContent="center"
+              alignItems="center"
+              paddingBottom="30px"
+            >
+              {" "}
+              <Button
+                startIcon={<KeyboardDoubleArrowDown />}
+                className={classes.InscriptionButton}
+                href="/inscription/marque"
+                variant="contained"
+              >
+                S'inscrire
+              </Button>{" "}
+            </Grid>
+          </Card>
+        </div>
+      </div>
+
+      <div>
+        <Typography variant="h1" className={classes.header2}>
+          Contactez nous !
+        </Typography>
+        <div className={classes.section3}>
           <div>
             <img
               src={`${contact}`}
@@ -337,4 +615,4 @@ const Business = () => {
   );
 };
 
-export default Business;
+export default Professionnel;

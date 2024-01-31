@@ -50,23 +50,14 @@ function EpicerieProductAdd() {
       .catch((err) => console.log(err));
   }, [idProduct]);
 
-  const [disponibilité, setDispo] = React.useState("");
+  const [disponibilité, setDispo] = React.useState(options[0]?.label || "");
 
-  const handleChangeDispo = (event) => {
-    const value = event.target.value;
-    setDispo(value);
-
-    // Conversion des valeurs "oui" ou "non" en true ou false
-    const booleanValue = value === "oui";
-
-    // Appel de la fonction pour mettre à jour formData
-    updateFormData("available", booleanValue);
-  };
+  
 
   const [formData, setFormData] = useState({
     idProduct: idProduct,
     price: "",
-    available: "",
+    available: disponibilité === "oui",
   });
 
   const [errorMessage, setErrorMessage] = useState("");
@@ -86,6 +77,17 @@ function EpicerieProductAdd() {
     });
   };
 
+  const handleChangeDispo = (event) => {
+    const value = event.target.value;
+    setDispo(value);
+  
+    // Utilisez la valeur de l'option "value"
+    const booleanValue = options.find(option => option.label === value)?.value || false;
+  
+    // Appel de la fonction pour mettre à jour formData
+    updateFormData("available", booleanValue);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -99,7 +101,7 @@ function EpicerieProductAdd() {
           },
           body: JSON.stringify(formData),
         }
-      );
+      );      
 
       if (response.ok) {
         const data = await response.json();

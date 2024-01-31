@@ -13,7 +13,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Drawer from "@mui/material/Drawer";
 import Divider from "@mui/material/Divider";
 import { makeStyles } from "@material-ui/core/styles";
-import logo from "../../images/logo.png";
+import logo from "../../images/rayonafrique.svg";
 import { BookmarkBorderOutlined, PersonOutline } from "@material-ui/icons";
 import Badge from "@mui/material/Badge";
 import Tooltip from "@mui/material/Tooltip";
@@ -41,6 +41,16 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "13px",
     textDecoration: "none",
     color: "black",
+    "&:hover": { color: "#922B21", backgroundColor: "white" },
+  },
+
+  buttonpro: {
+    flexGrow: 1,
+    fontWeight: 700,
+    fontSize: "13px",
+    textDecoration: "none",
+    color: "white",
+    backgroundColor: "#922B21",
     "&:hover": { color: "#922B21", backgroundColor: "white" },
   },
 }));
@@ -150,7 +160,7 @@ export default function PrimarySearchAppBar(props) {
             sx={{ display: { xs: "none", md: "flex" } }}
           >
             <a href="/">
-              <img height="50px" src={`${logo}`} alt="logo" />
+              <img height="90px" src={`${logo}`} alt="logo" />
             </a>
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
@@ -177,11 +187,11 @@ export default function PrimarySearchAppBar(props) {
               Contact
             </Button>
             <Button
-              className={classes.button}
+              className={classes.buttonpro}
               href="/business"
               sx={{ color: "black" }}
             >
-              Business
+              Professionnel
             </Button>
             <IconButton
               className={classes.button}
