@@ -14,7 +14,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import { visuallyHidden } from "@mui/utils";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
@@ -223,15 +223,13 @@ export default function EnhancedTable() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [selected, setSelected] = useState([]);
 
-  const { idEpicerie } = useParams();
-
   const [formData, setFormData] = useState([]);
 
   useEffect(()=> {
-    fetch(`${hostname}/api/v1/epicerie/productEpicerie/read/${idEpicerie}`)
+    fetch(`${hostname}/api/v1/epicerie/productEpicerie/read`)
     .then(res => res.json())
     .then(formData => setFormData(formData))
-  }, [idEpicerie])
+  })
 
 
   var rows = formData.map((produit) => {

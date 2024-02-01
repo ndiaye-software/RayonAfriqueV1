@@ -63,8 +63,8 @@ function App() {
           <Route path="produit/:name" element={<ShopDetail />} />
 
           {/* Epicerie */}
-          <Route path="/epicerie/:id" element={<EpicerieHome />} />
-          <Route path="/epicerie/:idEpicerie/produit" element={<EpicerieProduct />}/>
+          <Route path="/epicerie/" element={<EpicerieHome />} />
+          <Route path="/epicerie/produit" element={<EpicerieProduct />}/>
           <Route path="/epicerie/:id/produit/add" element={<EpicerieProductAdd />}/>
           <Route path="/epicerie/:id/produit/search" element={<EpicerieProductSearch />}/>
           <Route path="/epicerie/:id/produit/search/:idProduct/" element={<EpicerieProductPresentation />}/>

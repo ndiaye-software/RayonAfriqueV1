@@ -2,6 +2,7 @@ const EpicerieProduct = require("../../../models/EpicerieProduct");
 const Epicerie = require("../../../models/Epicerie");
 const Product = require("../../../models/Product");
 const asyncHandler = require("express-async-handler");
+const authenticateUser = require('../../../middleware/verifyJWT');
 
 const createEpicerieProduct = asyncHandler(async (req, res) => {
   const { idEpicerie } = req.params;
@@ -34,18 +35,26 @@ const createEpicerieProduct = asyncHandler(async (req, res) => {
   }
 });
 
-const getEpicerieProductByIdEpicerie = asyncHandler(async (req, res) => {
+const getEpicerieProductByIdEpicerie = asyncHandler( authenticateUser, async (req, res) => {
   try {
-    const { idEpicerie } = req.params;
+    const { id } = req.user.UserInfo;
 
-    const epicerie = await Epicerie.findById(idEpicerie);
+    if (!id) {
+      return console.log("No fucking id");
+    }
+
+    if (id) {
+      return console.log("there is an id");
+    }
+
+    const epicerie = await Epicerie.findById(id);
 
     if (!epicerie) {
       return res.status(404).json({ error: "Epicerie non trouvé." });
     }
 
     const epicerieProduct = await EpicerieProduct.find({
-      idEpicerie: idEpicerie,
+      id: id,
     })
       .populate({
         path: "idProduct",
@@ -63,8 +72,8 @@ const getEpicerieProductByIdEpicerie = asyncHandler(async (req, res) => {
 
     const formattedProducts = epicerieProduct.map((epicerieProduct) => ({
       _id: epicerieProduct._id,
-      idEpicerie: epicerieProduct.idEpicerie,
-      idEpicerieProduct: epicerieProduct.idProduct._id,
+      id: epicerieProduct.id,
+      idProduct: epicerieProduct.idProduct._id,
       name: epicerieProduct.idProduct.name,
       reference: epicerieProduct.idProduct.reference,
       description: epicerieProduct.idProduct.description,

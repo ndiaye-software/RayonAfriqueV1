@@ -189,7 +189,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-start",
   },
 
-  section2: {
+  section: {
     display: "flex",
     flexDirection: "row",
     flexWrap: "wrap",
@@ -197,6 +197,16 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#f9fafb",
     padding: "65px",
     gap: "15px",
+  },
+
+  section2: {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-evenly",
+    backgroundColor: "#f9fafb",
+    padding: "30px",
+    gap: "35px",
   },
 
   section3: {
@@ -258,7 +268,7 @@ const Professionnel = () => {
           RayonAfrique
         </Typography>
 
-        <div className={classes.section2}>
+        <div className={classes.section}>
           <Card
             sx={{
               maxWidth: 275,

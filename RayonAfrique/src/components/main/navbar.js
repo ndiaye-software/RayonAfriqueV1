@@ -70,7 +70,7 @@ export default function PrimarySearchAppBar(props) {
         sx={{ padding: 2, color: "#922B21", fontWeight: "bold" }}
       >
         <a href="/">
-          <img height="50px" src={`${logo}`} alt="logo" />
+          <img height="90px" src={`${logo}`} alt="logo" />
         </a>
       </Typography>
       <Divider />
@@ -102,14 +102,14 @@ export default function PrimarySearchAppBar(props) {
         <a href="/business">
           <ListItem disablePadding>
             <ListItemButton sx={{ textAlign: "left" }}>
-              <ListItemText sx={{ color: "black" }} primary="Business" />
+              <ListItemText sx={{ color: "black" }} primary="Professionnel" />
             </ListItemButton>
           </ListItem>
         </a>
 
         <a href="/connexion">
           <ListItem disablePadding>
-            <ListItemButton sx={{ textAlign: "left" }}>
+            <ListItemButton sx={{ textAlign: "left", color:"black" }}>
               <PersonOutline />
             </ListItemButton>
           </ListItem>
@@ -117,7 +117,7 @@ export default function PrimarySearchAppBar(props) {
 
         <a href="/cart">
           <ListItem disablePadding>
-            <ListItemButton sx={{ textAlign: "left" }}>
+            <ListItemButton sx={{ textAlign: "left", color:"black" }}>
               <BookmarkBorderOutlined />
             </ListItemButton>
           </ListItem>

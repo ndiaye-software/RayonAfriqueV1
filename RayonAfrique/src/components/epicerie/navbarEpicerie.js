@@ -14,7 +14,7 @@ import Drawer from "@mui/material/Drawer";
 import Divider from "@mui/material/Divider";
 import { makeStyles } from "@material-ui/core/styles";
 import { LogoutOutlined } from "@mui/icons-material";
-import logo from "../../images/logopro.png";
+import logo from "../../images/rayonafrique.svg";
 import { useParams } from "react-router-dom";
 
 const drawerWidth = 300;
@@ -60,7 +60,7 @@ export default function PrimarySearchAppBar(props) {
         sx={{ padding: 2, color: "#922B21", fontWeight: "bold" }}
       >
         <a href={`/epicerie/${idEpicerie}`}>
-          <img height="50px" src={`${logo}`} alt="logo" />
+          <img height="90px" src={`${logo}`} alt="logo" />
         </a>
       </Typography>
       <Divider />
@@ -135,7 +135,7 @@ export default function PrimarySearchAppBar(props) {
             sx={{ display: { xs: "none", md: "flex" } }}
           >
             <a href={`/epicerie/${idEpicerie}`}>
-              <img height="50px" src={`${logo}`} alt="logo" />
+              <img height="90px" src={`${logo}`} alt="logo" />
             </a>
           </Typography>
           <Box sx={{ flexGrow: 1 }} />

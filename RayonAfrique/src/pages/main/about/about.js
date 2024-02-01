@@ -28,6 +28,9 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "500px",
     maxHeight: "300px",
     borderRadius: "10px",
+    [theme.breakpoints.down("xs")]: {
+      maxWidth:"300px"
+    },
   },
 }));
 

@@ -45,11 +45,11 @@ export default function Connexion() {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        const { id } = data;
+        //const data = await response.json();
+        //const { id } = data.id;
 
         // Redirect to the "/epicerie/:id" route
-        navigate(`/epicerie/${id}`);
+        navigate(`/epicerie`);
       } else {
         const data = await response.json();
         if (data.message) {

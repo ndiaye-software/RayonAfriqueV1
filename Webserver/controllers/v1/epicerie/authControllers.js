@@ -63,6 +63,7 @@ const login = async (req, res) => {
       {
         EpicerieInfo: {
           mail: foundEpicerie.mail,
+          id : foundEpicerie._id
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
@@ -70,7 +71,7 @@ const login = async (req, res) => {
     );
 
     const refreshToken = jwt.sign(
-      { mail: foundEpicerie.mail },
+      { mail: foundEpicerie.mail, id : foundEpicerie._id },
       process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: "7d" }
     );

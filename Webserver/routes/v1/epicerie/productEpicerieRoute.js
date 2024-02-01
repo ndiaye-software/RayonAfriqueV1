@@ -4,7 +4,7 @@ const epicerieroductController = require("../../../controllers/v1/epicerie/produ
 
 
 router
-    .route("/read/:idEpicerie")
+    .route("/read")
     .get(epicerieroductController.getEpicerieProductByIdEpicerie);
 
 router

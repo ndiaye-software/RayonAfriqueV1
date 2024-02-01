@@ -138,7 +138,7 @@ const EpicerieHome = () => {
         <div className={classes.bannerImg}></div>
         <div className={classes.bannerText}>
           <Typography variant="h1" className={classes.section1_div_h1}>
-            RayonAfrique+
+            RayonAfrique
           </Typography>
         </div>
       </section>
