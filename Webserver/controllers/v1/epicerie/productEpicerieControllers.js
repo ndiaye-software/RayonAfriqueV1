@@ -35,17 +35,15 @@ const createEpicerieProduct = asyncHandler(async (req, res) => {
   }
 });
 
-const getEpicerieProductByIdEpicerie = asyncHandler( authenticateUser, async (req, res) => {
+const getEpicerieProductByIdEpicerie = asyncHandler(authenticateUser, async (req, res) => {
   try {
-    const { id } = req.user.UserInfo;
+
+    const { id } = req.id;
 
     if (!id) {
-      return console.log("No fucking id");
+        return console.log("No id found");
     }
-
-    if (id) {
-      return console.log("there is an id");
-    }
+    console.log("Found id:", id);
 
     const epicerie = await Epicerie.findById(id);
 
@@ -99,6 +97,7 @@ const getEpicerieProductByIdEpicerie = asyncHandler( authenticateUser, async (re
     });
   }
 });
+
 
 const updateEpicerieProduct = asyncHandler(async (req, res) => {
   const { idEpicerie, id } = req.params;

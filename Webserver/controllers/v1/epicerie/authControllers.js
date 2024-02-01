@@ -44,6 +44,7 @@ const login = async (req, res) => {
   }
 
   try {
+    // Recherche dans le modèle User
     const foundEpicerie = await Epicerie.findOne({ mail }).exec();
 
     if (!foundEpicerie) {
@@ -61,33 +62,39 @@ const login = async (req, res) => {
 
     const accessToken = jwt.sign(
       {
-        EpicerieInfo: {
-          mail: foundEpicerie.mail,
-          id : foundEpicerie._id
+        "UserInfo": {
+          "mail": foundEpicerie.mail,
+          "id": foundEpicerie._id.toString(),
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "15m" } //change 15m before deployment
+      { expiresIn: "15m" }
     );
 
     const refreshToken = jwt.sign(
-      { mail: foundEpicerie.mail, id : foundEpicerie._id },
+      {
+        "UserInfo": {
+          "mail": foundEpicerie.mail,
+          "id": foundEpicerie._id.toString(),
+        },
+      },
       process.env.REFRESH_TOKEN_SECRET,
-      { expiresIn: "7d" }
+      { expiresIn: "7d" } // the user does not have to login each day
     );
 
     // Créez un cookie sécurisé avec le token de rafraîchissement
     res.cookie("jwt", refreshToken, {
-      httpOnly: true, // accessible uniquement par le serveur web
-      secure: true, // https
-      sameSite: "None", // cookie cross-site
-      maxAge: 7 * 24 * 60 * 60 * 1000, // expiration du cookie : réglée pour correspondre au rT
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.json({ accessToken });
+    return res.json({ accessToken });
+    
   } catch (error) {
     console.error("Erreur lors de la connexion :", error);
-    res
+    return res
       .status(500)
       .json({ error: "Une erreur est survenue lors de la connexion." });
   }

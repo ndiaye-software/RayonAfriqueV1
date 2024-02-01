@@ -1,23 +1,25 @@
 const express = require("express");
 const router = express.Router();
-const epicerieroductController = require("../../../controllers/v1/epicerie/productEpicerieControllers");
+const epicerieproductController = require("../../../controllers/v1/epicerie/productEpicerieControllers");
+const verifyJWT = require('../../../middleware/verifyJWT')
 
+router.use(verifyJWT)
 
 router
     .route("/read")
-    .get(epicerieroductController.getEpicerieProductByIdEpicerie);
+    .get(epicerieproductController.getEpicerieProductByIdEpicerie);
 
 router
     .route("/create/:idEpicerie")
-    .post(epicerieroductController.createEpicerieProduct);
+    .post(epicerieproductController.createEpicerieProduct);
 
 
 router
   .route("/update/:idEpicerie/:id")
-  .patch(epicerieroductController.updateEpicerieProduct);
+  .patch(epicerieproductController.updateEpicerieProduct);
 
 router
   .route("/delete/:idEpicerie/:id")
-  .delete(epicerieroductController.deleteEpicerieProduct);
+  .delete(epicerieproductController.deleteEpicerieProduct);
 
 module.exports = router;

@@ -22,50 +22,10 @@ const login = async (req, res) => {
     // Recherche dans le modèle User
     const foundEpicerie = await User.findOne({ mail }).exec();
 
-    // Si l'utilisateur n'est pas trouvé dans le modèle User, recherche dans le modèle Epicerie
     if (!foundEpicerie) {
-      const foundEpicerie = await Epicerie.findOne({ mail }).exec();
-
-      if (!foundEpicerie) {
-        return res
-          .status(401)
-          .json({ message: "Email ou mot de passe incorrect" });
-      }
-
-      const match = await bcrypt.compare(password, foundEpicerie.password);
-
-      if (!match)
-        return res
-          .status(401)
-          .json({ message: "Email ou mot de passe incorrect" });
-      
-
-      const accessToken = jwt.sign(
-        {
-          UserInfo: {
-            mail: foundEpicerie.mail,
-            id: foundEpicerie._id,
-          },
-        },
-        process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: "15m" }
-      );
-
-      const refreshToken = jwt.sign(
-        { mail: foundEpicerie.mail },
-        process.env.REFRESH_TOKEN_SECRET,
-        { expiresIn: "7d" }
-      );
-
-      // Créez un cookie sécurisé avec le token de rafraîchissement
-      res.cookie("jwt", refreshToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "None",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-      });
-
-      return res.json({ accessToken, id: foundEpicerie._id });
+      return res
+        .status(401)
+        .json({ message: "Email ou mot de passe incorrect" });
     }
 
     const match = await bcrypt.compare(password, foundEpicerie.password);
@@ -77,9 +37,9 @@ const login = async (req, res) => {
 
     const accessToken = jwt.sign(
       {
-        UserInfo: {
-          mail: foundEpicerie.mail,
-          id: foundEpicerie._id
+        "UserInfo": {
+          "mail": foundEpicerie.mail,
+          "id": foundEpicerie._id.toString(),
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
@@ -87,9 +47,14 @@ const login = async (req, res) => {
     );
 
     const refreshToken = jwt.sign(
-      { mail: foundEpicerie.mail,  id: foundEpicerie._id },
+      {
+        "UserInfo": {
+          "mail": foundEpicerie.mail,
+          "id": foundEpicerie._id.toString(),
+        },
+      },
       process.env.REFRESH_TOKEN_SECRET,
-      { expiresIn: "7d" }
+      { expiresIn: "7d" } // the user does not have to login each day
     );
 
     // Créez un cookie sécurisé avec le token de rafraîchissement
@@ -100,7 +65,8 @@ const login = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    return res.json({ accessToken,  id: foundEpicerie._id });
+    return res.json({ accessToken });
+    
   } catch (error) {
     console.error("Erreur lors de la connexion :", error);
     return res
@@ -108,7 +74,6 @@ const login = async (req, res) => {
       .json({ error: "Une erreur est survenue lors de la connexion." });
   }
 };
-
 
 // @desc Refresh
 // @route GET /auth/refresh
@@ -173,13 +138,9 @@ const signUp = asyncHandler(async (req, res) => {
   // Vérification si tous les champs requis sont présents
   const missingFields = requiredFields.filter((field) => !req.body[field]);
   if (missingFields.length > 0) {
-    return res
-      .status(400)
-      .json({
-        message: `Les champs suivants sont requis : ${missingFields.join(
-          ", "
-        )}`,
-      });
+    return res.status(400).json({
+      message: `Les champs suivants sont requis : ${missingFields.join(", ")}`,
+    });
   }
 
   try {
