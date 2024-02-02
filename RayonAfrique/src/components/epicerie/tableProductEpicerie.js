@@ -14,7 +14,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import { visuallyHidden } from "@mui/utils";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
@@ -22,6 +22,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import hostname from "../../hostname";
 
 export function createData(nom, marque, prix, disponibilité, catégorie, origine) {
+
   return {
     nom,
     marque,
@@ -217,19 +218,19 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function EnhancedTable() {
+  const { id } = useParams();
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("marque");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [selected, setSelected] = useState([]);
-
   const [formData, setFormData] = useState([]);
 
   useEffect(()=> {
-    fetch(`${hostname}/api/v1/epicerie/productEpicerie/read`)
+    fetch(`${hostname}/api/v1/epicerie/productEpicerie/read/${id}`)
     .then(res => res.json())
     .then(formData => setFormData(formData))
-  })
+  },[id])
 
 
   var rows = formData.map((produit) => {

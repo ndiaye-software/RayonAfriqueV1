@@ -1,7 +1,6 @@
 import React from "react";
 import Home from "./pages/main/home/home";
 import Connexion from "././pages/main/log/connexion";
-import ConnexionEpicerie from "././pages/main/log/connexionEpicerie";
 import Reinitialisation from "././pages/main/log/reinitialisation_mdp";
 import Modification from "././pages/main/log/modification_mdp";
 import Contact from "././pages/main/contact/contact";
@@ -53,18 +52,17 @@ function App() {
           <Route path="/contact/notsent" element={<MessageNonEnvoyé/>} />
           <Route path="/about-us" element={<About />} />
           <Route path="/connexion" element={<Connexion />} />
-          <Route path="/epicerie/connexion" element={<ConnexionEpicerie />} />
-          <Route path="inscription/epicerie" element={<InscriptionEpicerie />}/>
+          <Route path="/inscription/epicerie" element={<InscriptionEpicerie />}/>
           <Route path="/inscription/client" element={<InscriptionClient />}/>
-          <Route path="business/inscription/validation" element={<ValidationBusiness />}/>
-          <Route path="business" element={<Business />} />
-          <Route path="terms-and-conditions" element={<TermsAndConditions />} />
-          <Route path="produit" element={<Shop />} />
-          <Route path="produit/:name" element={<ShopDetail />} />
+          <Route path="/business/inscription/validation" element={<ValidationBusiness />}/>
+          <Route path="/business" element={<Business />} />
+          <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+          <Route path="/produit" element={<Shop />} />
+          <Route path="/produit/:name" element={<ShopDetail />} />
 
           {/* Epicerie */}
-          <Route path="/epicerie/" element={<EpicerieHome />} />
-          <Route path="/epicerie/produit" element={<EpicerieProduct />}/>
+          <Route path="/epicerie/:id" element={<EpicerieHome />} />
+          <Route path="/epicerie/:id/produit" element={<EpicerieProduct />}/>
           <Route path="/epicerie/:id/produit/add" element={<EpicerieProductAdd />}/>
           <Route path="/epicerie/:id/produit/search" element={<EpicerieProductSearch />}/>
           <Route path="/epicerie/:id/produit/search/:idProduct/" element={<EpicerieProductPresentation />}/>

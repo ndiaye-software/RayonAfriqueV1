@@ -2,7 +2,8 @@ const EpicerieProduct = require("../../../models/EpicerieProduct");
 const Epicerie = require("../../../models/Epicerie");
 const Product = require("../../../models/Product");
 const asyncHandler = require("express-async-handler");
-const authenticateUser = require('../../../middleware/verifyJWT');
+const authenticateUser = require("../../../middleware/verifyJWT");
+const jwt = require("jsonwebtoken");
 
 const createEpicerieProduct = asyncHandler(async (req, res) => {
   const { idEpicerie } = req.params;
@@ -35,24 +36,35 @@ const createEpicerieProduct = asyncHandler(async (req, res) => {
   }
 });
 
-const getEpicerieProductByIdEpicerie = asyncHandler(authenticateUser, async (req, res) => {
+const getEpicerieProductByIdEpicerie = asyncHandler(async (req, res) => {
   try {
-
-    const { id } = req.id;
-
-    if (!id) {
-        return console.log("No id found");
+    if (!req.headers.authorization) {
+      res.status(402).json({ error: "Authorization header missing" });
+      return;
     }
-    console.log("Found id:", id);
 
-    const epicerie = await Epicerie.findById(id);
+    // Decode the accessToken to extract user ID
+    const accessToken = req.headers.authorization.replace("Bearer ", "");
+    // Verify and decode the token
+    const decodedToken = jwt.verify(
+      accessToken,
+      process.env.ACCESS_TOKEN_SECRET
+    );
+
+    // Access the user ID from the decoded token
+    const userId = decodedToken.UserInfo.id;
+    console.log(userId)
+
+    // Retrieve the user's epicerie by user ID
+    const epicerie = await Epicerie.findById(userId);
 
     if (!epicerie) {
       return res.status(404).json({ error: "Epicerie non trouvé." });
     }
 
+    // Retrieve epicerie products using the user ID
     const epicerieProduct = await EpicerieProduct.find({
-      id: id,
+      idEpicerie: userId,
     })
       .populate({
         path: "idProduct",
@@ -68,9 +80,9 @@ const getEpicerieProductByIdEpicerie = asyncHandler(authenticateUser, async (req
       return res.json({ message: "Aucun produit trouvé pour cette épicerie." });
     }
 
+    // Format and send the response
     const formattedProducts = epicerieProduct.map((epicerieProduct) => ({
-      _id: epicerieProduct._id,
-      id: epicerieProduct.id,
+      idEpicerieProduct: epicerieProduct._id,
       idProduct: epicerieProduct.idProduct._id,
       name: epicerieProduct.idProduct.name,
       reference: epicerieProduct.idProduct.reference,
@@ -97,7 +109,6 @@ const getEpicerieProductByIdEpicerie = asyncHandler(authenticateUser, async (req
     });
   }
 });
-
 
 const updateEpicerieProduct = asyncHandler(async (req, res) => {
   const { idEpicerie, id } = req.params;

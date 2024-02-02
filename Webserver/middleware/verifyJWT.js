@@ -17,7 +17,6 @@ const verifyJWT = (req, res, next) => {
             
             req.id = decoded.UserInfo.id
             req.mail = decoded.UserInfo.mail
-            console.log(req.id)
             next()
         }
     )
