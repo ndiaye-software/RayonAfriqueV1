@@ -14,22 +14,28 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import { visuallyHidden } from "@mui/utils";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
 import hostname from "../../hostname";
 
-export function createData(nom, marque, prix, disponibilité, catégorie, origine) {
-
+export function createData(
+  nom,
+  marque,
+  prix,
+  disponibilité,
+  catégorie,
+  origine
+) {
   return {
     nom,
     marque,
     prix,
     disponibilité,
     catégorie,
-    origine
+    origine,
   };
 }
 
@@ -218,23 +224,55 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function EnhancedTable() {
-  const { id } = useParams();
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("marque");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [selected, setSelected] = useState([]);
   const [formData, setFormData] = useState([]);
+  const [error, setError] = useState(null);
 
-  useEffect(()=> {
-    fetch(`${hostname}/api/v1/epicerie/productEpicerie/read/${id}`)
-    .then(res => res.json())
-    .then(formData => setFormData(formData))
-  },[id])
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
 
+    if (!accessToken) {
+      setError("Access token is missing");
+      return;
+    }
+
+    fetch(`${hostname}/api/v1/epicerie/productEpicerie/read`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((formData) => {
+        setFormData(formData);
+        console.log(formData)
+        setError(null);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setError("Error fetching data");
+      });
+  }, []);
 
   var rows = formData.map((produit) => {
-    return createData(produit.name, produit.label, parseFloat(produit.price), produit.available ? "Oui" : "Non", produit.category, produit.country);
+    return createData(
+      produit.name,
+      produit.label,
+      parseFloat(produit.price),
+      produit.available ? "Oui" : "Non",
+      produit.category,
+      produit.country
+    );
   });
 
   const handleRequestSort = (event, property) => {
@@ -394,6 +432,10 @@ export default function EnhancedTable() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
+      <div>
+        {/* Render your component content here */}
+        {error && <p>Error: {error}</p>}
+      </div>
     </Box>
   );
 }

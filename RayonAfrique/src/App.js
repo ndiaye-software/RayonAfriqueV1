@@ -30,6 +30,7 @@ import Test from "./pages/test";
 import Test2 from "./pages/test2";
 import Test3 from "./pages/test3";
 import EpicerieProductPresentation from "./pages/epicerie/product/epicerieProductPresentation";
+import EpicerieProductCreate from "./pages/epicerie/product/epicerieProductCreate";
 
 
 function App() {
@@ -61,17 +62,18 @@ function App() {
           <Route path="/produit/:name" element={<ShopDetail />} />
 
           {/* Epicerie */}
-          <Route path="/epicerie/:id" element={<EpicerieHome />} />
-          <Route path="/epicerie/:id/produit" element={<EpicerieProduct />}/>
-          <Route path="/epicerie/:id/produit/add" element={<EpicerieProductAdd />}/>
-          <Route path="/epicerie/:id/produit/search" element={<EpicerieProductSearch />}/>
-          <Route path="/epicerie/:id/produit/search/:idProduct/" element={<EpicerieProductPresentation />}/>
-          <Route path="/epicerie/:id/produit/search/:idProduct/add" element={<EpicerieProductAdd/>}/>
-          <Route path="/epicerie/:id/produit/update/:product" element={<EpicerieProductUpdate />}/>
-          <Route path="/epicerie/:id/profil" element={<EpicerieProfile />}/>
-          <Route path="/epicerie/:id/contact" element={<EpicerieContact />}/>
-          <Route path="/epicerie/:id/contact/sent" element={<MessageEnvoyéEpicerie />}/>
-          <Route path="/epicerie/:id/contact/notsent" element={<MessageNonEnvoyéEpicerie />}/>
+          <Route path="/epicerie/" element={<EpicerieHome />} />
+          <Route path="/epicerie/produit" element={<EpicerieProduct />}/>
+          <Route path="/epicerie/produit/add" element={<EpicerieProductAdd />}/>
+          <Route path="/epicerie/produit/search" element={<EpicerieProductSearch />}/>
+          <Route path="/epicerie/produit/search/create" element={<EpicerieProductCreate />}/>
+          <Route path="/epicerie/produit/search/:idProduct/" element={<EpicerieProductPresentation />}/>
+          <Route path="/epicerie/produit/search/:idProduct/add" element={<EpicerieProductAdd/>}/>
+          <Route path="/epicerie/produit/update/:product" element={<EpicerieProductUpdate />}/>
+          <Route path="/epicerie/profil" element={<EpicerieProfile />}/>
+          <Route path="/epicerie/contact" element={<EpicerieContact />}/>
+          <Route path="/epicerie/contact/sent" element={<MessageEnvoyéEpicerie />}/>
+          <Route path="/epicerie/contact/notsent" element={<MessageNonEnvoyéEpicerie />}/>
 
         </Routes>
       </BrowserRouter>

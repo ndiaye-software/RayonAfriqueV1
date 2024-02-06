@@ -44,9 +44,9 @@ export default function Connexion() {
       });
 
       if (response.ok) {
-        //const data = await response.json();
-        //const { UserInfo } = jwtDecode(data.accessToken); // Assuming you have a jwt_decode function
-        //const userId = UserInfo.id; 
+        const data = await response.json();
+        const { accessToken } = data;
+        localStorage.setItem('accessToken', accessToken); 
         navigate(`/epicerie`);
       } else {
         const data = await response.json();

@@ -211,7 +211,7 @@ function EpicerieProductSearch() {
                         <Typography marginBottom="15px">
                           Le produit que vous recherchez n'existe pas encore, Créez le !
                         </Typography>
-                        <Button className={classes.Button}>
+                        <Button className={classes.Button} href="search/create">
                           Créer un produit
                         </Button>
                       </Grid>

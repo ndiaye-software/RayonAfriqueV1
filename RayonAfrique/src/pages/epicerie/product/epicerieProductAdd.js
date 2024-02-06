@@ -52,8 +52,6 @@ function EpicerieProductAdd() {
 
   const [disponibilité, setDispo] = React.useState(options[0]?.label || "");
 
-  
-
   const [formData, setFormData] = useState({
     idProduct: idProduct,
     price: "",

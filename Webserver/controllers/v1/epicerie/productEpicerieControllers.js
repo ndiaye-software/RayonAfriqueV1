@@ -111,8 +111,21 @@ const getEpicerieProductByIdEpicerie = asyncHandler(async (req, res) => {
 });
 
 const updateEpicerieProduct = asyncHandler(async (req, res) => {
-  const { idEpicerie, id } = req.params;
-  const { idProduct, price, available } = req.body;
+  if (!req.headers.authorization) {
+    res.status(402).json({ error: "Authorization header missing" });
+    return;
+  }
+
+  const accessToken = req.headers.authorization.replace("Bearer ", "");
+  const decodedToken = jwt.verify(
+    accessToken,
+    process.env.ACCESS_TOKEN_SECRET
+  );
+
+  const idEpicerie = decodedToken.UserInfo.id;
+  console.log(idEpicerie)
+  const { id } = req.params;
+  const { price, available } = req.body;
 
   try {
     const epicerie = await Epicerie.findById(idEpicerie);
