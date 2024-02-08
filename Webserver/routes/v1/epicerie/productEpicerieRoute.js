@@ -10,7 +10,7 @@ router
     .get(epicerieproductController.getEpicerieProductByIdEpicerie);
 
 router
-    .route("/create/:idEpicerie")
+    .route("/create")
     .post(epicerieproductController.createEpicerieProduct);
 
 

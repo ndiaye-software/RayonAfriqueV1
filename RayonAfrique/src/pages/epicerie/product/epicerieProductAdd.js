@@ -39,7 +39,7 @@ function EpicerieProductAdd() {
   const [data, setData] = useState([]);
 
   const { idProduct } = useParams();
-  const { idEpicerie } = useParams();
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetch(`${hostname}/api/v1/epicerie/product/read/${idProduct}`)
@@ -78,33 +78,45 @@ function EpicerieProductAdd() {
   const handleChangeDispo = (event) => {
     const value = event.target.value;
     setDispo(value);
-  
+
     // Utilisez la valeur de l'option "value"
-    const booleanValue = options.find(option => option.label === value)?.value || false;
-  
+    const booleanValue =
+      options.find((option) => option.label === value)?.value || false;
+
     // Appel de la fonction pour mettre à jour formData
     updateFormData("available", booleanValue);
   };
 
   const handleSubmit = async (event) => {
+
     event.preventDefault();
+
+    const accessToken = localStorage.getItem("accessToken");
+
+    if (!accessToken) {
+      setError("Access token is missing");
+      return;
+    }
 
     try {
       const response = await fetch(
-        `${hostname}/api/v1/epicerie/productEpicerie/create/${idEpicerie}`,
+        `${hostname}/api/v1/epicerie/productEpicerie/create`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify(formData),
         }
-      );      
+      );
+
+      console.log(formData)
 
       if (response.ok) {
         const data = await response.json();
         console.log(data);
-        navigate(`/success`);
+        navigate(`/epicerie/produit`);
       } else {
         const data = await response.json();
         if (data.message) {
@@ -126,7 +138,13 @@ function EpicerieProductAdd() {
         <Navbar />
         <Box sx={{ backgroundColor: "#f9fafb" }}>
           <Stack direction="column" justifyContent="center">
-            <Box flex={4} p={{ xs: 0, md: 2 }} sx={{ marginBottom: "60px" }}>
+            <Box
+              flex={4}
+              p={{ xs: 0, md: 2 }}
+              sx={{ marginBottom: "60px" }}
+              component="form"
+              onSubmit={handleSubmit}
+            >
               <Box
                 flexWrap="wrap"
                 justifyContent="center"
@@ -135,8 +153,6 @@ function EpicerieProductAdd() {
                 alignContent="center"
                 marginBottom="35px"
                 marginTop="35px"
-                component="form"
-                onSubmit={handleSubmit}
                 noValidate
               >
                 <Box>
@@ -205,6 +221,10 @@ function EpicerieProductAdd() {
                   {errorMessage}
                 </Typography>
               )}
+              <div>
+                {/* Render your component content here */}
+                {error && <p>Error: {error}</p>}
+              </div>
               <Box
                 justifyContent="space-evenly"
                 display="flex"

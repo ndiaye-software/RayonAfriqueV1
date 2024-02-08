@@ -227,7 +227,7 @@ export default function EnhancedTable() {
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("marque");
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selected, setSelected] = useState([]);
   const [formData, setFormData] = useState([]);
   const [error, setError] = useState(null);
@@ -423,7 +423,7 @@ export default function EnhancedTable() {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5, 15, 25]}
+          rowsPerPageOptions={[10, 20, 30]}
           component="div"
           count={rows.length}
           rowsPerPage={rowsPerPage}

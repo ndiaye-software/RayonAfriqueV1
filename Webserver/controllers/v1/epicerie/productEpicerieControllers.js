@@ -2,27 +2,41 @@ const EpicerieProduct = require("../../../models/EpicerieProduct");
 const Epicerie = require("../../../models/Epicerie");
 const Product = require("../../../models/Product");
 const asyncHandler = require("express-async-handler");
-const authenticateUser = require("../../../middleware/verifyJWT");
 const jwt = require("jsonwebtoken");
 
 const createEpicerieProduct = asyncHandler(async (req, res) => {
-  const { idEpicerie } = req.params;
-
-  const epicerie = await Epicerie.findById(idEpicerie);
-
-  if (!epicerie) {
-    return res.status(404).json({ error: "Epicerie non trouvé." });
-  }
-
-  const { idProduct, price, available } = req.body;
-
-  if (!idEpicerie || !idProduct || !price || !available) {
-    return res.status(400).json({ message: "Tous les champs sont requis" });
-  }
 
   try {
+    if (!req.headers.authorization) {
+      res.status(402).json({ error: "Authorization header missing" });
+      return;
+    }
+  
+    // Decode the accessToken to extract user ID
+    const accessToken = req.headers.authorization.replace("Bearer ", "");
+    // Verify and decode the token
+    const decodedToken = jwt.verify(
+      accessToken,
+      process.env.ACCESS_TOKEN_SECRET
+    );
+    
+    // Access the user ID from the decoded token
+    const userId = decodedToken.UserInfo.id;
+  
+    // Retrieve the user's epicerie by user ID
+    const epicerie = await Epicerie.findById(userId);
+  
+    if (!epicerie) {
+      return res.status(404).json({ error: "Epicerie non trouvé." });
+    }
+  
+    const { idProduct, price, available } = req.body;
+  
+    if (!userId || !idProduct || !price || !available) {
+      return res.status(400).json({ message: "Tous les champs sont requis" });
+    }
     const epicerieProduct = new EpicerieProduct({
-      idEpicerie,
+      idEpicerie : userId,
       idProduct,
       price,
       available,
@@ -53,7 +67,6 @@ const getEpicerieProductByIdEpicerie = asyncHandler(async (req, res) => {
 
     // Access the user ID from the decoded token
     const userId = decodedToken.UserInfo.id;
-    console.log(userId)
 
     // Retrieve the user's epicerie by user ID
     const epicerie = await Epicerie.findById(userId);
