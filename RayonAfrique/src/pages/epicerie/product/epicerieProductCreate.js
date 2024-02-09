@@ -11,6 +11,7 @@ import { MenuItem } from "@mui/material";
 import InsertImage from "../../../images/insertimage.png";
 import hostname from "../../../hostname";
 import { Add } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles(() => ({
   Button: {
@@ -30,15 +31,22 @@ const useStyles = makeStyles(() => ({
 }));
 
 function EpicerieProductCreate() {
-  // State to track whether "Autre" button is clicked
-  const [isAutreClicked, setIsAutreClicked] = useState(false);
+  const [countryInput, setCountryInput] = useState("");
+  const [isCountryClicked, setIsCountryClicked] = useState(false);
+  const handleToggleCountry = () => {
+    setIsCountryClicked((prevIsCountryClicked) => !prevIsCountryClicked);
+  };
 
-  // State to store the input value for "Autre"
-  const [autreInput, setAutreInput] = useState("");
+  const [labelInput, setLabelInput] = useState("");
+  const [isLabelClicked, setIsLabelClicked] = useState(false);
+  const handleToggleLabel = () => {
+    setIsLabelClicked((prevIsLabelClicked) => !prevIsLabelClicked);
+  };
 
-  // Event handler for toggling "Autre" button
-  const handleToggleAutre = () => {
-    setIsAutreClicked((prevIsAutreClicked) => !prevIsAutreClicked);
+  const [categoryInput, setCategoryInput] = useState("");
+  const [isCategoryClicked, setIsCategoryClicked] = useState(false);
+  const handleToggleCategory = () => {
+    setIsCategoryClicked((prevIsCategoryClicked) => !prevIsCategoryClicked);
   };
   const [country, setCountry] = useState([]);
   useEffect(() => {
@@ -80,13 +88,83 @@ function EpicerieProductCreate() {
     setSelectedCategory(event.target.value);
   };
 
+  const [formData, setFormData] = useState({
+    name: "",
+    reference: "",
+    ingredients: "",
+    description: "",
+    image: "",
+    category: "",
+    country: "",
+    label: "",
+  });
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const navigate = useNavigate();
+
+  const [error, setError] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const accessToken = localStorage.getItem("accessToken");
+
+    if (!accessToken) {
+      setError("Access token is missing");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${hostname}/api/v1/epicerie/product/create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      console.log(formData);
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        navigate(`/epicerie/produit`);
+      } else {
+        const data = await response.json();
+        if (data.message) {
+          setErrorMessage(data.message);
+        } else {
+          setErrorMessage("Erreur lors de la création du produit");
+        }
+      }
+    } catch (error) {
+      console.error("Erreur lors de la création du produit :", error);
+    }
+  };
+
   const classes = useStyles();
 
   return (
     <>
       <div>
         <Navbar />
-        <Box sx={{ backgroundColor: "#f9fafb" }}>
+        <Box
+          sx={{ backgroundColor: "#f9fafb" }}
+          component="form"
+          onSubmit={handleSubmit}
+        >
           <Stack direction="row" justifyContent="space-between">
             <Box
               container
@@ -95,48 +173,53 @@ function EpicerieProductCreate() {
               sx={{ marginBottom: "60px" }}
             >
               <Box
-                flexWrap="wrap"
-                justifyContent="space-evenly"
-                display="flex"
-                flexDirection="row"
                 marginBottom="35px"
                 marginTop="35px"
+                paddingLeft="50px"
+                paddingRight="50px"
               >
-                <Grid container>
-                  <Grid xs={7}>
-                    <div>
-                      <Box>
-                        <img
-                          src={InsertImage}
-                          alt="insérée"
-                          height="300px"
-                          width="350px"
-                        />
-                      </Box>
-                      <Box justifyContent="center" display="flex" width="350px">
-                        {" "}
-                        <input
-                          type="file"
-                          accept="image/*"
-                          style={{ display: "none" }}
-                          id="contained-button-file"
-                        />
-                        <label htmlFor="contained-button-file">
-                          <Button
-                            fullWidth
-                            className={classes.Button}
-                            component="span"
-                            endIcon={<InsertPhoto />}
-                          >
-                            Insérer une photo
-                          </Button>
-                        </label>
-                      </Box>
-                    </div>
+                <Grid container wrap spacing="30px">
+                  <Grid
+                    md={7}
+                    xs={12}
+                    justifyContent="center"
+                    display="flex"
+                    flexDirection="column"
+                  >
+                    <Box>
+                      <img
+                        src={InsertImage}
+                        alt="insérée"
+                        height="300px"
+                        width="350px"
+                      />
+                    </Box>
+                    <Box justifyContent="center" display="flex" width="350px">
+                      {" "}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        style={{ display: "none" }}
+                        id="contained-button-file"
+                        value={formData.image}
+                        onChange={handleChange}
+                      />
+                      <label htmlFor="contained-button-file">
+                        <Button
+                          fullWidth
+                          className={classes.Button}
+                          component="span"
+                          endIcon={<InsertPhoto />}
+                        >
+                          Insérer une photo
+                        </Button>
+                      </label>
+                    </Box>
                   </Grid>
 
                   <Grid
-                    xs={5}
+                    md={5}
+                    xs={12}
                     padding="20px"
                     maxWidth="600px"
                     flexDirection="column"
@@ -150,14 +233,18 @@ function EpicerieProductCreate() {
                         variant="outlined"
                         fullWidth
                         name="name"
+                        value={formData.name}
+                        onChange={handleChange}
                       />
                     </Grid>
                     <Grid item xs={12}>
                       <TextField
-                        label="Reference"
+                        label="Autre nom"
                         variant="outlined"
                         fullWidth
                         name="reference"
+                        value={formData.reference}
+                        onChange={handleChange}
                       />
                     </Grid>
                     <Grid item xs={12}>
@@ -166,6 +253,8 @@ function EpicerieProductCreate() {
                         variant="outlined"
                         fullWidth
                         name="ingredients"
+                        value={formData.ingredients}
+                        onChange={handleChange}
                       />
                     </Grid>
                     <Grid item xs={12}>
@@ -208,15 +297,15 @@ function EpicerieProductCreate() {
                     </Grid>
                     <Grid item xs={12}>
                       {/* Render TextField for "Autre" if button is clicked */}
-                      {isAutreClicked && (
+                      {isCountryClicked && (
                         <TextField
                           label="Autre"
                           variant="outlined"
                           fullWidth
                           name="autreInput"
-                          value={autreInput}
+                          value={countryInput}
                           onChange={(event) =>
-                            setAutreInput(event.target.value)
+                            setCountryInput(event.target.value)
                           }
                         />
                       )}
@@ -224,9 +313,11 @@ function EpicerieProductCreate() {
                         <Grid
                           item
                           xs={2}
+                          variant="body2"
+                          color="inherit"
                           sx={{ display: "flex", alignItems: "center" }}
                         >
-                          <IconButton fullWidth onClick={handleToggleAutre}>
+                          <IconButton fullWidth onClick={handleToggleCountry}>
                             <Add
                               sx={{
                                 backgroundColor: "#922B21",
@@ -241,10 +332,12 @@ function EpicerieProductCreate() {
                         <Grid
                           item
                           xs={10}
+                          variant="body2"
+                          color="inherit"
                           sx={{ display: "flex", alignItems: "center" }}
                         >
                           <Typography variant="body2">
-                            Ajouter un nouveau produit
+                            Ajouter un nouveau pays
                           </Typography>
                         </Grid>
                       </Grid>
@@ -289,15 +382,15 @@ function EpicerieProductCreate() {
                     </Grid>
                     <Grid item xs={12}>
                       {/* Render TextField for "Autre" if button is clicked */}
-                      {isAutreClicked && (
+                      {isCategoryClicked && (
                         <TextField
                           label="Autre"
                           variant="outlined"
                           fullWidth
                           name="autreInput"
-                          value={autreInput}
+                          value={categoryInput}
                           onChange={(event) =>
-                            setAutreInput(event.target.value)
+                            setCategoryInput(event.target.value)
                           }
                         />
                       )}
@@ -307,7 +400,7 @@ function EpicerieProductCreate() {
                           xs={2}
                           sx={{ display: "flex", alignItems: "center" }}
                         >
-                          <IconButton fullWidth onClick={handleToggleAutre}>
+                          <IconButton fullWidth onClick={handleToggleCategory}>
                             <Add
                               sx={{
                                 backgroundColor: "#922B21",
@@ -325,7 +418,7 @@ function EpicerieProductCreate() {
                           sx={{ display: "flex", alignItems: "center" }}
                         >
                           <Typography variant="body2">
-                            Ajouter un nouveau produit
+                            Ajouter une nouvelle catégorie
                           </Typography>
                         </Grid>
                       </Grid>
@@ -369,16 +462,15 @@ function EpicerieProductCreate() {
                       </FormControl>
                     </Grid>
                     <Grid item xs={12}>
-                      {/* Render TextField for "Autre" if button is clicked */}
-                      {isAutreClicked && (
+                      {isLabelClicked && (
                         <TextField
                           label="Autre"
                           variant="outlined"
                           fullWidth
                           name="autreInput"
-                          value={autreInput}
+                          value={labelInput}
                           onChange={(event) =>
-                            setAutreInput(event.target.value)
+                            setLabelInput(event.target.value)
                           }
                         />
                       )}
@@ -388,7 +480,7 @@ function EpicerieProductCreate() {
                           xs={2}
                           sx={{ display: "flex", alignItems: "center" }}
                         >
-                          <IconButton fullWidth onClick={handleToggleAutre}>
+                          <IconButton fullWidth onClick={handleToggleLabel}>
                             <Add
                               sx={{
                                 backgroundColor: "#922B21",
@@ -406,7 +498,7 @@ function EpicerieProductCreate() {
                           sx={{ display: "flex", alignItems: "center" }}
                         >
                           <Typography variant="body2">
-                            Ajouter un nouveau produit
+                            Ajouter une nouvelle marque
                           </Typography>
                         </Grid>
                       </Grid>
@@ -423,10 +515,12 @@ function EpicerieProductCreate() {
                   }}
                 >
                   <TextField
+                    value={formData.description}
+                    onChange={handleChange}
                     label="Description"
                     variant="outlined"
                     fullWidth
-                    name="Description"
+                    name="description"
                     multiline
                     minRows={5}
                   />
@@ -435,7 +529,7 @@ function EpicerieProductCreate() {
             </Box>
           </Stack>
           <Box justifyContent="center" display="flex" marginBottom="30px">
-            <Button className={classes.Button} endIcon={<Save />}>
+            <Button type="submit" className={classes.Button} endIcon={<Save />}>
               Enregistrer
             </Button>
           </Box>

@@ -2,9 +2,26 @@ const Product = require("../../../models/Product");
 const Label = require("../../../models/Label");
 const Category = require("../../../models/Category");
 const Country = require("../../../models/Country");
+const Epicerie = require("../../../models/Epicerie");
 const asyncHandler = require("express-async-handler");
+const jwt = require("jsonwebtoken");
 
 const createProduct = asyncHandler(async (req, res) => {
+
+  if (!req.headers.authorization) {
+    res.status(402).json({ error: "Authorization header missing" });
+    return;
+  }
+  const accessToken = req.headers.authorization.replace("Bearer ", "");
+  const decodedToken = jwt.verify(
+    accessToken,
+    process.env.ACCESS_TOKEN_SECRET
+  );
+  const userId = decodedToken.UserInfo.id;
+  const epicerie = await Epicerie.findById(userId);
+  if (!epicerie) {
+    return res.status(404).json({ error: "Epicerie non trouvé." });
+  }
   const {
     name,
     reference,
@@ -21,7 +38,6 @@ const createProduct = asyncHandler(async (req, res) => {
   }
 
   try {
-    // Vérifier si le produit existe déjà en utilisant tous les champs
     let existingProduct = await Product.findOne({
       name,
       reference,
@@ -34,11 +50,9 @@ const createProduct = asyncHandler(async (req, res) => {
     });
 
     if (existingProduct) {
-      // Si le produit existe déjà, renvoyer un message approprié
       return res.status(400).json({ message: "Le produit existe déjà." });
     }
 
-    // Si le produit n'existe pas, le créer
     const product = new Product({
       name,
       reference,

@@ -111,8 +111,6 @@ function EpicerieProductAdd() {
         }
       );
 
-      console.log(formData)
-
       if (response.ok) {
         const data = await response.json();
         console.log(data);
