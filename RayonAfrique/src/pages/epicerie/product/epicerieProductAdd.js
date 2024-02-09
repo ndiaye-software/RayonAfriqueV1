@@ -42,7 +42,10 @@ function EpicerieProductAdd() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`${hostname}/api/v1/epicerie/product/read/${idProduct}`)
+    const accessToken = localStorage.getItem("accessToken");
+    fetch(`${hostname}/api/v1/epicerie/product/read/${idProduct}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
       .then((res) => res.json())
       .then((data) => {
         setData(data);

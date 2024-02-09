@@ -115,7 +115,7 @@ const EpicerieProduct = () => {
         <div className={classes.bannerImg}></div>
         <div className={classes.bannerText}>
           <Typography variant="h1" className={classes.section1_div_h1}>
-            RayonAfrique+
+            RayonAfrique
           </Typography>
           <Typography variant="h3" className={classes.section1_div_h3}>
             Gérez vos produits !{" "}

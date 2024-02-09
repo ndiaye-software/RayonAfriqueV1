@@ -68,7 +68,10 @@ function EpicerieProductSearch() {
   const [productNames, setProductNames] = useState([]);
 
   useEffect(() => {
-    fetch(`${hostname}/api/v1/epicerie/product/read`)
+    const accessToken = localStorage.getItem("accessToken");
+    fetch(`${hostname}/api/v1/epicerie/product/read`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
       .then((res) => res.json())
       .then((data) => {
         setData(data);
@@ -209,7 +212,8 @@ function EpicerieProductSearch() {
                         xs={12}
                       >
                         <Typography marginBottom="15px">
-                          Le produit que vous recherchez n'existe pas encore, Créez le !
+                          Le produit que vous recherchez n'existe pas encore,
+                          Créez le !
                         </Typography>
                         <Button className={classes.Button} href="search/create">
                           Créer un produit

@@ -7,16 +7,12 @@ const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
 
 const createProduct = asyncHandler(async (req, res) => {
-
   if (!req.headers.authorization) {
     res.status(402).json({ error: "Authorization header missing" });
     return;
   }
   const accessToken = req.headers.authorization.replace("Bearer ", "");
-  const decodedToken = jwt.verify(
-    accessToken,
-    process.env.ACCESS_TOKEN_SECRET
-  );
+  const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
   const userId = decodedToken.UserInfo.id;
   const epicerie = await Epicerie.findById(userId);
   if (!epicerie) {
@@ -74,6 +70,21 @@ const createProduct = asyncHandler(async (req, res) => {
 
 const getProduct = asyncHandler(async (req, res) => {
   try {
+    if (!req.headers.authorization) {
+      res.status(402).json({ error: "Authorization header missing" });
+      return;
+    }
+    const accessToken = req.headers.authorization.replace("Bearer ", "");
+    const decodedToken = jwt.verify(
+      accessToken,
+      process.env.ACCESS_TOKEN_SECRET
+    );
+    const userId = decodedToken.UserInfo.id;
+    const epicerie = await Epicerie.findById(userId);
+    if (!epicerie) {
+      return res.status(404).json({ error: "Epicerie non trouvé." });
+    }
+
     // Recherche des produits de l'épicerie spécifiée par idEpicerie
     const product = await Product.find()
       .populate("category")
@@ -82,12 +93,10 @@ const getProduct = asyncHandler(async (req, res) => {
       .lean();
 
     if (!Product) {
-      return res
-        .status(404)
-        .json({ message: "Aucun produit trouvé pour cette épicerie." });
+      return res.status(404).json({ message: "Aucun produit trouvé" });
     }
 
-    const formattedProduct = product.map(product => ({
+    const formattedProduct = product.map((product) => ({
       _id: product._id,
       name: product.name,
       reference: product.reference,
@@ -109,56 +118,71 @@ const getProduct = asyncHandler(async (req, res) => {
 
 //Chercher un produit à travers son :nom ou son :référence, catgeory, country, label
 const searchProduct = asyncHandler(async (req, res) => {
-    try {
-      const { name } = req.body;
-  
-      const category = await Category.findOne({ categoryName: name });
-      const label = await Label.findOne({ labelName: name });
-      const country = await Country.findOne({ countryName: name });
-  
-      const categoryId = category ? category._id : null;
-      const labelId = label ? label._id : null;
-      const countryId = country ? country._id : null;
-  
-      // Recherchez le produit par nom, référence, label, country ou category
-      const products = await Product.find({
-        $or: [
-          { name: { $regex: name, $options: "i" } }, // Recherche par nom (insensible à la casse)
-          { reference: { $regex: name, $options: "i" } }, // Recherche par référence (insensible à la casse)
-          { 'label': labelId }, // Utilisez l'ID de label pour la recherche
-          { 'country': countryId }, // Utilisez l'ID de country pour la recherche
-          { 'category': categoryId }, // Utilisez l'ID de category pour la recherche
-        ],
-      })
-        .populate("category")
-        .populate("country")
-        .populate("label")
-        .lean();
-  
-      if (products.length === 0) {
-        return res.status(404).json({ message: "Produit non trouvé." });
-      }
-  
-      const formattedProducts = products.map(product => ({
-        _id: product._id,
-        name: product.name,
-        reference: product.reference,
-        image: product.image,
-        description: product.description,
-        categoryName: product.category ? product.category.categoryName : null,
-        countryName: product.country ? product.country.countryName : null,
-        labelName: product.label ? product.label.labelName : null,
-      }));
-  
-      res.status(200).json(formattedProducts);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Erreur lors de la recherche du produit." });
+  try {
+    const { name } = req.body;
+
+    const category = await Category.findOne({ categoryName: name });
+    const label = await Label.findOne({ labelName: name });
+    const country = await Country.findOne({ countryName: name });
+
+    const categoryId = category ? category._id : null;
+    const labelId = label ? label._id : null;
+    const countryId = country ? country._id : null;
+
+    // Recherchez le produit par nom, référence, label, country ou category
+    const products = await Product.find({
+      $or: [
+        { name: { $regex: name, $options: "i" } }, // Recherche par nom (insensible à la casse)
+        { reference: { $regex: name, $options: "i" } }, // Recherche par référence (insensible à la casse)
+        { label: labelId }, // Utilisez l'ID de label pour la recherche
+        { country: countryId }, // Utilisez l'ID de country pour la recherche
+        { category: categoryId }, // Utilisez l'ID de category pour la recherche
+      ],
+    })
+      .populate("category")
+      .populate("country")
+      .populate("label")
+      .lean();
+
+    if (products.length === 0) {
+      return res.status(404).json({ message: "Produit non trouvé." });
     }
-  });
+
+    const formattedProducts = products.map((product) => ({
+      _id: product._id,
+      name: product.name,
+      reference: product.reference,
+      image: product.image,
+      description: product.description,
+      categoryName: product.category ? product.category.categoryName : null,
+      countryName: product.country ? product.country.countryName : null,
+      labelName: product.label ? product.label.labelName : null,
+    }));
+
+    res.status(200).json(formattedProducts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Erreur lors de la recherche du produit." });
+  }
+});
 
 const getProductById = asyncHandler(async (req, res) => {
   try {
+    if (!req.headers.authorization) {
+      res.status(402).json({ error: "Authorization header missing" });
+      return;
+    }
+    const accessToken = req.headers.authorization.replace("Bearer ", "");
+    const decodedToken = jwt.verify(
+      accessToken,
+      process.env.ACCESS_TOKEN_SECRET
+    );
+    const userId = decodedToken.UserInfo.id;
+    const epicerie = await Epicerie.findById(userId);
+    if (!epicerie) {
+      return res.status(404).json({ error: "Epicerie non trouvé." });
+    }
+
     const { idProduct } = req.params; // Récupérez l'ID du produit à partir des paramètres de l'URL
 
     // Recherchez le produit par son ID
@@ -199,5 +223,5 @@ module.exports = {
   createProduct,
   getProduct,
   getProductById,
-  searchProduct
+  searchProduct,
 };

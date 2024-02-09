@@ -123,7 +123,8 @@ function EpicerieProductCreate() {
     }
 
     try {
-      const response = await fetch(
+      console.log(formData)
+      /* const response = await fetch(
         `${hostname}/api/v1/epicerie/product/create`,
         {
           method: "POST",
@@ -148,7 +149,7 @@ function EpicerieProductCreate() {
         } else {
           setErrorMessage("Erreur lors de la création du produit");
         }
-      }
+      } */
     } catch (error) {
       console.error("Erreur lors de la création du produit :", error);
     }
