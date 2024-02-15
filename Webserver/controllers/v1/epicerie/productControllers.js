@@ -11,38 +11,66 @@ const createProduct = asyncHandler(async (req, res) => {
     res.status(402).json({ error: "Authorization header missing" });
     return;
   }
+
   const accessToken = req.headers.authorization.replace("Bearer ", "");
   const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
   const userId = decodedToken.UserInfo.id;
   const epicerie = await Epicerie.findById(userId);
+
   if (!epicerie) {
     return res.status(404).json({ error: "Epicerie non trouvé." });
   }
+
   const {
     name,
     reference,
     ingredients,
     description,
     image,
-    category,
-    country,
-    label,
+    category: categoryName,
+    country: countryName,
+    label: labelName,
   } = req.body;
 
-  if (!name || !category || !country || !image || !label) {
+  if (!name || !categoryName || !countryName || !image || !labelName) {
     return res.status(400).json({ message: "Tous les champs sont requis" });
   }
 
   try {
+    // Recherche des catégories, labels et pays dans la base de données
+    const [category, label, country] = await Promise.all([
+      Category.findOne({ categoryName: categoryName }),
+      Label.findOne({ labelName: labelName }),
+      Country.findOne({ countryName: countryName }),
+    ]);
+
+    if (!category) {
+      return res
+        .status(404)
+        .json({ error: `La catégorie '${categoryName}' n'existe pas.` });
+    }
+
+    if (!label) {
+      return res
+        .status(404)
+        .json({ error: `Le label '${labelName}' n'existe pas.` });
+    }
+
+    if (!country) {
+      return res
+        .status(404)
+        .json({ error: `Le pays '${countryName}' n'existe pas.` });
+    }
+
     let existingProduct = await Product.findOne({
       name,
       reference,
       ingredients,
       description,
       image,
-      category,
-      country,
-      label,
+      category: category._id,
+      country: country._id,
+      label: label._id,
     });
 
     if (existingProduct) {
@@ -55,9 +83,9 @@ const createProduct = asyncHandler(async (req, res) => {
       ingredients,
       description,
       image,
-      category,
-      country,
-      label,
+      category: category._id,
+      country: country._id,
+      label: label._id,
     });
 
     await product.save();

@@ -264,16 +264,30 @@ export default function EnhancedTable() {
       });
   }, []);
 
-  var rows = formData.map((produit) => {
-    return createData(
-      produit.name,
-      produit.label,
-      parseFloat(produit.price),
-      produit.available ? "Oui" : "Non",
-      produit.category,
-      produit.country
-    );
-  });
+  // Calcul des lignes après la récupération des données
+  if (formData && formData.length > 0) {
+    var rows = formData.map((produit) => {
+      return createData(
+        produit.name,
+        produit.label,
+        parseFloat(produit.price),
+        produit.available ? "Oui" : "Non",
+        produit.category,
+        produit.country
+      );
+    });
+  } else {
+    rows = [];
+  }
+
+  const visibleRows = useMemo(
+    () =>
+      stableSort(rows, getComparator(order, orderBy)).slice(
+        page * rowsPerPage,
+        page * rowsPerPage + rowsPerPage
+      ),
+    [rows, order, orderBy, page, rowsPerPage]
+  );
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -324,15 +338,6 @@ export default function EnhancedTable() {
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-
-  const visibleRows = useMemo(
-    () =>
-      stableSort(rows, getComparator(order, orderBy)).slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      ),
-    [rows, order, orderBy, page, rowsPerPage]
-  );
 
   return (
     <Box

@@ -77,16 +77,51 @@ function EpicerieProductCreate() {
   const [selectedCategory, setSelectedCategory] = useState("");
 
   const handleChangeCountry = (event) => {
-    setSelectedCountry(event.target.value);
+    const { value } = event.target;
+    setSelectedCountry(value); // Mise à jour du state
+    setFormData({        // Mise à jour de formData
+      ...formData,
+      country: value,
+    });
   };
 
   const handleChangeMarque = (event) => {
-    setSelectedMarque(event.target.value);
+    const { value } = event.target;
+    setSelectedMarque(value); // Mise à jour du state
+    setFormData({        // Mise à jour de formData
+      ...formData,
+      label: value,
+    });
   };
 
   const handleChangeCategory = (event) => {
-    setSelectedCategory(event.target.value);
+    const { value } = event.target;
+    setSelectedCategory(value); // Mise à jour du state
+    setFormData({        // Mise à jour de formData
+      ...formData,
+      category: value,
+    });
   };
+
+  const [imageSrc, setImageSrc] = useState(""); // State pour stocker l'URL de l'image
+
+  // Fonction pour gérer le changement de fichier
+  const handleFileChange = (event) => {
+    const file = event.target.files[0]; // Récupérer le fichier sélectionné
+    const reader = new FileReader(); // Créer un lecteur de fichier
+  
+    reader.onloadend = () => {
+      setImageSrc(reader.result);
+    };
+  
+    if (file) {
+      reader.readAsDataURL(file); // Commencer à lire le fichier en tant que données URL
+      setFormData({        // Mise à jour de formData
+        ...formData,
+        image: file,
+      });
+    }
+  }
 
   const [formData, setFormData] = useState({
     name: "",
@@ -189,7 +224,7 @@ function EpicerieProductCreate() {
                   >
                     <Box>
                       <img
-                        src={InsertImage}
+                        src={imageSrc || InsertImage}
                         alt="insérée"
                         height="300px"
                         width="350px"
@@ -202,8 +237,7 @@ function EpicerieProductCreate() {
                         accept="image/*"
                         style={{ display: "none" }}
                         id="contained-button-file"
-                        value={formData.image}
-                        onChange={handleChange}
+                        onChange={handleFileChange}
                       />
                       <label htmlFor="contained-button-file">
                         <Button
@@ -277,6 +311,7 @@ function EpicerieProductCreate() {
                         </InputLabel>
                         <Select
                           value={selectedCountry}
+                          name="country"
                           label="Pays"
                           onChange={handleChangeCountry}
                           required
@@ -363,6 +398,7 @@ function EpicerieProductCreate() {
                         <Select
                           value={selectedCategory}
                           label="Catégorie"
+                          name="category"
                           onChange={handleChangeCategory}
                           required
                           style={{ fontSize: "12px" }}
@@ -444,6 +480,7 @@ function EpicerieProductCreate() {
                         <Select
                           value={selectedMarque}
                           label="Marque"
+                          name="label"
                           onChange={handleChangeMarque}
                           required
                           style={{ fontSize: "12px" }}
