@@ -55,7 +55,7 @@ function App() {
           <Route path="/connexion" element={<Connexion />} />
           <Route path="/inscription/epicerie" element={<InscriptionEpicerie />}/>
           <Route path="/inscription/client" element={<InscriptionClient />}/>
-          <Route path="/business/inscription/validation" element={<ValidationBusiness />}/>
+          <Route path="/inscription/epicerie/validation" element={<ValidationBusiness />}/>
           <Route path="/business" element={<Business />} />
           <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
           <Route path="/produit" element={<Shop />} />
