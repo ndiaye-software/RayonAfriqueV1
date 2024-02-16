@@ -98,8 +98,12 @@ const createProduct = asyncHandler(async (req, res) => {
     await product.save();
     res.status(201).json(product);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Erreur lors de la création du produit" });
+    if (error.code === 11000 && error.keyPattern && error.keyPattern.name) {
+      res.status(400).json({ message: "Ce produit existe déjà." });
+    } else {
+      console.error(error);
+      res.status(500).json({ error: "Erreur lors de la création du produit" });
+    }
   }
 });
 
