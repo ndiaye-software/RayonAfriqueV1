@@ -32,8 +32,15 @@ const createProduct = asyncHandler(async (req, res) => {
     label: labelName,
   } = req.body;
 
-  if (!name || !categoryName || !countryName || !image || !labelName) {
-    return res.status(400).json({ message: "Tous les champs sont requis" });
+  const missingFields = [];
+  if (!name) missingFields.push("nom produit");
+  if (!categoryName) missingFields.push("catégorie du produit");
+  if (!countryName) missingFields.push("pays du produit");
+  if (!image) missingFields.push("image");
+  if (!labelName) missingFields.push("marque du produit");
+
+  if (missingFields.length > 0) {
+    return res.status(400).json({ message: `Les champs suivants sont requis: ${missingFields.join(', ')}` });
   }
 
   try {
@@ -95,6 +102,7 @@ const createProduct = asyncHandler(async (req, res) => {
     res.status(500).json({ error: "Erreur lors de la création du produit" });
   }
 });
+
 
 const getProduct = asyncHandler(async (req, res) => {
   try {
