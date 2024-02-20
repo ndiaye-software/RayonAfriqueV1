@@ -115,8 +115,6 @@ function EpicerieProductAdd() {
       );
 
       if (response.ok) {
-        const data = await response.json();
-        console.log(data);
         navigate(`/epicerie/produit`);
       } else {
         const data = await response.json();
@@ -160,7 +158,7 @@ function EpicerieProductAdd() {
                   <div>
                     <Box>
                       <img
-                        src={data.image}
+                        src={require(`../../../images/${data.image}`)}
                         alt={data.name}
                         height="300px"
                         width="350px"

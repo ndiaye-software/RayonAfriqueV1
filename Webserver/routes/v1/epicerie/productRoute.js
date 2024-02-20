@@ -1,20 +1,31 @@
-const express = require('express')
-const router = express.Router()
-const productController = require('../../../controllers/v1/epicerie/productControllers')
-const verifyJWT = require('../../../middleware/verifyJWT')
+const express = require("express");
+const router = express.Router();
+const productController = require("../../../controllers/v1/epicerie/productControllers");
 
-router.use(verifyJWT)
+const multer = require("multer");
 
-router.route('/read/')
-    .get(productController.getProduct)
+// Définir le dossier de destination pour enregistrer les images
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "../../../RAYONAFRIQUE/RAYONAFRIQUEV1/RayonAfrique/src/images");
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now();
+    cb(null, uniqueSuffix + file.originalname);
+  },
+});
 
-router.route('/read/:idProduct')
-    .get(productController.getProductById)
+// Initialiser Multer avec la configuration de stockage
+const upload = multer({ storage: storage });
 
-router.route('/search/')
-    .post(productController.searchProduct)
+router.post("/image/upload-image", upload.single("image"), productController.postImage);
 
-router.route('/create')
-    .post(productController.createProduct)
-    
-module.exports = router
+router.get("/image/get-image", productController.getImage);
+
+router.route("/read/").get(productController.getProduct);
+
+router.route("/read/:idProduct").get(productController.getProductById);
+
+router.post("/create", upload.single("image"), productController.createProduct);
+
+module.exports = router;

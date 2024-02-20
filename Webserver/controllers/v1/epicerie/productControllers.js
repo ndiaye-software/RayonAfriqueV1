@@ -6,6 +6,25 @@ const Epicerie = require("../../../models/Epicerie");
 const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
 
+const postImage = asyncHandler(async (req, res) => {
+  try {
+    const imageName = req.file.filename;
+    await Images.create({ image: imageName });
+    res.json({ status: "ok" });
+  } catch (error) {
+    res.json({ status: error });
+  }
+});
+
+const getImage = async (req, res) => {
+  try {
+    const data = await Images.find({});
+    res.send({ status: "ok", data: data });
+  } catch (error) {
+    res.json({ status: error });
+  }
+};
+
 const createProduct = asyncHandler(async (req, res) => {
   if (!req.headers.authorization) {
     res.status(402).json({ error: "Authorization header missing" });
@@ -21,12 +40,15 @@ const createProduct = asyncHandler(async (req, res) => {
     return res.status(404).json({ error: "Epicerie non trouvé." });
   }
 
+  const imageName = req.file.filename;
+
+  console.log(imageName);
+
   const {
     name,
     reference,
     ingredients,
     description,
-    image,
     category: categoryName,
     country: countryName,
     label: labelName,
@@ -36,19 +58,21 @@ const createProduct = asyncHandler(async (req, res) => {
   if (!name) missingFields.push("nom produit");
   if (!categoryName) missingFields.push("catégorie du produit");
   if (!countryName) missingFields.push("pays du produit");
-  if (!image) missingFields.push("image");
+  if (!imageName) missingFields.push("image");
   if (!labelName) missingFields.push("marque du produit");
 
   if (missingFields.length > 0) {
-    return res.status(400).json({ message: `Les champs suivants sont requis: ${missingFields.join(', ')}` });
+    return res.status(400).json({
+      message: `Les champs suivants sont requis: ${missingFields.join(", ")}`,
+    });
   }
 
   try {
     // Recherche des catégories, labels et pays dans la base de données
     const [category, label, country] = await Promise.all([
-      Category.findOne({ categoryName: categoryName }),
-      Label.findOne({ labelName: labelName }),
-      Country.findOne({ countryName: countryName }),
+      Category.findOne({ categoryName }),
+      Label.findOne({ labelName }),
+      Country.findOne({ countryName }),
     ]);
 
     if (!category) {
@@ -56,7 +80,6 @@ const createProduct = asyncHandler(async (req, res) => {
         .status(404)
         .json({ error: `La catégorie '${categoryName}' n'existe pas.` });
     }
-
     if (!label) {
       return res
         .status(404)
@@ -74,7 +97,6 @@ const createProduct = asyncHandler(async (req, res) => {
       reference,
       ingredients,
       description,
-      image,
       category: category._id,
       country: country._id,
       label: label._id,
@@ -84,19 +106,30 @@ const createProduct = asyncHandler(async (req, res) => {
       return res.status(400).json({ message: "Le produit existe déjà." });
     }
 
+    console.log({
+      name,
+      reference,
+      ingredients,
+      description,
+      image: imageName,
+      category: category._id,
+      country: country._id,
+      label: label._id,
+    });
     const product = new Product({
       name,
       reference,
       ingredients,
       description,
-      image,
+      image: imageName,
       category: category._id,
       country: country._id,
       label: label._id,
     });
 
-    await product.save();
-    res.status(201).json(product);
+    const savedProduct = await product.save();
+    
+    res.status(201).json({id: savedProduct._id});
   } catch (error) {
     if (error.code === 11000 && error.keyPattern && error.keyPattern.name) {
       res.status(400).json({ message: "Ce produit existe déjà." });
@@ -106,7 +139,6 @@ const createProduct = asyncHandler(async (req, res) => {
     }
   }
 });
-
 
 const getProduct = asyncHandler(async (req, res) => {
   try {
@@ -153,56 +185,6 @@ const getProduct = asyncHandler(async (req, res) => {
     res.status(500).json({
       error: "Erreur lors de la récupération des produits d'épicerie.",
     });
-  }
-});
-
-//Chercher un produit à travers son :nom ou son :référence, catgeory, country, label
-const searchProduct = asyncHandler(async (req, res) => {
-  try {
-    const { name } = req.body;
-
-    const category = await Category.findOne({ categoryName: name });
-    const label = await Label.findOne({ labelName: name });
-    const country = await Country.findOne({ countryName: name });
-
-    const categoryId = category ? category._id : null;
-    const labelId = label ? label._id : null;
-    const countryId = country ? country._id : null;
-
-    // Recherchez le produit par nom, référence, label, country ou category
-    const products = await Product.find({
-      $or: [
-        { name: { $regex: name, $options: "i" } }, // Recherche par nom (insensible à la casse)
-        { reference: { $regex: name, $options: "i" } }, // Recherche par référence (insensible à la casse)
-        { label: labelId }, // Utilisez l'ID de label pour la recherche
-        { country: countryId }, // Utilisez l'ID de country pour la recherche
-        { category: categoryId }, // Utilisez l'ID de category pour la recherche
-      ],
-    })
-      .populate("category")
-      .populate("country")
-      .populate("label")
-      .lean();
-
-    if (products.length === 0) {
-      return res.status(404).json({ message: "Produit non trouvé." });
-    }
-
-    const formattedProducts = products.map((product) => ({
-      _id: product._id,
-      name: product.name,
-      reference: product.reference,
-      image: product.image,
-      description: product.description,
-      categoryName: product.category ? product.category.categoryName : null,
-      countryName: product.country ? product.country.countryName : null,
-      labelName: product.label ? product.label.labelName : null,
-    }));
-
-    res.status(200).json(formattedProducts);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Erreur lors de la recherche du produit." });
   }
 });
 
@@ -263,5 +245,6 @@ module.exports = {
   createProduct,
   getProduct,
   getProductById,
-  searchProduct,
+  postImage,
+  getImage,
 };

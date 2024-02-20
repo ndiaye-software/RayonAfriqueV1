@@ -103,25 +103,26 @@ function EpicerieProductCreate() {
     });
   };
 
+
   const [imageSrc, setImageSrc] = useState(""); // State pour stocker l'URL de l'image
 
   // Fonction pour gérer le changement de fichier
   const handleFileChange = (event) => {
-    const file = event.target.files[0]; // Récupérer le fichier sélectionné
-    const reader = new FileReader(); // Créer un lecteur de fichier
+    const file = event.target.files[0]; // Get the selected file
+    const reader = new FileReader();
   
     reader.onloadend = () => {
       setImageSrc(reader.result);
     };
   
     if (file) {
-      reader.readAsDataURL(file); // Commencer à lire le fichier en tant que données URL
-      setFormData({        // Mise à jour de formData
-        ...formData,
+      reader.readAsDataURL(file);
+      setFormData((prevFormData) => ({
+        ...prevFormData,
         image: file,
-      });
+      }));
     }
-  }
+  };
 
   const [formData, setFormData] = useState({
     name: "",
@@ -149,34 +150,40 @@ function EpicerieProductCreate() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+  
     const accessToken = localStorage.getItem("accessToken");
-
+  
     if (!accessToken) {
       setError("Access token is missing");
       return;
     }
-
+  
     try {
-      console.log(formData)
-      /* const response = await fetch(
+      const formDataToSend = new FormData();
+      formDataToSend.append("image", formData.image);
+      formDataToSend.append("name", formData.name);
+      formDataToSend.append("reference", formData.reference);
+      formDataToSend.append("ingredients", formData.ingredients);
+      formDataToSend.append("description", formData.description);
+      formDataToSend.append("category", formData.category);
+      formDataToSend.append("country", formData.country);
+      formDataToSend.append("label", formData.label);
+  
+      const response = await fetch(
         `${hostname}/api/v1/epicerie/product/create`,
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`,
           },
-          body: JSON.stringify(formData),
+          body: formDataToSend,
         }
       );
-
-      console.log(formData);
-
+  
+  
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
-        navigate(`/epicerie/produit`);
+        navigate(`/epicerie/produit/search/${data.id}/add`);
       } else {
         const data = await response.json();
         if (data.message) {
@@ -184,11 +191,13 @@ function EpicerieProductCreate() {
         } else {
           setErrorMessage("Erreur lors de la création du produit");
         }
-      } */
+      }
     } catch (error) {
       console.error("Erreur lors de la création du produit :", error);
     }
   };
+  
+  
 
   const classes = useStyles();
 
@@ -572,6 +581,7 @@ function EpicerieProductCreate() {
             </Button>
           </Box>
         </Box>
+        <div>{error} {errorMessage}</div>
         <Footer />
       </div>
     </>

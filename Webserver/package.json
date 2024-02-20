@@ -32,6 +32,7 @@
     "jwt-decode": "^4.0.0",
     "mongodb": "^6.1.0",
     "mongoose": "^7.5.2",
+    "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.5",
     "phone-number-validation": "^0.1.2",
     "react-places-autocomplete": "^7.3.0",

@@ -31,6 +31,7 @@ import Test2 from "./pages/test2";
 import Test3 from "./pages/test3";
 import EpicerieProductPresentation from "./pages/epicerie/product/epicerieProductPresentation";
 import EpicerieProductCreate from "./pages/epicerie/product/epicerieProductCreate";
+import Test_image from "./pages/test_image";
 
 
 function App() {
@@ -45,6 +46,7 @@ function App() {
           <Route path="/test" element={<Test />}/>
           <Route path="/test2" element={<Test2 />}/>
           <Route path="/test3" element={<Test3 />}/>
+          <Route path="/testImage" element={<Test_image />}/>
           <Route path="/business/connexion/reinitialisation-mdp" element={<Reinitialisation />}/>
           <Route path="/business/connexion/reinitialisation-mdp/modification-mdp" element={<Modification />}/>
           <Route path="/business/connexion/authentification" element={<Authentification />}/>
