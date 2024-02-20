@@ -255,7 +255,6 @@ export default function EnhancedTable() {
       })
       .then((formData) => {
         setFormData(formData);
-        console.log(formData)
         setError(null);
       })
       .catch((error) => {
