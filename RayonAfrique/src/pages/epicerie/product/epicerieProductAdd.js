@@ -51,6 +51,10 @@ function EpicerieProductAdd() {
         setData(data);
       })
       .catch((err) => console.log(err));
+    const delay = setTimeout(() => {
+      setError(null);
+    }, 2000);
+    return () => clearTimeout(delay);
   }, [idProduct]);
 
   const [disponibilité, setDispo] = React.useState(options[0]?.label || "");
@@ -91,7 +95,6 @@ function EpicerieProductAdd() {
   };
 
   const handleSubmit = async (event) => {
-
     event.preventDefault();
 
     const accessToken = localStorage.getItem("accessToken");
@@ -157,12 +160,14 @@ function EpicerieProductAdd() {
                 <Box>
                   <div>
                     <Box>
-                      <img
-                        src={require(`../../../images/${data.image}`)}
-                        alt={data.name}
-                        height="300px"
-                        width="350px"
-                      />
+                      {data.image && (
+                        <img
+                          src={require(`../../../images/${data.image}`)}
+                          alt="Product"
+                          height="300px"
+                          width="350px"
+                        />
+                      )}
                     </Box>
                   </div>
                 </Box>

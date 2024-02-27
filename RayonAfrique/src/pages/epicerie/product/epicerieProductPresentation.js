@@ -29,87 +29,116 @@ const useStyles = makeStyles(() => ({
 
 function EpicerieProductPresentation() {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const { idProduct } = useParams();
 
   useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-    fetch(`${hostname}/api/v1/epicerie/product/read/${idProduct}`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    })
-      .then((res) => res.json())
-      .then((data) => {
+    const fetchData = async () => {
+      try {
+        const accessToken = localStorage.getItem("accessToken");
+        const response = await fetch(
+          `${hostname}/api/v1/epicerie/product/read/${idProduct}`,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
         setData(data);
-      })
-      .catch((err) => console.log(err));
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, [idProduct]);
 
   const classes = useStyles();
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  if (!data) {
+    return <div>No data available</div>;
+  }
 
   return (
     <>
       <div>
         <Box backgroundColor="#f9fafb">
           <Navbar />
-          {data && (
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              sx={{ flexDirection: { xs: "column", sm: "row" } }}
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            sx={{ flexDirection: { xs: "column", sm: "row" } }}
+          >
+            <Box
+              flex={4}
+              p={{ xs: 0, md: 2 }}
+              sx={{ backgroundColor: "#f9fafb" }}
             >
               <Box
-                flex={4}
-                p={{ xs: 0, md: 2 }}
-                sx={{ backgroundColor: "#f9fafb" }}
+                flexWrap="wrap"
+                justifyContent="space-evenly"
+                display="flex"
+                flexDirection="row"
+                marginBottom="35px"
+                marginTop="35px"
               >
-                <Box
-                  flexWrap="wrap"
-                  justifyContent="space-evenly"
-                  display="flex"
-                  flexDirection="row"
-                  marginBottom="35px"
-                  marginTop="35px"
-                >
-                  <Box>
-                    <div>
+                <Box>
+                  <div>
+                    {data.image && (
                       <img
-                        src={data.image}
-                        alt={data.name}
+                        src={require(`../../../images/${data.image}`)}
+                        alt="Product"
                         height="300px"
                         width="350px"
                       />
-                    </div>
-                  </Box>
+                    )}
+                  </div>
+                </Box>
 
-                  <Box
-                    padding="20px"
-                    maxWidth="500px"
-                    flexDirection="column"
-                    display="flex"
-                    gap={2}
-                  >
-                    <Box>
-                      <Typography variant="h6">Nom : {data.name} </Typography>
-                      <Typography variant="h6">
-                        Marque : {data.labelName}{" "}
-                      </Typography>
-                      <Typography variant="body1">
-                        Catégorie : {data.categoryName}{" "}
-                      </Typography>
-                      <Typography variant="body1">
-                        Pays : {data.countryName}{" "}
-                      </Typography>
-                    </Box>
-                    <Box>
-                      <span>{data.description}</span>
-                    </Box>
+                <Box
+                  padding="20px"
+                  maxWidth="500px"
+                  flexDirection="column"
+                  display="flex"
+                  gap={2}
+                >
+                  <Box>
+                    <Typography variant="h6">Nom : {data.name} </Typography>
+                    <Typography variant="h6">
+                      Marque : {data.labelName}{" "}
+                    </Typography>
+                    <Typography variant="body1">
+                      Catégorie : {data.categoryName}{" "}
+                    </Typography>
+                    <Typography variant="body1">
+                      Pays : {data.countryName}{" "}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <span>{data.description}</span>
                   </Box>
                 </Box>
               </Box>
-            </Stack>
-          )}
+            </Box>
+          </Stack>
           <Box display="flex" justifyContent="center" marginBottom="30px">
-            <Button href={`${idProduct}/add`} className={classes.Button}>Ajouter ce produit</Button>
+            <Button href={`${idProduct}/add`} className={classes.Button}>
+              Ajouter ce produit
+            </Button>
           </Box>
           <Footer />
         </Box>

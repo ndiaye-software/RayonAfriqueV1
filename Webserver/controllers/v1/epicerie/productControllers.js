@@ -6,25 +6,6 @@ const Epicerie = require("../../../models/Epicerie");
 const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
 
-const postImage = asyncHandler(async (req, res) => {
-  try {
-    const imageName = req.file.filename;
-    await Images.create({ image: imageName });
-    res.json({ status: "ok" });
-  } catch (error) {
-    res.json({ status: error });
-  }
-});
-
-const getImage = async (req, res) => {
-  try {
-    const data = await Images.find({});
-    res.send({ status: "ok", data: data });
-  } catch (error) {
-    res.json({ status: error });
-  }
-};
-
 const createProduct = asyncHandler(async (req, res) => {
   if (!req.headers.authorization) {
     res.status(402).json({ error: "Authorization header missing" });
@@ -245,6 +226,4 @@ module.exports = {
   createProduct,
   getProduct,
   getProductById,
-  postImage,
-  getImage,
 };

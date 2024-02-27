@@ -12,13 +12,30 @@ import hostname from "../../../hostname";
 function ShopDetail() {
   const { name } = useParams();
 
-  const [data, setData] = useState([])
-  useEffect(()=> {
-    fetch(`${hostname}/api/v1/user/shop/grocery/${name}`)
-    .then(res => res.json())
-    .then((data) => setData(data))
-  }, [name])
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `${hostname}/api/v1/user/shop/grocery/${name}`
+        );
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setData(data);
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [name]);
 
   const productsPerPage = 9;
   const totalPages = Math.ceil(data.length / productsPerPage);
@@ -38,10 +55,19 @@ function ShopDetail() {
   };
 
   const startIndex = (currentPage - 1) * productsPerPage;
-  const visibleProducts = data.slice(
-    startIndex,
-    startIndex + productsPerPage
-  );
+  const visibleProducts = data.slice(startIndex, startIndex + productsPerPage);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  if (!data) {
+    return <div>No data available</div>;
+  }
 
   return (
     <>
@@ -62,7 +88,7 @@ function ShopDetail() {
               <Box>
                 <Box sx={{ textAlign: "center" }}>
                   <Typography variant="h5" paddingBottom="30px">
-                    Disponible dans{" "} <span>{data.length}</span> {" "} épicerie(s)
+                    Disponible dans <span>{data.length}</span> épicerie(s)
                   </Typography>
                 </Box>
 
@@ -80,14 +106,16 @@ function ShopDetail() {
                       lg={4}
                       key={index}
                     >
-                      <ProductShop
-                        key={index}
-                        image={product.image}
-                        nomProduit={product.nomProduit}
-                        adresse={product.adresse}
-                        nomEpicerie={product.nomEpicerie}
-                        prix={product.prix}
-                      />
+                      {product.image && (
+                        <ProductShop
+                          key={index}
+                          image={require(`../../../images/${product.image}`)}
+                          nomProduit={product.nomProduit}
+                          adresse={product.adresse}
+                          nomEpicerie={product.nomEpicerie}
+                          prix={product.prix}
+                        />
+                      )}
                     </Grid>
                   ))}
                 </Grid>

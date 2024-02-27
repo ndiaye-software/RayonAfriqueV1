@@ -58,7 +58,7 @@ function EpicerieProductUpdate(product) {
                   <div>
                     <Box>
                       <img
-                        src={product.image}
+                        src={require(`../../../images/${product.image}`)}
                         alt="insérée"
                         height="300px"
                         width="350px"

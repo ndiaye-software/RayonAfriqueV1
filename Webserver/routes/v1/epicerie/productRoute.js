@@ -2,6 +2,10 @@ const express = require("express");
 const router = express.Router();
 const productController = require("../../../controllers/v1/epicerie/productControllers");
 
+const verifyJWT = require('../../../middleware/verifyJWT')
+
+router.use(verifyJWT)
+
 const multer = require("multer");
 
 // Définir le dossier de destination pour enregistrer les images
@@ -17,10 +21,6 @@ const storage = multer.diskStorage({
 
 // Initialiser Multer avec la configuration de stockage
 const upload = multer({ storage: storage });
-
-router.post("/image/upload-image", upload.single("image"), productController.postImage);
-
-router.get("/image/get-image", productController.getImage);
 
 router.route("/read/").get(productController.getProduct);
 
