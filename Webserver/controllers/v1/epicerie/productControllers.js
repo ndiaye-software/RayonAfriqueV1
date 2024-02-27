@@ -23,8 +23,6 @@ const createProduct = asyncHandler(async (req, res) => {
 
   const imageName = req.file.filename;
 
-  console.log(imageName);
-
   const {
     name,
     reference,
@@ -33,14 +31,18 @@ const createProduct = asyncHandler(async (req, res) => {
     category: categoryName,
     country: countryName,
     label: labelName,
+    autreCategory,
+    autreCountry,
+    autreLabel
   } = req.body;
 
   const missingFields = [];
   if (!name) missingFields.push("nom produit");
-  if (!categoryName) missingFields.push("catégorie du produit");
-  if (!countryName) missingFields.push("pays du produit");
+  if (!categoryName && !autreCategory) missingFields.push("catégorie du produit");
+  if (!countryName && !autreCountry) missingFields.push("pays du produit");
+  if (!labelName && !autreLabel) missingFields.push("marque du produit");
   if (!imageName) missingFields.push("image");
-  if (!labelName) missingFields.push("marque du produit");
+
 
   if (missingFields.length > 0) {
     return res.status(400).json({
@@ -50,11 +52,41 @@ const createProduct = asyncHandler(async (req, res) => {
 
   try {
     // Recherche des catégories, labels et pays dans la base de données
-    const [category, label, country] = await Promise.all([
+    let [category, label, country] = await Promise.all([
       Category.findOne({ categoryName }),
       Label.findOne({ labelName }),
       Country.findOne({ countryName }),
     ]);
+
+    // Create new category if not found
+    if (!category && autreCategory) {
+      category = new Category({ categoryName: autreCategory });
+      category = await category.save();
+    } else if (!category) {
+      return res
+        .status(404)
+        .json({ error: `La catégorie '${categoryName}' n'existe pas.` });
+    }
+
+    // Create new label if not found
+    if (!label && autreLabel) {
+      label = new Label({ labelName: autreLabel });
+      label = await label.save();
+    } else if (!label) {
+      return res
+        .status(404)
+        .json({ error: `Le label '${labelName}' n'existe pas.` });
+    }
+
+    // Create new country if not found
+    if (!country && autreCountry) {
+      country = new Country({ countryName: autreCountry });
+      country = await country.save();
+    } else if (!country) {
+      return res
+        .status(404)
+        .json({ error: `Le pays '${countryName}' n'existe pas.` });
+    }
 
     if (!category) {
       return res
@@ -109,8 +141,8 @@ const createProduct = asyncHandler(async (req, res) => {
     });
 
     const savedProduct = await product.save();
-    
-    res.status(201).json({id: savedProduct._id});
+
+    res.status(201).json({ id: savedProduct._id });
   } catch (error) {
     if (error.code === 11000 && error.keyPattern && error.keyPattern.name) {
       res.status(400).json({ message: "Ce produit existe déjà." });

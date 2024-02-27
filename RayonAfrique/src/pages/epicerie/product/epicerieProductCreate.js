@@ -31,19 +31,16 @@ const useStyles = makeStyles(() => ({
 }));
 
 function EpicerieProductCreate() {
-  const [countryInput, setCountryInput] = useState("");
   const [isCountryClicked, setIsCountryClicked] = useState(false);
   const handleToggleCountry = () => {
     setIsCountryClicked((prevIsCountryClicked) => !prevIsCountryClicked);
   };
 
-  const [labelInput, setLabelInput] = useState("");
   const [isLabelClicked, setIsLabelClicked] = useState(false);
   const handleToggleLabel = () => {
     setIsLabelClicked((prevIsLabelClicked) => !prevIsLabelClicked);
   };
 
-  const [categoryInput, setCategoryInput] = useState("");
   const [isCategoryClicked, setIsCategoryClicked] = useState(false);
   const handleToggleCategory = () => {
     setIsCategoryClicked((prevIsCategoryClicked) => !prevIsCategoryClicked);
@@ -133,6 +130,9 @@ function EpicerieProductCreate() {
     category: "",
     country: "",
     label: "",
+    autreCountry : "",
+    autreCategory : "",
+    autreLabel :""
   });
 
   const handleChange = (event) => {
@@ -168,8 +168,13 @@ function EpicerieProductCreate() {
       formDataToSend.append("category", formData.category);
       formDataToSend.append("country", formData.country);
       formDataToSend.append("label", formData.label);
-  
-      const response = await fetch(
+      formDataToSend.append("autreCategory", formData.autreCategory);
+      formDataToSend.append("autreCountry", formData.autreCountry);
+      formDataToSend.append("autreLabel", formData.autreLabel);
+      for (let pair of formDataToSend.entries()) {
+        console.log(pair[0] + ": " + pair[1]);
+      }
+     const response = await fetch(
         `${hostname}/api/v1/epicerie/product/create`,
         {
           method: "POST",
@@ -192,9 +197,12 @@ function EpicerieProductCreate() {
           setErrorMessage("Erreur lors de la création du produit");
         }
       }
+
     } catch (error) {
       console.error("Erreur lors de la création du produit :", error);
+
     }
+   
   };
   
   
@@ -323,7 +331,6 @@ function EpicerieProductCreate() {
                           name="country"
                           label="Pays"
                           onChange={handleChangeCountry}
-                          required
                           style={{ fontSize: "12px", color: "black" }}
                         >
                           {country.map((countryName) => {
@@ -347,11 +354,9 @@ function EpicerieProductCreate() {
                           label="Autre"
                           variant="outlined"
                           fullWidth
-                          name="autreInput"
-                          value={countryInput}
-                          onChange={(event) =>
-                            setCountryInput(event.target.value)
-                          }
+                          name="autreCountry"
+                          value={formData.autreCountry}
+                          onChange={handleChange}
                         />
                       )}
                       <Grid container>
@@ -409,7 +414,6 @@ function EpicerieProductCreate() {
                           label="Catégorie"
                           name="category"
                           onChange={handleChangeCategory}
-                          required
                           style={{ fontSize: "12px" }}
                         >
                           {category?.map((categoryName) => {
@@ -433,11 +437,9 @@ function EpicerieProductCreate() {
                           label="Autre"
                           variant="outlined"
                           fullWidth
-                          name="autreInput"
-                          value={categoryInput}
-                          onChange={(event) =>
-                            setCategoryInput(event.target.value)
-                          }
+                          name="autreCategory"
+                          value={formData.autreCategory}
+                          onChange={handleChange}
                         />
                       )}
                       <Grid container>
@@ -491,7 +493,6 @@ function EpicerieProductCreate() {
                           label="Marque"
                           name="label"
                           onChange={handleChangeMarque}
-                          required
                           style={{ fontSize: "12px" }}
                         >
                           {marque?.map((nameCompany) => {
@@ -514,11 +515,9 @@ function EpicerieProductCreate() {
                           label="Autre"
                           variant="outlined"
                           fullWidth
-                          name="autreInput"
-                          value={labelInput}
-                          onChange={(event) =>
-                            setLabelInput(event.target.value)
-                          }
+                          name="autreLabel"
+                          value={formData.autreLabel}
+                          onChange={handleChange}
                         />
                       )}
                       <Grid container>
