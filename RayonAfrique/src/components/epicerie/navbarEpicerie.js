@@ -15,7 +15,7 @@ import Divider from "@mui/material/Divider";
 import { makeStyles } from "@material-ui/core/styles";
 import { LogoutOutlined } from "@mui/icons-material";
 import logo from "../../images/rayonafrique.svg";
-import { useParams } from "react-router-dom";
+
 
 const drawerWidth = 300;
 
@@ -45,7 +45,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function PrimarySearchAppBar(props) {
-  const { idEpicerie } = useParams();
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -59,14 +58,14 @@ export default function PrimarySearchAppBar(props) {
         variant="h6"
         sx={{ padding: 2, color: "#922B21", fontWeight: "bold" }}
       >
-        <a href={`/epicerie/${idEpicerie}`}>
+        <a href={`/epicerie/`}>
           <img height="90px" src={`${logo}`} alt="logo" />
         </a>
       </Typography>
       <Divider />
       <List>
 
-        <a href={`/epicerie/${idEpicerie}/produit`}>
+        <a href={`/epicerie/produit`}>
           <ListItem disablePadding>
             <ListItemButton sx={{ textAlign: "left" }}>
               <ListItemText sx={{ color: "black" }} primary="Produit" />
@@ -74,7 +73,7 @@ export default function PrimarySearchAppBar(props) {
           </ListItem>
         </a>
 
-        <a href={`/epiceries/${idEpicerie}/profil`}>
+        <a href={`/epiceries/profil`}>
           <ListItem disablePadding>
             <ListItemButton sx={{ textAlign: "left" }}>
               <ListItemText sx={{ color: "black" }} primary="Profil" />
@@ -82,7 +81,7 @@ export default function PrimarySearchAppBar(props) {
           </ListItem>
         </a>
 
-        <a href={`/epicerie/${idEpicerie}/contact`}>
+        <a href={`/epicerie/contact`}>
           <ListItem disablePadding>
             <ListItemButton sx={{ textAlign: "left" }}>
               <ListItemText sx={{ color: "black" }} primary="Contact" />
@@ -90,7 +89,7 @@ export default function PrimarySearchAppBar(props) {
           </ListItem>
         </a>
 
-        <a href={`/epicerie/${idEpicerie}/logout`}>
+        <a href={`/epicerie/logout`}>
           <ListItem disablePadding>
             <ListItemButton sx={{ textAlign: "left" }}>
               <ListItemText sx={{ color: "black" }} primary="Déconnexion" />
@@ -134,7 +133,7 @@ export default function PrimarySearchAppBar(props) {
             component="div"
             sx={{ display: { xs: "none", md: "flex" } }}
           >
-            <a href={`/epicerie/${idEpicerie}`}>
+            <a href={`/epicerie`}>
               <img height="90px" src={`${logo}`} alt="logo" />
             </a>
           </Typography>
@@ -142,27 +141,27 @@ export default function PrimarySearchAppBar(props) {
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <Button
               className={classes.button}
-              href={`/epicerie/${idEpicerie}/produit`}
+              href={`/epicerie/produit`}
               sx={{ color: "black" }}
             >
               Produit
             </Button>
             <Button
               className={classes.button}
-              href={`/epicerie/${idEpicerie}/profil`}
+              href={`/epicerie/profil`}
               sx={{ color: "black" }}
             >
               Profil
             </Button>
             <Button
               className={classes.button}
-              href={`/epicerie/${idEpicerie}/contact`}
+              href={`/epicerie/contact`}
               sx={{ color: "black" }}
             >
               Contact
             </Button>
             <Tooltip title="Déconnexion">
-              <IconButton href={`/fournisseur/${idEpicerie}/logout`}>
+              <IconButton href={`/fournisseur/logout`}>
                 <LogoutOutlined sx={{ "&:hover": { color: "#922B21" } }} />
               </IconButton>
             </Tooltip>

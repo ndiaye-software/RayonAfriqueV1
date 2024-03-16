@@ -18,11 +18,11 @@ const createProduct = asyncHandler(async (req, res) => {
   const epicerie = await Epicerie.findById(userId);
 
   if (!epicerie) {
-    return res.status(404).json({ error: "Epicerie non trouvé." });
+    return res.status(404).json({ message: "Epicerie non trouvée." });
   }
 
   if (!req.file) {
-    return res.status(404).json({ error: "Mettez une image." });
+    return res.status(404).json({ message: "Mettez une image." });
   }
 
   const imageName = req.file.filename;
@@ -64,49 +64,61 @@ const createProduct = asyncHandler(async (req, res) => {
 
     // Create new category if not found
     if (!category && autreCategory) {
+      const existingCategory = await Category.findOne({ categoryName: autreCategory });
+      if (existingCategory) {
+        return res.status(409).json({ message: `La catégorie '${autreCategory}' existe déjà. Sélectionnez-le !` });
+      }
       category = new Category({ categoryName: autreCategory });
       category = await category.save();
     } else if (!category) {
       return res
         .status(404)
-        .json({ error: `La catégorie '${categoryName}' n'existe pas.` });
+        .json({ message: `La catégorie '${categoryName}' n'existe pas.` });
     }
 
     // Create new label if not found
     if (!label && autreLabel) {
+      const existingLabel = await Label.findOne({ labelName: autreLabel });
+      if (existingLabel) {
+        return res.status(409).json({ message: `La marque '${autreLabel}' existe déjà. Sélectionnez-le !` });
+      }
       label = new Label({ labelName: autreLabel });
       label = await label.save();
     } else if (!label) {
       return res
         .status(404)
-        .json({ error: `Le label '${labelName}' n'existe pas.` });
+        .json({ message: `Le label '${labelName}' n'existe pas.` });
     }
 
     // Create new country if not found
     if (!country && autreCountry) {
+      const existingCountry = await Country.findOne({ countryName: autreCountry });
+      if (existingCountry) {
+        return res.status(409).json({ message: `La pays '${autreCountry}' existe déjà. Sélectionnez-le !` });
+      }
       country = new Country({ countryName: autreCountry });
       country = await country.save();
     } else if (!country) {
       return res
         .status(404)
-        .json({ error: `Le pays '${countryName}' n'existe pas.` });
+        .json({ message: `Le pays '${countryName}' n'existe pas.` });
     }
 
     if (!category) {
       return res
         .status(404)
-        .json({ error: `La catégorie '${categoryName}' n'existe pas.` });
+        .json({ message: `La catégorie '${categoryName}' n'existe pas.` });
     }
     if (!label) {
       return res
         .status(404)
-        .json({ error: `Le label '${labelName}' n'existe pas.` });
+        .json({ message: `Le label '${labelName}' n'existe pas.` });
     }
 
     if (!country) {
       return res
         .status(404)
-        .json({ error: `Le pays '${countryName}' n'existe pas.` });
+        .json({ message: `Le pays '${countryName}' n'existe pas.` });
     }
 
     let existingProduct = await Product.findOne({

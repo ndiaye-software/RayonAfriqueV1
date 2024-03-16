@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { IconButton, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import Box from "@mui/material/Box";
 import Navbar from "../../../components/epicerie/navbarEpicerie";
 import Footer from "../../../components/main/footer";
 import { InsertPhoto, Save } from "@material-ui/icons";
-import { TextField, Button, Grid, Typography } from "@material-ui/core";
+import { TextField, Button, Grid } from "@material-ui/core";
 import { FormControl, InputLabel, Select } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { MenuItem } from "@mui/material";
 import InsertImage from "../../../images/insertimage.png";
 import hostname from "../../../hostname";
-import { Add } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 
 const useStyles = makeStyles(() => ({
   Button: {
@@ -33,20 +32,11 @@ const useStyles = makeStyles(() => ({
 }));
 
 function EpicerieProductCreate() {
+
   const [isCountryClicked, setIsCountryClicked] = useState(false);
-  const handleToggleCountry = () => {
-    setIsCountryClicked((prevIsCountryClicked) => !prevIsCountryClicked);
-  };
-
   const [isLabelClicked, setIsLabelClicked] = useState(false);
-  const handleToggleLabel = () => {
-    setIsLabelClicked((prevIsLabelClicked) => !prevIsLabelClicked);
-  };
-
   const [isCategoryClicked, setIsCategoryClicked] = useState(false);
-  const handleToggleCategory = () => {
-    setIsCategoryClicked((prevIsCategoryClicked) => !prevIsCategoryClicked);
-  };
+
   const [country, setCountry] = useState([]);
   useEffect(() => {
     fetch(`${hostname}/api/v1/user/country/read`)
@@ -77,34 +67,58 @@ function EpicerieProductCreate() {
 
   const handleChangeCountry = (event) => {
     const { value } = event.target;
-    setSelectedCountry(value); // Mise à jour du state
-    setFormData({
-      // Mise à jour de formData
-      ...formData,
-      country: value,
-    });
+    setSelectedCountry(value);
+    if (value === "Autre") {
+      setIsCountryClicked(true);
+      setFormData({
+        ...formData,
+        country: "",
+      });
+    } else {
+      setIsCountryClicked(false);
+      setFormData({
+        ...formData,
+        country: value,
+      });
+    }
   };
-
+  
   const handleChangeMarque = (event) => {
     const { value } = event.target;
-    setSelectedMarque(value); // Mise à jour du state
-    setFormData({
-      // Mise à jour de formData
-      ...formData,
-      label: value,
-    });
+    setSelectedMarque(value);
+    if (value === "Autre") {
+      setIsLabelClicked(true);
+      setFormData({
+        ...formData,
+        label: "",
+      });
+    } else {
+      setIsLabelClicked(false);
+      setFormData({
+        ...formData,
+        label: value,
+      });
+    }
   };
-
+  
   const handleChangeCategory = (event) => {
     const { value } = event.target;
-    setSelectedCategory(value); // Mise à jour du state
-    setFormData({
-      // Mise à jour de formData
-      ...formData,
-      category: value,
-    });
+    setSelectedCategory(value);
+    if (value === "Autre") {
+      setIsCategoryClicked(true);
+      setFormData({
+        ...formData,
+        category: "",
+      });
+    } else {
+      setIsCategoryClicked(false);
+      setFormData({
+        ...formData,
+        category: value,
+      });
+    }
   };
-
+  
   const [imageSrc, setImageSrc] = useState(""); // State pour stocker l'URL de l'image
 
   // Fonction pour gérer le changement de fichier
@@ -161,7 +175,7 @@ function EpicerieProductCreate() {
     }
 
     try {
-      console.log(formData)
+      console.log(formData);
       const formDataToSend = new FormData();
       formDataToSend.append("image", formData.image);
       formDataToSend.append("name", formData.name);
@@ -174,7 +188,7 @@ function EpicerieProductCreate() {
       formDataToSend.append("autreCategory", formData.autreCategory);
       formDataToSend.append("autreCountry", formData.autreCountry);
       formDataToSend.append("autreLabel", formData.autreLabel);
-      console.log(formDataToSend)
+      console.log(formDataToSend);
       const response = await fetch(
         `${hostname}/api/v1/epicerie/product/create`,
         {
@@ -328,6 +342,13 @@ function EpicerieProductCreate() {
                           onChange={handleChangeCountry}
                           style={{ fontSize: "12px", color: "black" }}
                         >
+                          <MenuItem
+                            sx={{ fontSize: "12px" }}
+                            key="autre"
+                            value="Autre"
+                          >
+                            Autre
+                          </MenuItem>
                           {country.map((countryName) => {
                             return (
                               <MenuItem
@@ -354,38 +375,6 @@ function EpicerieProductCreate() {
                           onChange={handleChange}
                         />
                       )}
-                      <Grid container>
-                        <Grid
-                          item
-                          xs={2}
-                          variant="body2"
-                          color="inherit"
-                          sx={{ display: "flex", alignItems: "center" }}
-                        >
-                          <IconButton fullWidth onClick={handleToggleCountry}>
-                            <Add
-                              sx={{
-                                backgroundColor: "#922B21",
-                                borderRadius: "50%",
-                                padding: "5px",
-                                fontSize: "20px",
-                                color: "white",
-                              }}
-                            />
-                          </IconButton>
-                        </Grid>
-                        <Grid
-                          item
-                          xs={10}
-                          variant="body2"
-                          color="inherit"
-                          sx={{ display: "flex", alignItems: "center" }}
-                        >
-                          <Typography variant="body2">
-                            Ajouter un nouveau pays
-                          </Typography>
-                        </Grid>
-                      </Grid>
                     </Grid>
                     <Grid item xs={12}>
                       <FormControl
@@ -411,6 +400,13 @@ function EpicerieProductCreate() {
                           onChange={handleChangeCategory}
                           style={{ fontSize: "12px" }}
                         >
+                          <MenuItem
+                            sx={{ fontSize: "12px" }}
+                            key="autre"
+                            value="Autre"
+                          >
+                            Autre
+                          </MenuItem>
                           {category?.map((categoryName) => {
                             return (
                               <MenuItem
@@ -437,34 +433,6 @@ function EpicerieProductCreate() {
                           onChange={handleChange}
                         />
                       )}
-                      <Grid container>
-                        <Grid
-                          item
-                          xs={2}
-                          sx={{ display: "flex", alignItems: "center" }}
-                        >
-                          <IconButton fullWidth onClick={handleToggleCategory}>
-                            <Add
-                              sx={{
-                                backgroundColor: "#922B21",
-                                borderRadius: "50%",
-                                padding: "5px",
-                                fontSize: "20px",
-                                color: "white",
-                              }}
-                            />
-                          </IconButton>
-                        </Grid>
-                        <Grid
-                          item
-                          xs={10}
-                          sx={{ display: "flex", alignItems: "center" }}
-                        >
-                          <Typography variant="body2">
-                            Ajouter une nouvelle catégorie
-                          </Typography>
-                        </Grid>
-                      </Grid>
                     </Grid>
                     <Grid item xs={12}>
                       <FormControl
@@ -490,6 +458,13 @@ function EpicerieProductCreate() {
                           onChange={handleChangeMarque}
                           style={{ fontSize: "12px" }}
                         >
+                          <MenuItem
+                            sx={{ fontSize: "12px" }}
+                            key="autre"
+                            value="Autre"
+                          >
+                            Autre
+                          </MenuItem>
                           {marque?.map((nameCompany) => {
                             return (
                               <MenuItem
@@ -515,34 +490,6 @@ function EpicerieProductCreate() {
                           onChange={handleChange}
                         />
                       )}
-                      <Grid container>
-                        <Grid
-                          item
-                          xs={2}
-                          sx={{ display: "flex", alignItems: "center" }}
-                        >
-                          <IconButton fullWidth onClick={handleToggleLabel}>
-                            <Add
-                              sx={{
-                                backgroundColor: "#922B21",
-                                borderRadius: "50%",
-                                padding: "5px",
-                                fontSize: "20px",
-                                color: "white",
-                              }}
-                            />
-                          </IconButton>
-                        </Grid>
-                        <Grid
-                          item
-                          xs={10}
-                          sx={{ display: "flex", alignItems: "center" }}
-                        >
-                          <Typography variant="body2">
-                            Ajouter une nouvelle marque
-                          </Typography>
-                        </Grid>
-                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -576,8 +523,7 @@ function EpicerieProductCreate() {
           </Box>
         </Box>
         <div>
-          <ToastContainer
-          theme="colored"/>
+          <ToastContainer theme="colored" />
         </div>
         <Footer />
       </div>
