@@ -12,6 +12,8 @@ import InsertImage from "../../../images/insertimage.png";
 import hostname from "../../../hostname";
 import { Add } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const useStyles = makeStyles(() => ({
   Button: {
@@ -76,7 +78,8 @@ function EpicerieProductCreate() {
   const handleChangeCountry = (event) => {
     const { value } = event.target;
     setSelectedCountry(value); // Mise à jour du state
-    setFormData({        // Mise à jour de formData
+    setFormData({
+      // Mise à jour de formData
       ...formData,
       country: value,
     });
@@ -85,7 +88,8 @@ function EpicerieProductCreate() {
   const handleChangeMarque = (event) => {
     const { value } = event.target;
     setSelectedMarque(value); // Mise à jour du state
-    setFormData({        // Mise à jour de formData
+    setFormData({
+      // Mise à jour de formData
       ...formData,
       label: value,
     });
@@ -94,12 +98,12 @@ function EpicerieProductCreate() {
   const handleChangeCategory = (event) => {
     const { value } = event.target;
     setSelectedCategory(value); // Mise à jour du state
-    setFormData({        // Mise à jour de formData
+    setFormData({
+      // Mise à jour de formData
       ...formData,
       category: value,
     });
   };
-
 
   const [imageSrc, setImageSrc] = useState(""); // State pour stocker l'URL de l'image
 
@@ -107,11 +111,11 @@ function EpicerieProductCreate() {
   const handleFileChange = (event) => {
     const file = event.target.files[0]; // Get the selected file
     const reader = new FileReader();
-  
+
     reader.onloadend = () => {
       setImageSrc(reader.result);
     };
-  
+
     if (file) {
       reader.readAsDataURL(file);
       setFormData((prevFormData) => ({
@@ -130,9 +134,9 @@ function EpicerieProductCreate() {
     category: "",
     country: "",
     label: "",
-    autreCountry : "",
-    autreCategory : "",
-    autreLabel :""
+    autreCountry: "",
+    autreCategory: "",
+    autreLabel: "",
   });
 
   const handleChange = (event) => {
@@ -145,20 +149,19 @@ function EpicerieProductCreate() {
 
   const navigate = useNavigate();
 
-  const [error, setError] = useState(null);
-  const [errorMessage, setErrorMessage] = useState("");
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+    toast(null);
+
     const accessToken = localStorage.getItem("accessToken");
-  
+
     if (!accessToken) {
-      setError("Access token is missing");
+      toast("Access token is missing");
       return;
     }
-  
+
     try {
+      console.log(formData)
       const formDataToSend = new FormData();
       formDataToSend.append("image", formData.image);
       formDataToSend.append("name", formData.name);
@@ -171,10 +174,8 @@ function EpicerieProductCreate() {
       formDataToSend.append("autreCategory", formData.autreCategory);
       formDataToSend.append("autreCountry", formData.autreCountry);
       formDataToSend.append("autreLabel", formData.autreLabel);
-      for (let pair of formDataToSend.entries()) {
-        console.log(pair[0] + ": " + pair[1]);
-      }
-     const response = await fetch(
+      console.log(formDataToSend)
+      const response = await fetch(
         `${hostname}/api/v1/epicerie/product/create`,
         {
           method: "POST",
@@ -184,28 +185,22 @@ function EpicerieProductCreate() {
           body: formDataToSend,
         }
       );
-  
-  
+
       if (response.ok) {
         const data = await response.json();
         navigate(`/epicerie/produit/search/${data.id}/add`);
       } else {
         const data = await response.json();
         if (data.message) {
-          setErrorMessage(data.message);
+          toast.error(data.message);
         } else {
-          setErrorMessage("Erreur lors de la création du produit");
+          toast.error("Erreur lors de la création du produit");
         }
       }
-
     } catch (error) {
-      console.error("Erreur lors de la création du produit :", error);
-
+      console.log("Erreur lors de la création du produit :", error);
     }
-   
   };
-  
-  
 
   const classes = useStyles();
 
@@ -580,7 +575,10 @@ function EpicerieProductCreate() {
             </Button>
           </Box>
         </Box>
-        <div>{error} {errorMessage}</div>
+        <div>
+          <ToastContainer
+          theme="colored"/>
+        </div>
         <Footer />
       </div>
     </>

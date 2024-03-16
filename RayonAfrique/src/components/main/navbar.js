@@ -15,7 +15,7 @@ import Divider from "@mui/material/Divider";
 import { makeStyles } from "@material-ui/core/styles";
 import logo from "../../images/rayonafrique.svg";
 import { BookmarkBorderOutlined, PersonOutline } from "@material-ui/icons";
-import Badge from "@mui/material/Badge";
+// import Badge from "@mui/material/Badge";
 import Tooltip from "@mui/material/Tooltip";
 
 const drawerWidth = 300;
@@ -109,7 +109,7 @@ export default function PrimarySearchAppBar(props) {
 
         <a href="/connexion">
           <ListItem disablePadding>
-            <ListItemButton sx={{ textAlign: "left", color:"black" }}>
+            <ListItemButton sx={{ textAlign: "left", color: "black" }}>
               <PersonOutline />
             </ListItemButton>
           </ListItem>
@@ -117,7 +117,7 @@ export default function PrimarySearchAppBar(props) {
 
         <a href="/cart">
           <ListItem disablePadding>
-            <ListItemButton sx={{ textAlign: "left", color:"black" }}>
+            <ListItemButton sx={{ textAlign: "left", color: "black" }}>
               <BookmarkBorderOutlined />
             </ListItemButton>
           </ListItem>
@@ -202,7 +202,7 @@ export default function PrimarySearchAppBar(props) {
                 <PersonOutline />
               </Tooltip>
             </IconButton>
-            <IconButton
+            {/* <IconButton
               className={classes.button}
               href="/cart"
               sx={{ color: "black" }}
@@ -212,7 +212,7 @@ export default function PrimarySearchAppBar(props) {
                   <BookmarkBorderOutlined />
                 </Badge>
               </Tooltip>
-            </IconButton>
+            </IconButton>*/}
           </Box>
         </Toolbar>
       </AppBar>

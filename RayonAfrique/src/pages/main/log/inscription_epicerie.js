@@ -364,11 +364,11 @@ export default function SignUp() {
                     Déjà un compte ? Connectez-vous!
                   </Link>
                 </Grid>
-                <Grid item>
+                {/*<Grid item>
                   <Link href="/inscription/client" variant="body2">
                     Vous êtes client ?
                   </Link>
-                </Grid>
+              </Grid>*/}
               </Grid>
             </Box>
           </Box>

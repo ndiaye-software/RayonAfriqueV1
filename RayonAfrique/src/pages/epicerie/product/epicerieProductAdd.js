@@ -10,6 +10,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import hostname from "../../../hostname";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const useStyles = makeStyles(() => ({
   Button: {
@@ -39,7 +41,6 @@ function EpicerieProductAdd() {
   const [data, setData] = useState([]);
 
   const { idProduct } = useParams();
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -51,10 +52,6 @@ function EpicerieProductAdd() {
         setData(data);
       })
       .catch((err) => console.log(err));
-    const delay = setTimeout(() => {
-      setError(null);
-    }, 2000);
-    return () => clearTimeout(delay);
   }, [idProduct]);
 
   const [disponibilité, setDispo] = React.useState(options[0]?.label || "");
@@ -64,8 +61,6 @@ function EpicerieProductAdd() {
     price: "",
     available: disponibilité === "oui",
   });
-
-  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -100,7 +95,7 @@ function EpicerieProductAdd() {
     const accessToken = localStorage.getItem("accessToken");
 
     if (!accessToken) {
-      setError("Access token is missing");
+      toast.error("Access token is missing");
       return;
     }
 
@@ -122,9 +117,9 @@ function EpicerieProductAdd() {
       } else {
         const data = await response.json();
         if (data.message) {
-          setErrorMessage(data.message);
+          toast.error(data.message);
         } else {
-          setErrorMessage("Erreur lors de la création du produit");
+          toast.error("Erreur lors de la création du produit");
         }
       }
     } catch (error) {
@@ -220,14 +215,8 @@ function EpicerieProductAdd() {
                   </Grid>
                 </Box>
               </Box>
-              {errorMessage && (
-                <Typography variant="body1" color="error" gutterBottom>
-                  {errorMessage}
-                </Typography>
-              )}
               <div>
-                {/* Render your component content here */}
-                {error && <p>Error: {error}</p>}
+                <ToastContainer theme="colored" />
               </div>
               <Box
                 justifyContent="space-evenly"

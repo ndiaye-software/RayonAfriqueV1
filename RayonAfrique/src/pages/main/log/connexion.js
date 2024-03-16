@@ -12,6 +12,8 @@ import Navbar from "../../../components/main/navbar";
 import Footer from "../../../components/main/footer";
 import hostname from "../../../hostname";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Connexion() {
   const navigate = useNavigate();
@@ -20,8 +22,6 @@ export default function Connexion() {
     mail: "",
     password: "",
   });
-
-  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -46,14 +46,14 @@ export default function Connexion() {
       if (response.ok) {
         const data = await response.json();
         const { accessToken } = data;
-        localStorage.setItem('accessToken', accessToken); 
+        localStorage.setItem("accessToken", accessToken);
         navigate(`/epicerie`);
       } else {
         const data = await response.json();
         if (data.message) {
-          setErrorMessage(data.message);
+          toast.error(data.message);
         } else {
-          setErrorMessage("Erreur d'authentification");
+          toast("Erreur d'authentification");
         }
       }
     } catch (error) {
@@ -120,11 +120,9 @@ export default function Connexion() {
                 onChange={handleChange}
                 autoComplete="current-password"
               />
-              {errorMessage && (
-                <Typography variant="body1" color="error" gutterBottom>
-                  {errorMessage}
-                </Typography>
-              )}
+              <div>
+                <ToastContainer theme="colored" />
+              </div>
               <Button
                 type="submit"
                 fullWidth
@@ -145,7 +143,7 @@ export default function Connexion() {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="/inscription/client" variant="body2">
+                  <Link href="/inscription/epicerie" variant="body2">
                     {"Pas de compte ? Inscrivez vous"}
                   </Link>
                 </Grid>

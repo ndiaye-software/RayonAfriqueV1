@@ -21,6 +21,10 @@ const createProduct = asyncHandler(async (req, res) => {
     return res.status(404).json({ error: "Epicerie non trouvé." });
   }
 
+  if (!req.file) {
+    return res.status(404).json({ error: "Mettez une image." });
+  }
+
   const imageName = req.file.filename;
 
   const {
@@ -41,7 +45,7 @@ const createProduct = asyncHandler(async (req, res) => {
   if (!categoryName && !autreCategory) missingFields.push("catégorie du produit");
   if (!countryName && !autreCountry) missingFields.push("pays du produit");
   if (!labelName && !autreLabel) missingFields.push("marque du produit");
-  if (!imageName) missingFields.push("image");
+  if (!imageName || !req.file || !req.file.filename) missingFields.push("image");
 
 
   if (missingFields.length > 0) {

@@ -32,9 +32,30 @@ const createEpicerieProduct = asyncHandler(async (req, res) => {
   
     const { idProduct, price, available } = req.body;
   
-    if (!userId || !idProduct || !price || !available) {
-      return res.status(400).json({ message: "Tous les champs sont requis" });
+    
+    const missingFields = [];
+    if (!userId) missingFields.push("userId");
+    if (!idProduct) missingFields.push("idProduct");
+    if (!price) missingFields.push("prix");
+    if (!available) missingFields.push("disponibilité");
+  
+    if (missingFields.length > 0) {
+      return res.status(400).json({
+        message: `Les champs suivants sont requis: ${missingFields.join(", ")}`,
+      });
     }
+
+    const existingProduct = await EpicerieProduct.findOne({
+      idEpicerie: userId,
+      idProduct: idProduct,
+    });
+
+    if (existingProduct) {
+      return res
+        .status(409)
+        .json({ message: "Ce produit existe déjà dans votre épicerie." });
+    }
+
     const epicerieProduct = new EpicerieProduct({
       idEpicerie : userId,
       idProduct,
