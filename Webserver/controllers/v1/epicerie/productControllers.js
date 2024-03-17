@@ -6,7 +6,20 @@ const Epicerie = require("../../../models/Epicerie");
 const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
 
+function StringFormatter(chaine) {
+  if (chaine.includes(' ')) {
+    // La chaîne contient plusieurs mots
+    return chaine.split(' ')
+      .map(mot => mot.charAt(0).toUpperCase() + mot.slice(1).toLowerCase())
+      .join(' ');
+  } else {
+    // La chaîne ne contient qu'un seul mot
+    return chaine.charAt(0).toUpperCase() + chaine.slice(1).toLowerCase();
+  }
+}
+
 const createProduct = asyncHandler(async (req, res) => {
+
   if (!req.headers.authorization) {
     res.status(402).json({ error: "Authorization header missing" });
     return;
@@ -68,9 +81,11 @@ const createProduct = asyncHandler(async (req, res) => {
       if (existingCategory) {
         return res.status(409).json({ message: `La catégorie '${autreCategory}' existe déjà. Sélectionnez-le !` });
       }
-      category = new Category({ categoryName: autreCategory });
+      const autreCategoryFormatted = StringFormatter(autreCategory)
+      category = new Category({ categoryName: autreCategoryFormatted });
       category = await category.save();
     } else if (!category) {
+
       return res
         .status(404)
         .json({ message: `La catégorie '${categoryName}' n'existe pas.` });
@@ -80,11 +95,14 @@ const createProduct = asyncHandler(async (req, res) => {
     if (!label && autreLabel) {
       const existingLabel = await Label.findOne({ labelName: autreLabel });
       if (existingLabel) {
+  
         return res.status(409).json({ message: `La marque '${autreLabel}' existe déjà. Sélectionnez-le !` });
       }
-      label = new Label({ labelName: autreLabel });
+      const autreLabelFormatted = StringFormatter(autreLabel)
+      label = new Label({ labelName: autreLabelFormatted });
       label = await label.save();
     } else if (!label) {
+
       return res
         .status(404)
         .json({ message: `Le label '${labelName}' n'existe pas.` });
@@ -94,32 +112,40 @@ const createProduct = asyncHandler(async (req, res) => {
     if (!country && autreCountry) {
       const existingCountry = await Country.findOne({ countryName: autreCountry });
       if (existingCountry) {
+  
         return res.status(409).json({ message: `La pays '${autreCountry}' existe déjà. Sélectionnez-le !` });
       }
-      country = new Country({ countryName: autreCountry });
+      const autreCountryFormatted =  StringFormatter(autreCountry)
+      country = new Country({ countryName: autreCountryFormatted });
       country = await country.save();
     } else if (!country) {
+
       return res
         .status(404)
         .json({ message: `Le pays '${countryName}' n'existe pas.` });
     }
 
     if (!category) {
+
       return res
         .status(404)
         .json({ message: `La catégorie '${categoryName}' n'existe pas.` });
     }
     if (!label) {
+
       return res
         .status(404)
         .json({ message: `Le label '${labelName}' n'existe pas.` });
     }
 
     if (!country) {
+
       return res
         .status(404)
         .json({ message: `Le pays '${countryName}' n'existe pas.` });
     }
+
+    // Reformatting the name
 
     let existingProduct = await Product.findOne({
       name,
@@ -135,21 +161,12 @@ const createProduct = asyncHandler(async (req, res) => {
       return res.status(400).json({ message: "Le produit existe déjà." });
     }
 
-    console.log({
-      name,
-      reference,
-      ingredients,
-      description,
-      image: imageName,
-      category: category._id,
-      country: country._id,
-      label: label._id,
-    });
+
     const product = new Product({
-      name,
-      reference,
-      ingredients,
-      description,
+      name : StringFormatter(name),
+      reference : StringFormatter(reference),
+      ingredients : StringFormatter(ingredients),
+      description : StringFormatter(description),
       image: imageName,
       category: category._id,
       country: country._id,
@@ -157,7 +174,6 @@ const createProduct = asyncHandler(async (req, res) => {
     });
 
     const savedProduct = await product.save();
-
     res.status(201).json({ id: savedProduct._id });
   } catch (error) {
     if (error.code === 11000 && error.keyPattern && error.keyPattern.name) {
@@ -183,7 +199,7 @@ const getProduct = asyncHandler(async (req, res) => {
     const userId = decodedToken.UserInfo.id;
     const epicerie = await Epicerie.findById(userId);
     if (!epicerie) {
-      return res.status(404).json({ error: "Epicerie non trouvé." });
+      return res.status(404).json({ error: "Epicerie non trouvée." });
     }
 
     // Recherche des produits de l'épicerie spécifiée par idEpicerie

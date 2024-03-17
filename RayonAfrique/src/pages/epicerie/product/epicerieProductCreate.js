@@ -32,7 +32,6 @@ const useStyles = makeStyles(() => ({
 }));
 
 function EpicerieProductCreate() {
-
   const [isCountryClicked, setIsCountryClicked] = useState(false);
   const [isLabelClicked, setIsLabelClicked] = useState(false);
   const [isCategoryClicked, setIsCategoryClicked] = useState(false);
@@ -82,7 +81,7 @@ function EpicerieProductCreate() {
       });
     }
   };
-  
+
   const handleChangeMarque = (event) => {
     const { value } = event.target;
     setSelectedMarque(value);
@@ -100,7 +99,7 @@ function EpicerieProductCreate() {
       });
     }
   };
-  
+
   const handleChangeCategory = (event) => {
     const { value } = event.target;
     setSelectedCategory(value);
@@ -118,7 +117,7 @@ function EpicerieProductCreate() {
       });
     }
   };
-  
+
   const [imageSrc, setImageSrc] = useState(""); // State pour stocker l'URL de l'image
 
   // Fonction pour gérer le changement de fichier
@@ -188,7 +187,11 @@ function EpicerieProductCreate() {
       formDataToSend.append("autreCategory", formData.autreCategory);
       formDataToSend.append("autreCountry", formData.autreCountry);
       formDataToSend.append("autreLabel", formData.autreLabel);
-      console.log(formDataToSend);
+      console.log(
+        formDataToSend.forEach((value, key) => {
+          console.log(`${key}: ${value}`);
+        })
+      );
       const response = await fetch(
         `${hostname}/api/v1/epicerie/product/create`,
         {
