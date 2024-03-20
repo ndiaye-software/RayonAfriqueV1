@@ -20,6 +20,10 @@ router
 
 router
   .route("/delete/:idEpicerie/:id")
-  .delete(epicerieproductController.deleteEpicerieProduct);
+  .delete(epicerieproductController.deleteEpicerieProductById);
+
+router
+  .route("/delete/listproduct")
+  .delete(epicerieproductController.deleteEpicerieProductsByNameList);
 
 module.exports = router;

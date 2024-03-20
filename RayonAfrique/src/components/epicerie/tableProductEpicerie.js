@@ -20,6 +20,13 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
 import hostname from "../../hostname";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import { Close } from "@material-ui/icons";
 
 export function createData(
   nom,
@@ -170,7 +177,7 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, handleDelete } = props;
 
   return (
     <Toolbar
@@ -209,7 +216,7 @@ function EnhancedTableToolbar(props) {
       {numSelected > 0 ? (
         <>
           <Tooltip title="Supprimer">
-            <IconButton>
+            <IconButton onClick={handleDelete}>
               <DeleteIcon />
             </IconButton>
           </Tooltip>
@@ -231,6 +238,11 @@ export default function EnhancedTable() {
   const [selected, setSelected] = useState([]);
   const [formData, setFormData] = useState([]);
   const [error, setError] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -332,6 +344,11 @@ export default function EnhancedTable() {
     setSelected(newSelected);
   };
 
+  const handleDelete = () => {
+    console.log("Éléments sélectionnés pour la suppression : ", selected);
+    setOpenDialog(true);
+  };
+
   const isSelected = (nom) => selected.indexOf(nom) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -350,7 +367,10 @@ export default function EnhancedTable() {
       }}
     >
       <Paper sx={{ width: "100%" }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar
+          numSelected={selected.length}
+          handleDelete={handleDelete}
+        />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -436,6 +456,31 @@ export default function EnhancedTable() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
+      <Dialog onClose={handleCloseDialog} open={openDialog}>
+        <DialogTitle>Selected Items for Deletion</DialogTitle>
+        <List>
+          {selected.map((item, index) => (
+            <ListItem key={index}>
+              <ListItemButton>
+                <ListItemText primary={item} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+        <Box flexDirection="row" justifyContent="space-evenly">
+          <Box>
+            <Close />
+            <Typography>Annuler</Typography>
+          </Box>
+        </Box>
+        <Box>
+          <Box>
+            <DeleteIcon />
+            <Typography>Supprimer</Typography>
+          </Box>
+        </Box>
+      </Dialog>
+
       <div>
         {/* Render your component content here */}
         {error && <p>Error: {error}</p>}

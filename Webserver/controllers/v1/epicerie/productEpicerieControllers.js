@@ -198,10 +198,27 @@ const updateEpicerieProduct = asyncHandler(async (req, res) => {
   }
 });
 
-const deleteEpicerieProduct = asyncHandler(async (req, res) => {
-  const { id, idEpicerie } = req.params;
+const deleteEpicerieProductById = asyncHandler(async (req, res) => {
+  if (!req.headers.authorization) {
+    res.status(402).json({ error: "Authorization header missing" });
+    return;
+  }
 
-  const epicerie = await Epicerie.findById(idEpicerie);
+  // Decode the accessToken to extract user ID
+  const accessToken = req.headers.authorization.replace("Bearer ", "");
+  // Verify and decode the token
+  const decodedToken = jwt.verify(
+    accessToken,
+    process.env.ACCESS_TOKEN_SECRET
+  );
+  
+  // Access the user ID from the decoded token
+  const userId = decodedToken.UserInfo.id;
+
+  // Retrieve the user's epicerie by user ID
+  const epicerie = await Epicerie.findById(userId);
+
+  const {id} = req.params
 
   if (!epicerie) {
     return res.status(404).json({ error: "Epicerie non trouvée." });
@@ -237,9 +254,69 @@ const deleteEpicerieProduct = asyncHandler(async (req, res) => {
   }
 });
 
+const deleteEpicerieProductsByNameList = asyncHandler(async (req, res) => {
+  if (!req.headers.authorization) {
+    res.status(402).json({ error: "Authorization header missing" });
+    return;
+  }
+
+  // Decode the accessToken to extract user ID
+  const accessToken = req.headers.authorization.replace("Bearer ", "");
+  // Verify and decode the token
+  const decodedToken = jwt.verify(
+    accessToken,
+    process.env.ACCESS_TOKEN_SECRET
+  );
+  
+  // Access the user ID from the decoded token
+  const userId = decodedToken.UserInfo.id;
+
+  // Retrieve the user's epicerie by user ID
+  const epicerie = await Epicerie.findById(userId);
+
+  if (!epicerie) {
+    return res.status(404).json({ error: "Epicerie non trouvée." });
+  }
+
+  const { productNameList } = req.body;
+
+  if (!productNameList || !Array.isArray(productNameList) || productNameList.length === 0) {
+    return res.status(400).json({ message: "Liste de noms de produits requis." });
+  }
+
+  try {
+    // Find all products belonging to the epicerie
+    const products = await EpicerieProduct.find({ idEpicerie: epicerie._id });
+
+    const deletedProducts = [];
+
+    // Iterate over the product names provided and delete matching products
+    for (const productName of productNameList) {
+      const product = products.find(p => p.idProduct.name === productName);
+
+      if (product) {
+        await EpicerieProduct.deleteOne({ _id: product._id });
+        deletedProducts.push(productName);
+      }
+    }
+
+    if (deletedProducts.length === 0) {
+      return res.status(404).json({ error: "Aucun produit correspondant trouvé." });
+    }
+
+    const reply = `Produits (${deletedProducts.join(', ')}) supprimés.`;
+    res.status(200).json(reply);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Erreur lors de la suppression des produits d'épicerie." });
+  }
+});
+
+
 module.exports = {
   createEpicerieProduct,
   getEpicerieProductByIdEpicerie,
   updateEpicerieProduct,
-  deleteEpicerieProduct,
+  deleteEpicerieProductById,
+  deleteEpicerieProductsByNameList
 };
