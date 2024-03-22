@@ -5,13 +5,12 @@ const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
 
 const createEpicerieProduct = asyncHandler(async (req, res) => {
-
   try {
     if (!req.headers.authorization) {
       res.status(402).json({ error: "Authorization header missing" });
       return;
     }
-  
+
     // Decode the accessToken to extract user ID
     const accessToken = req.headers.authorization.replace("Bearer ", "");
     // Verify and decode the token
@@ -19,26 +18,25 @@ const createEpicerieProduct = asyncHandler(async (req, res) => {
       accessToken,
       process.env.ACCESS_TOKEN_SECRET
     );
-    
+
     // Access the user ID from the decoded token
     const userId = decodedToken.UserInfo.id;
-  
+
     // Retrieve the user's epicerie by user ID
     const epicerie = await Epicerie.findById(userId);
-  
+
     if (!epicerie) {
       return res.status(404).json({ error: "Epicerie non trouvé." });
     }
-  
+
     const { idProduct, price, available } = req.body;
-  
-    
+
     const missingFields = [];
     if (!userId) missingFields.push("userId");
     if (!idProduct) missingFields.push("idProduct");
     if (!price) missingFields.push("prix");
     if (!available) missingFields.push("disponibilité");
-  
+
     if (missingFields.length > 0) {
       return res.status(400).json({
         message: `Les champs suivants sont requis: ${missingFields.join(", ")}`,
@@ -57,7 +55,7 @@ const createEpicerieProduct = asyncHandler(async (req, res) => {
     }
 
     const epicerieProduct = new EpicerieProduct({
-      idEpicerie : userId,
+      idEpicerie: userId,
       idProduct,
       price,
       available,
@@ -151,13 +149,10 @@ const updateEpicerieProduct = asyncHandler(async (req, res) => {
   }
 
   const accessToken = req.headers.authorization.replace("Bearer ", "");
-  const decodedToken = jwt.verify(
-    accessToken,
-    process.env.ACCESS_TOKEN_SECRET
-  );
+  const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
   const idEpicerie = decodedToken.UserInfo.id;
-  console.log(idEpicerie)
+  console.log(idEpicerie);
   const { id } = req.params;
   const { price, available } = req.body;
 
@@ -207,18 +202,15 @@ const deleteEpicerieProductById = asyncHandler(async (req, res) => {
   // Decode the accessToken to extract user ID
   const accessToken = req.headers.authorization.replace("Bearer ", "");
   // Verify and decode the token
-  const decodedToken = jwt.verify(
-    accessToken,
-    process.env.ACCESS_TOKEN_SECRET
-  );
-  
+  const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+
   // Access the user ID from the decoded token
   const userId = decodedToken.UserInfo.id;
 
   // Retrieve the user's epicerie by user ID
   const epicerie = await Epicerie.findById(userId);
 
-  const {id} = req.params
+  const { id } = req.params;
 
   if (!epicerie) {
     return res.status(404).json({ error: "Epicerie non trouvée." });
@@ -263,11 +255,8 @@ const deleteEpicerieProductsByNameList = asyncHandler(async (req, res) => {
   // Decode the accessToken to extract user ID
   const accessToken = req.headers.authorization.replace("Bearer ", "");
   // Verify and decode the token
-  const decodedToken = jwt.verify(
-    accessToken,
-    process.env.ACCESS_TOKEN_SECRET
-  );
-  
+  const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+
   // Access the user ID from the decoded token
   const userId = decodedToken.UserInfo.id;
 
@@ -280,43 +269,51 @@ const deleteEpicerieProductsByNameList = asyncHandler(async (req, res) => {
 
   const { productNameList } = req.body;
 
-  if (!productNameList || !Array.isArray(productNameList) || productNameList.length === 0) {
-    return res.status(400).json({ message: "Liste de noms de produits requis." });
+  console.log(productNameList);
+
+  if (
+    !productNameList ||
+    !Array.isArray(productNameList) ||
+    productNameList.length === 0
+  ) {
+    return res
+      .status(400)
+      .json({ message: "Liste de noms de produits requis." });
   }
 
   try {
-    // Find all products belonging to the epicerie
-    const products = await EpicerieProduct.find({ idEpicerie: epicerie._id });
+    // Find the corresponding product documents based on product names
+    const products = await Product.find({ name: { $in: productNameList } });
 
-    const deletedProducts = [];
+    // Extract the IDs of the found products
+    const productIds = products.map((product) => product._id);
 
-    // Iterate over the product names provided and delete matching products
-    for (const productName of productNameList) {
-      const product = products.find(p => p.idProduct.name === productName);
+    // Delete the corresponding EpicerieProduct documents based on product IDs
+    const deleteResult = await EpicerieProduct.deleteMany({
+      idEpicerie: epicerie._id,
+      idProduct: { $in: productIds },
+    });
 
-      if (product) {
-        await EpicerieProduct.deleteOne({ _id: product._id });
-        deletedProducts.push(productName);
-      }
-    }
-
-    if (deletedProducts.length === 0) {
+    if (deleteResult.deletedCount === 0) {
       return res.status(404).json({ error: "Aucun produit correspondant trouvé." });
     }
 
-    const reply = `Produits (${deletedProducts.join(', ')}) supprimés.`;
-    res.status(200).json(reply);
+    const reply = `Produits ${productNameList.join(', ')} supprimés.`;
+    res.status(200).json({message : reply});
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Erreur lors de la suppression des produits d'épicerie." });
+    res
+      .status(500)
+      .json({
+        error: "Erreur lors de la suppression des produits d'épicerie.",
+      });
   }
 });
-
 
 module.exports = {
   createEpicerieProduct,
   getEpicerieProductByIdEpicerie,
   updateEpicerieProduct,
   deleteEpicerieProductById,
-  deleteEpicerieProductsByNameList
+  deleteEpicerieProductsByNameList,
 };

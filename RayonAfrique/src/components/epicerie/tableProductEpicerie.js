@@ -24,9 +24,11 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import { Close } from "@material-ui/icons";
+import { Grid } from "@mui/material";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export function createData(
   nom,
@@ -345,9 +347,54 @@ export default function EnhancedTable() {
   };
 
   const handleDelete = () => {
-    console.log("Éléments sélectionnés pour la suppression : ", selected);
     setOpenDialog(true);
   };
+
+  const handleDeleteList = async (event) => {
+    console.log(selected);
+    event.preventDefault();
+  
+    const accessToken = localStorage.getItem("accessToken");
+  
+    if (!accessToken) {
+      toast("Access token is missing");
+      return;
+    }
+  
+    try {
+      const response = await fetch(
+        `${hostname}/api/v1/epicerie/productEpicerie/delete/listproduct`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json", // Ajoutez le type de contenu JSON
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({ productNameList: selected }), // Convertissez les données en JSON
+        }
+      );
+  
+      if (response.ok) {
+        const data = await response.json();
+        if (data.message) {
+          toast.success(data.message);
+        } 
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      } else {
+        const data = await response.json();
+        if (data.message) {
+          toast.error(data.message);
+        } else {
+          toast.error("Erreur lors de la suppression");
+        }
+      }
+    } catch (error) {
+      console.log("Erreur lors de la suppression :", error);
+    }
+  };
+  
 
   const isSelected = (nom) => selected.indexOf(nom) !== -1;
 
@@ -457,29 +504,39 @@ export default function EnhancedTable() {
         />
       </Paper>
       <Dialog onClose={handleCloseDialog} open={openDialog}>
-        <DialogTitle>Selected Items for Deletion</DialogTitle>
+        <DialogTitle>Voulez-vous supprimer ces produits ?</DialogTitle>
         <List>
           {selected.map((item, index) => (
             <ListItem key={index}>
-              <ListItemButton>
-                <ListItemText primary={item} />
-              </ListItemButton>
+              <ListItemText primary={item} />
             </ListItem>
           ))}
         </List>
-        <Box flexDirection="row" justifyContent="space-evenly">
-          <Box>
-            <Close />
-            <Typography>Annuler</Typography>
-          </Box>
-        </Box>
-        <Box>
-          <Box>
-            <DeleteIcon />
-            <Typography>Supprimer</Typography>
-          </Box>
-        </Box>
+        <Grid
+          display="flex"
+          flexDirection="row"
+          justifyContent="space-evenly"
+          marginBottom="30px"
+        >
+          <Tooltip title="annuler">
+            <IconButton
+              onClick={handleCloseDialog}
+              aria-label="close"
+              sx={{ bgcolor: "#922B21", color: "white" }}
+            >
+              <Close />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="supprimer">
+            <IconButton onClick={handleDeleteList} aria-label="delete">
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+        </Grid>
       </Dialog>
+      <div>
+        <ToastContainer theme="colored" />
+      </div>
 
       <div>
         {/* Render your component content here */}

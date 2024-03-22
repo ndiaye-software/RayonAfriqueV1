@@ -164,7 +164,7 @@ function EpicerieProductCreate() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    toast(null);
+    
 
     const accessToken = localStorage.getItem("accessToken");
 
