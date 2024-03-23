@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Stack } from "@mui/material";
 import Box from "@mui/material/Box";
 import Navbar from "../../../components/epicerie/navbarEpicerie";
@@ -8,9 +8,13 @@ import { TextField, Button, Grid } from "@material-ui/core";
 import { FormControl, InputLabel, Select } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { MenuItem } from "@mui/material";
+import { useParams } from "react-router-dom";
+import hostname from "../../../hostname";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 
 const useStyles = makeStyles(() => ({
-  ButtonInsert: {
+  Button: {
     fontWeight: "bolder",
     color: "white",
     backgroundColor: "#922B21",
@@ -28,16 +32,124 @@ const useStyles = makeStyles(() => ({
 
 const options = [{ label: "oui" }, { label: "non" }];
 
-function EpicerieProductUpdate(product) {
-  let [disponibilité, setDispo] = React.useState("");
+function EpicerieProductUpdate() {
+  const classes = useStyles();
+  const navigate = useNavigate();
+  const { idProduct } = useParams();
 
-  disponibilité = product.disponibilité;
+  // Initialize state variables outside of conditional blocks
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [disponibilité, setDispo] = useState(options[0]?.label || "");
+  const [formData, setFormData] = useState({
+    idProduct: idProduct,
+    price: "",
+    available: disponibilité === "oui",
+  });
 
-  const handleChangeDispo = (event) => {
-    setDispo(event.target.value);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const accessToken = localStorage.getItem("accessToken");
+        const response = await fetch(
+          `${hostname}/api/v1/epicerie/productEpicerie/read/${idProduct}`,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setData(data[0]);
+        console.log(data);
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [idProduct]);
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
 
-  const classes = useStyles();
+  const updateFormData = (name, value) => {
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleChangeDispo = (event) => {
+    const value = event.target.value;
+    setDispo(value);
+
+    // Utilisez la valeur de l'option "value"
+    const booleanValue =
+      options.find((option) => option.label === value)?.value || false;
+
+    // Appel de la fonction pour mettre à jour formData
+    updateFormData("available", booleanValue);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const accessToken = localStorage.getItem("accessToken");
+
+    if (!accessToken) {
+      toast.error("Access token is missing");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${hostname}/api/v1/epicerie/productEpicerie/create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      if (response.ok) {
+        navigate(`/epicerie/produit`);
+      } else {
+        const data = await response.json();
+        if (data.message) {
+          toast.error(data.message);
+        } else {
+          toast.error("Erreur lors de la création du produit");
+        }
+      }
+    } catch (error) {
+      console.error("Erreur lors de la création du produit :", error);
+    }
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  if (!data) {
+    return <div>No data available</div>;
+  }
 
   return (
     <>
@@ -45,7 +157,12 @@ function EpicerieProductUpdate(product) {
         <Navbar />
         <Box sx={{ backgroundColor: "#f9fafb" }}>
           <Stack direction="row" justifyContent="space-between">
-            <Box flex={4} p={{ xs: 0, md: 2 }} sx={{ marginBottom: "60px" }}>
+            <Box
+              flex={4}
+              p={{ xs: 0, md: 2 }}
+              sx={{ marginBottom: "60px" }}
+              onSubmit={handleSubmit}
+            >
               <Box
                 flexWrap="wrap"
                 justifyContent="space-evenly"
@@ -58,10 +175,11 @@ function EpicerieProductUpdate(product) {
                   <div>
                     <Box>
                       <img
-                        src={require(`../../../images/${product.image}`)}
+                        src={require(`../../../images/${data.image}`)}
                         alt="insérée"
                         height="300px"
                         width="350px"
+                        onChange={handleChange}
                       />
                     </Box>
                     <Box justifyContent="center" display="flex" width="350px">
@@ -75,7 +193,7 @@ function EpicerieProductUpdate(product) {
                       <label htmlFor="contained-button-file">
                         <Button
                           fullWidth
-                          className={classes.ButtonInsert}
+                          className={classes.Button}
                           component="span"
                           endIcon={<InsertPhoto />}
                         >
@@ -93,38 +211,21 @@ function EpicerieProductUpdate(product) {
                   display="flex"
                   gap={2}
                 >
-                  <Grid item xs={12} fullWidth>
-                    <TextField
-                      label="Nom du produit"
-                      variant="outlined"
-                      fullWidth
-                      name="name"
-                      value={product.name}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      label="Marque du produit"
-                      variant="outlined"
-                      fullWidth
-                      name="label"
-                      value={product.marque}
-                    />
-                  </Grid>
                   <Grid item xs={12}>
                     <TextField
                       label="Prix"
                       variant="outlined"
                       fullWidth
                       name="price"
-                      value={product.prix}
+                      value={data.price}
+                      onChange={handleChange}
                     />
                   </Grid>
                   <Grid item xs={12}>
                     <FormControl fullWidth variant="outlined">
                       <InputLabel>Disponibilité</InputLabel>
                       <Select
-                        value={disponibilité}
+                        value={data.available}
                         label="Disponibilité"
                         onChange={handleChangeDispo}
                         required
@@ -142,30 +243,19 @@ function EpicerieProductUpdate(product) {
                 </Box>
               </Box>
 
-              <Box justifyContent="center" display="flex">
-                <Box
-                  sx={{
-                    textAlign: "center",
-                    width: { xs: "250px", sm: "500px" },
-                  }}
-                >
-                  <TextField
-                    label="Description"
-                    variant="outlined"
-                    fullWidth
-                    name="Description"
-                    multiline
-                    minRows={5}
-                  />
-                </Box>
-              </Box>
-
               <Box justifyContent="center" display="flex" marginTop="30px">
-                <Button className={classes.ButtonRDV} endIcon={<Save />}>
+                <Button
+                  type="submit"
+                  className={classes.Button}
+                  endIcon={<Save />}
+                >
                   Enregistrer
                 </Button>
               </Box>
             </Box>
+            <div>
+              <ToastContainer theme="colored" />
+            </div>
           </Stack>
         </Box>
         <Footer />

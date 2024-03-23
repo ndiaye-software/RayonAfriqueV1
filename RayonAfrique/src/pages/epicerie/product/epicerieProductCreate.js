@@ -187,11 +187,6 @@ function EpicerieProductCreate() {
       formDataToSend.append("autreCategory", formData.autreCategory);
       formDataToSend.append("autreCountry", formData.autreCountry);
       formDataToSend.append("autreLabel", formData.autreLabel);
-      console.log(
-        formDataToSend.forEach((value, key) => {
-          console.log(`${key}: ${value}`);
-        })
-      );
       const response = await fetch(
         `${hostname}/api/v1/epicerie/product/create`,
         {

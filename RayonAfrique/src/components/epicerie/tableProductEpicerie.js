@@ -31,6 +31,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export function createData(
+  id,
   nom,
   marque,
   prix,
@@ -39,6 +40,7 @@ export function createData(
   origine
 ) {
   return {
+    id,
     nom,
     marque,
     prix,
@@ -281,6 +283,7 @@ export default function EnhancedTable() {
   if (formData && formData.length > 0) {
     var rows = formData.map((produit) => {
       return createData(
+        produit.idProduct,
         produit.name,
         produit.label,
         parseFloat(produit.price),
@@ -451,7 +454,7 @@ export default function EnhancedTable() {
                     </TableCell>
                     <TableCell
                       component={Link}
-                      to={`update/${row.nom}`}
+                      to={`update/${row.id}`}
                       width="200px"
                       align="left"
                     >

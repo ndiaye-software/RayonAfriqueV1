@@ -10,6 +10,10 @@ router
     .get(epicerieproductController.getEpicerieProductByIdEpicerie);
 
 router
+    .route("/read/:idProduct")
+    .get(epicerieproductController.getProductDetailsById);
+
+router
     .route("/create")
     .post(epicerieproductController.createEpicerieProduct);
 
