@@ -174,7 +174,6 @@ function EpicerieProductCreate() {
     }
 
     try {
-      console.log(formData);
       const formDataToSend = new FormData();
       formDataToSend.append("image", formData.image);
       formDataToSend.append("name", formData.name);

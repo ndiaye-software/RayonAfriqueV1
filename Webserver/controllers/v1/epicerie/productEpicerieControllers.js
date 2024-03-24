@@ -172,8 +172,6 @@ const getProductDetailsById = asyncHandler(async (req, res) => {
     // Extract the product ID from the request parameters
     const { idProduct } = req.params;
 
-    console.log({ idProduct, userId });
-
     // Retrieve the epicerie product details using the product ID
     const epicerieProduct = await EpicerieProduct.find({
       idProduct: idProduct,
@@ -198,7 +196,6 @@ const getProductDetailsById = asyncHandler(async (req, res) => {
       return res.status(403).json({ error: "Unauthorized access to product." });
     }
 
-    console.log(epicerieProduct);
 
     const formattedProduct = epicerieProduct.map((product) => ({
       idEpicerieProduct: product._id,
@@ -235,7 +232,6 @@ const updateEpicerieProduct = asyncHandler(async (req, res) => {
   const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
   const idEpicerie = decodedToken.UserInfo.id;
-  console.log(idEpicerie);
   const { id } = req.params;
   const { price, available } = req.body;
 
@@ -351,8 +347,6 @@ const deleteEpicerieProductsByNameList = asyncHandler(async (req, res) => {
   }
 
   const { productNameList } = req.body;
-
-  console.log(productNameList);
 
   if (
     !productNameList ||

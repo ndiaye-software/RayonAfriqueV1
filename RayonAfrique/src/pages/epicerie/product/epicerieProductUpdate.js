@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Stack } from "@mui/material";
+import { Stack, Tooltip, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Navbar from "../../../components/epicerie/navbarEpicerie";
 import Footer from "../../../components/main/footer";
-import { InsertPhoto, Save } from "@material-ui/icons";
+import Save from "@mui/icons-material/Save";
 import { TextField, Button, Grid } from "@material-ui/core";
-import { FormControl, InputLabel, Select } from "@material-ui/core";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
-import { MenuItem } from "@mui/material";
-import { useParams } from "react-router-dom";
 import hostname from "../../../hostname";
+import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const useStyles = makeStyles(() => ({
   Button: {
@@ -30,49 +30,39 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const options = [{ label: "oui" }, { label: "non" }];
+const options = [
+  { label: "oui", value: true },
+  { label: "non", value: false },
+];
 
 function EpicerieProductUpdate() {
-  const classes = useStyles();
   const navigate = useNavigate();
+
+  const [data, setData] = useState([]);
+
   const { idProduct } = useParams();
 
-  // Initialize state variables outside of conditional blocks
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [disponibilité, setDispo] = useState(options[0]?.label || "");
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    fetch(`${hostname}/api/v1/epicerie/productEpicerie/read/${idProduct}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setData(data[0]);
+        const disponibiliteValue = data[0]?.available ? "oui" : "non";
+        setDispo(disponibiliteValue);
+      })
+      .catch((err) => console.log(err));
+  }, [idProduct]);
+
+  const [disponibilité, setDispo] = React.useState(options[0]?.label || "");
+
   const [formData, setFormData] = useState({
     idProduct: idProduct,
     price: "",
     available: disponibilité === "oui",
   });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const accessToken = localStorage.getItem("accessToken");
-        const response = await fetch(
-          `${hostname}/api/v1/epicerie/productEpicerie/read/${idProduct}`,
-          {
-            headers: { Authorization: `Bearer ${accessToken}` },
-          }
-        );
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        setData(data[0]);
-        console.log(data);
-        setLoading(false);
-      } catch (error) {
-        setError(error);
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [idProduct]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -139,67 +129,42 @@ function EpicerieProductUpdate() {
     }
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-
-  if (!data) {
-    return <div>No data available</div>;
-  }
+  const classes = useStyles();
 
   return (
     <>
       <div>
         <Navbar />
-        <Box sx={{ backgroundColor: "#f9fafb" }}>
-          <Stack direction="row" justifyContent="space-between">
+        {data && <Box sx={{ backgroundColor: "#f9fafb" }}>
+          <Stack direction="column" justifyContent="center">
             <Box
               flex={4}
               p={{ xs: 0, md: 2 }}
               sx={{ marginBottom: "60px" }}
+              component="form"
               onSubmit={handleSubmit}
             >
               <Box
                 flexWrap="wrap"
-                justifyContent="space-evenly"
+                justifyContent="center"
                 display="flex"
-                flexDirection="row"
+                flexDirection="column"
+                alignContent="center"
                 marginBottom="35px"
                 marginTop="35px"
+                noValidate
               >
                 <Box>
                   <div>
                     <Box>
-                      <img
-                        src={require(`../../../images/${data.image}`)}
-                        alt="insérée"
-                        height="300px"
-                        width="350px"
-                        onChange={handleChange}
-                      />
-                    </Box>
-                    <Box justifyContent="center" display="flex" width="350px">
-                      {" "}
-                      <input
-                        type="file"
-                        accept="image/*"
-                        style={{ display: "none" }}
-                        id="contained-button-file"
-                      />
-                      <label htmlFor="contained-button-file">
-                        <Button
-                          fullWidth
-                          className={classes.Button}
-                          component="span"
-                          endIcon={<InsertPhoto />}
-                        >
-                          Insérer une photo
-                        </Button>
-                      </label>
+                      {data.image && (
+                        <img
+                          src={require(`../../../images/${data.image}`)}
+                          alt="Product"
+                          height="300px"
+                          width="350px"
+                        />
+                      )}
                     </Box>
                   </div>
                 </Box>
@@ -211,53 +176,66 @@ function EpicerieProductUpdate() {
                   display="flex"
                   gap={2}
                 >
+                  <Box textAlign="center">
+                    <Typography variant="h6">
+                      {data.name} - {data.label}
+                    </Typography>
+                  </Box>
+
                   <Grid item xs={12}>
                     <TextField
                       label="Prix"
                       variant="outlined"
                       fullWidth
                       name="price"
-                      value={data.price}
+                      id="price"
+                      defaultValue={data ? data.price : ""}
                       onChange={handleChange}
                     />
                   </Grid>
                   <Grid item xs={12}>
-                    <FormControl fullWidth variant="outlined">
-                      <InputLabel>Disponibilité</InputLabel>
-                      <Select
-                        value={data.available}
-                        label="Disponibilité"
-                        onChange={handleChangeDispo}
-                        required
-                      >
-                        {options?.map((option) => {
-                          return (
+                    <Tooltip
+                      title="Marquez comme disponible sur votre épicerie"
+                      placement="top"
+                    >
+                      <FormControl fullWidth variant="outlined">
+                        <InputLabel>Disponibilité</InputLabel>
+                        <Select
+                          value={disponibilité}
+                          label="Disponibilité"
+                          onChange={handleChangeDispo}
+                          required
+                        >
+                          {options?.map((option) => (
                             <MenuItem key={option.label} value={option.label}>
-                              {option.label ?? option.label}
+                              {option.label}
                             </MenuItem>
-                          );
-                        })}
-                      </Select>
-                    </FormControl>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Tooltip>
                   </Grid>
                 </Box>
               </Box>
-
-              <Box justifyContent="center" display="flex" marginTop="30px">
+              <div>
+                <ToastContainer theme="colored" />
+              </div>
+              <Box
+                justifyContent="space-evenly"
+                display="flex"
+                marginTop="30px"
+              >
                 <Button
                   type="submit"
                   className={classes.Button}
                   endIcon={<Save />}
                 >
-                  Enregistrer
+                  Modifier le produit
                 </Button>
               </Box>
             </Box>
-            <div>
-              <ToastContainer theme="colored" />
-            </div>
           </Stack>
-        </Box>
+        </Box>}
         <Footer />
       </div>
     </>
