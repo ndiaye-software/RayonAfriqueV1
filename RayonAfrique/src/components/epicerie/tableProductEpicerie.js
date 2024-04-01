@@ -283,7 +283,7 @@ export default function EnhancedTable() {
   if (formData && formData.length > 0) {
     var rows = formData.map((produit) => {
       return createData(
-        produit.idProduct,
+        produit.idEpicerieProduct,
         produit.name,
         produit.label,
         parseFloat(produit.price),

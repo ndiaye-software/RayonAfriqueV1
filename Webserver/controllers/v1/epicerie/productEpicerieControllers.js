@@ -142,7 +142,89 @@ const getEpicerieProductByIdEpicerie = asyncHandler(async (req, res) => {
   }
 });
 
-const getProductDetailsById = asyncHandler(async (req, res) => {
+const getProductDetailsByIdProduct = asyncHandler(async (req, res) => {
+  try {
+    // Check if authorization header is missing
+    if (!req.headers.authorization) {
+      res.status(402).json({ error: "Authorization header missing" });
+      return;
+    }
+
+    // Decode the accessToken to extract user ID
+    const accessToken = req.headers.authorization.replace("Bearer ", "");
+    // Verify and decode the token
+    const decodedToken = jwt.verify(
+      accessToken,
+      process.env.ACCESS_TOKEN_SECRET
+    );
+
+    // Access the user ID from the decoded token
+    const idEpicerie = decodedToken.UserInfo.id;
+
+    // Retrieve the user's epicerie by user ID
+    const epicerie = await Epicerie.findById(idEpicerie);
+
+    // Check if the epicerie exists for the user
+    if (!epicerie) {
+      return res.status(404).json({ error: "Epicerie not found." });
+    }
+
+    // Extract the product ID from the request parameters
+    const { idEpicerieProduct } = req.params;
+
+    // Retrieve the epicerie product details using the product ID
+    const epicerieProduct = await EpicerieProduct.find({
+      _id: idEpicerieProduct,
+    })
+      .populate({
+        path: "idProduct",
+        populate: {
+          path: "category country label",
+          select: "categoryName countryName labelName",
+        },
+        select: "name category label country description image reference",
+      })
+      .lean();
+
+    // Check if the product exists
+    if (!epicerieProduct) {
+      return res.status(404).json({ error: "Product not found." });
+    }
+
+
+    // Check if the product belongs to the user's epicerie
+    if (epicerieProduct[0].idEpicerie.toString() !== idEpicerie) {
+      return res.status(403).json({ error: "Unauthorized access to product." });
+    }
+
+
+    const formattedProduct = epicerieProduct.map((product) => ({
+      idEpicerieProduct: product._id,
+      idProduct: product.idProduct._id,
+      name: product.idProduct.name,
+      reference: product.idProduct.reference,
+      description: product.idProduct.description,
+      image: product.idProduct.image,
+      category: product.idProduct.category
+        ? product.idProduct.category.categoryName
+        : null,
+      country: product.idProduct.country
+        ? product.idProduct.country.countryName
+        : null,
+      label: product.idProduct.label ? product.idProduct.label.labelName : null,
+      price: product.price,
+      available: product.available,
+    }));
+
+    res.status(200).json(formattedProduct);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error fetching product details." });
+  }
+});
+
+const getProductDetailsByIdEpicerieProduct = asyncHandler(async (req, res) => {
   try {
     // Check if authorization header is missing
     if (!req.headers.authorization) {
@@ -170,11 +252,11 @@ const getProductDetailsById = asyncHandler(async (req, res) => {
     }
 
     // Extract the product ID from the request parameters
-    const { idProduct } = req.params;
+    const { idEpicerieProduct } = req.params;
 
     // Retrieve the epicerie product details using the product ID
     const epicerieProduct = await EpicerieProduct.find({
-      idProduct: idProduct,
+      _id: idEpicerieProduct,
     })
       .populate({
         path: "idProduct",
@@ -190,6 +272,9 @@ const getProductDetailsById = asyncHandler(async (req, res) => {
     if (!epicerieProduct) {
       return res.status(404).json({ error: "Product not found." });
     }
+
+    console.log({" epicerie Product " : epicerieProduct[0].idEpicerie.toString()})
+    console.log({" user "  : userId})
 
     // Check if the product belongs to the user's epicerie
     if (epicerieProduct[0].idEpicerie.toString() !== userId) {
@@ -237,11 +322,12 @@ const updateEpicerieProduct = asyncHandler(async (req, res) => {
 
   try {
     const epicerie = await Epicerie.findById(idEpicerie);
-    const epicerieProduct = await EpicerieProduct.findById(id);
 
     if (!epicerie) {
       return res.status(404).json({ error: "Epicerie non trouvée." });
     }
+
+    const epicerieProduct = await EpicerieProduct.findById(id);
 
     if (!epicerieProduct) {
       return res.status(404).json({ error: "Produit d'épicerie non trouvé." });
@@ -393,5 +479,6 @@ module.exports = {
   updateEpicerieProduct,
   deleteEpicerieProductById,
   deleteEpicerieProductsByNameList,
-  getProductDetailsById,
+  getProductDetailsByIdProduct,
+  getProductDetailsByIdEpicerieProduct,
 };

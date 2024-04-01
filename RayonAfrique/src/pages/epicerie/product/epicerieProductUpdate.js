@@ -38,31 +38,35 @@ const options = [
 function EpicerieProductUpdate() {
   const navigate = useNavigate();
 
-  const [data, setData] = useState([]);
+  const { idEpicerieProduct } = useParams();
 
-  const { idProduct } = useParams();
+  const [formData, setFormData] = useState({
+    idEpicerieProduct: idEpicerieProduct,
+    price: "",
+    available: false,
+    label: "",
+    image: "",
+    name: "",
+  });
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
-    fetch(`${hostname}/api/v1/epicerie/productEpicerie/read/${idProduct}`, {
+    fetch(`${hostname}/api/v1/epicerie/productEpicerie/read/${idEpicerieProduct}`, {
       headers: { Authorization: `Bearer ${accessToken}` },
     })
       .then((res) => res.json())
       .then((data) => {
-        setData(data[0]);
-        const disponibiliteValue = data[0]?.available ? "oui" : "non";
-        setDispo(disponibiliteValue);
+        setFormData({
+          idEpicerieProduct: idEpicerieProduct,
+          price: data[0]?.price || "",
+          available: data[0]?.available || false,
+          label: data[0]?.label || "",
+          image: data[0]?.image || "",
+          name: data[0]?.name || "",
+        });
       })
       .catch((err) => console.log(err));
-  }, [idProduct]);
-
-  const [disponibilité, setDispo] = React.useState(options[0]?.label || "");
-
-  const [formData, setFormData] = useState({
-    idProduct: idProduct,
-    price: "",
-    available: disponibilité === "oui",
-  });
+  }, [idEpicerieProduct]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -72,23 +76,18 @@ function EpicerieProductUpdate() {
     });
   };
 
-  const updateFormData = (name, value) => {
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
   const handleChangeDispo = (event) => {
     const value = event.target.value;
-    setDispo(value);
 
     // Utilisez la valeur de l'option "value"
     const booleanValue =
       options.find((option) => option.label === value)?.value || false;
 
     // Appel de la fonction pour mettre à jour formData
-    updateFormData("available", booleanValue);
+    setFormData({
+      ...formData,
+      available: booleanValue,
+    });
   };
 
   const handleSubmit = async (event) => {
@@ -135,107 +134,109 @@ function EpicerieProductUpdate() {
     <>
       <div>
         <Navbar />
-        {data && <Box sx={{ backgroundColor: "#f9fafb" }}>
-          <Stack direction="column" justifyContent="center">
-            <Box
-              flex={4}
-              p={{ xs: 0, md: 2 }}
-              sx={{ marginBottom: "60px" }}
-              component="form"
-              onSubmit={handleSubmit}
-            >
+        {formData && (
+          <Box sx={{ backgroundColor: "#f9fafb" }}>
+            <Stack direction="column" justifyContent="center">
               <Box
-                flexWrap="wrap"
-                justifyContent="center"
-                display="flex"
-                flexDirection="column"
-                alignContent="center"
-                marginBottom="35px"
-                marginTop="35px"
-                noValidate
+                flex={4}
+                p={{ xs: 0, md: 2 }}
+                sx={{ marginBottom: "60px" }}
+                component="form"
+                onSubmit={handleSubmit}
               >
-                <Box>
-                  <div>
-                    <Box>
-                      {data.image && (
-                        <img
-                          src={require(`../../../images/${data.image}`)}
-                          alt="Product"
-                          height="300px"
-                          width="350px"
-                        />
-                      )}
-                    </Box>
-                  </div>
-                </Box>
-
                 <Box
-                  padding="20px"
-                  maxWidth="600px"
-                  flexDirection="column"
+                  flexWrap="wrap"
+                  justifyContent="center"
                   display="flex"
-                  gap={2}
+                  flexDirection="column"
+                  alignContent="center"
+                  marginBottom="35px"
+                  marginTop="35px"
+                  noValidate
                 >
-                  <Box textAlign="center">
-                    <Typography variant="h6">
-                      {data.name} - {data.label}
-                    </Typography>
+                  <Box>
+                    <div>
+                      <Box>
+                        {formData.image && (
+                          <img
+                            src={require(`../../../images/${formData.image}`)}
+                            alt="Product"
+                            height="300px"
+                            width="350px"
+                          />
+                        )}
+                      </Box>
+                    </div>
                   </Box>
 
-                  <Grid item xs={12}>
-                    <TextField
-                      label="Prix"
-                      variant="outlined"
-                      fullWidth
-                      name="price"
-                      id="price"
-                      defaultValue={data ? data.price : ""}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Tooltip
-                      title="Marquez comme disponible sur votre épicerie"
-                      placement="top"
-                    >
-                      <FormControl fullWidth variant="outlined">
-                        <InputLabel>Disponibilité</InputLabel>
-                        <Select
-                          value={disponibilité}
-                          label="Disponibilité"
-                          onChange={handleChangeDispo}
-                          required
-                        >
-                          {options?.map((option) => (
-                            <MenuItem key={option.label} value={option.label}>
-                              {option.label}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Tooltip>
-                  </Grid>
+                  <Box
+                    padding="20px"
+                    maxWidth="600px"
+                    flexDirection="column"
+                    display="flex"
+                    gap={2}
+                  >
+                    <Box textAlign="center">
+                      <Typography variant="h6">
+                        {formData.name} - {formData.label}
+                      </Typography>
+                    </Box>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        label="Prix"
+                        variant="outlined"
+                        fullWidth
+                        name="price"
+                        id="price"
+                        value={formData.price}
+                        onChange={handleChange}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Tooltip
+                        title="Marquez comme disponible sur votre épicerie"
+                        placement="top"
+                      >
+                        <FormControl fullWidth variant="outlined">
+                          <InputLabel>Disponibilité</InputLabel>
+                          <Select
+                            value={formData.available ? "oui" : "non"}
+                            label="Disponibilité"
+                            onChange={handleChangeDispo}
+                            required
+                          >
+                            {options?.map((option) => (
+                              <MenuItem key={option.label} value={option.label}>
+                                {option.label}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </Tooltip>
+                    </Grid>
+                  </Box>
+                </Box>
+                <div>
+                  <ToastContainer theme="colored" />
+                </div>
+                <Box
+                  justifyContent="space-evenly"
+                  display="flex"
+                  marginTop="30px"
+                >
+                  <Button
+                    type="submit"
+                    className={classes.Button}
+                    endIcon={<Save />}
+                  >
+                    Modifier le produit
+                  </Button>
                 </Box>
               </Box>
-              <div>
-                <ToastContainer theme="colored" />
-              </div>
-              <Box
-                justifyContent="space-evenly"
-                display="flex"
-                marginTop="30px"
-              >
-                <Button
-                  type="submit"
-                  className={classes.Button}
-                  endIcon={<Save />}
-                >
-                  Modifier le produit
-                </Button>
-              </Box>
-            </Box>
-          </Stack>
-        </Box>}
+            </Stack>
+          </Box>
+        )}
         <Footer />
       </div>
     </>

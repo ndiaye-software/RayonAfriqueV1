@@ -8,7 +8,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import InsertImage from "../../../images/insertimage.png";
 import backgroundImage from "../../../images/background.jpg";
 import { Typography } from "@material-ui/core";
-import { useParams } from "react-router-dom";
 import hostname from "../../../hostname";
 
 const useStyles = makeStyles((theme) => ({
@@ -108,44 +107,56 @@ const useStyles = makeStyles((theme) => ({
 function EpicerieProfile() {
   const classes = useStyles();
 
-  const { id } = useParams();
-
   const [errorMessage, setErrorMessage] = useState("");
 
   const [response, setResponse] = useState(false);
 
   const [formData, setFormData] = useState({
     nameCompany: "",
-    nameUser: "",
+    name: "",
     phone: "",
     mail: "",
-    address: "",
+    adresse: "",
     description: "",
     image: "",
   });
 
   useEffect(() => {
-    fetch(`${hostname}/api/v1/user/readUser/${id}`)
+    const accessToken = localStorage.getItem("accessToken");
+    fetch(`${hostname}/api/v1/epicerie/profile/read`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
       .then((res) => res.json())
-      .then((userData) => {
-        setFormData(userData);
+      .then((data) => {
+        setFormData({
+          nameCompany: data.nameCompany || "",
+          name: data.name || "",
+          phone: data.phone || "",
+          mail: data.mail || "",
+          adresse: data.adresse || "",
+          description: data.description || "",
+          image: data.image || "",
+        });
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [id]);
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await fetch(`${hostname}/api/v1/user/update/${id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...formData }),
-      });
+      const response = await fetch(
+        `${hostname}/api/v1/epicerie/profile/update`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ...formData }),
+        }
+      );
 
       if (response.ok) {
         setResponse(true);
@@ -189,179 +200,179 @@ function EpicerieProfile() {
 
   return (
     <>
-      <div>
-        <Navbar />
-        <section className={classes.banner}>
-          <div className={classes.bannerImg}></div>
-          <div className={classes.bannerText}>
-            <Typography variant="h1" className={classes.section1_div_h1}>
-              RayonAfrique+
-            </Typography>
-            <Typography variant="h3" className={classes.section1_div_h3}>
-              Gérez votre profil !
-            </Typography>
-          </div>
-        </section>
-        <Box sx={{ backgroundColor: "#f9fafb" }}>
-          <Stack direction="row" justifyContent="space-between">
-            <Box
-              flex={4}
-              p={{ xs: 0, md: 2 }}
-              sx={{ marginBottom: "60px" }}
-              onSubmit={handleSubmit}
-            >
+        <div>
+          <Navbar />
+          <section className={classes.banner}>
+            <div className={classes.bannerImg}></div>
+            <div className={classes.bannerText}>
+              <Typography variant="h1" className={classes.section1_div_h1}>
+                RayonAfrique+
+              </Typography>
+              <Typography variant="h3" className={classes.section1_div_h3}>
+                Gérez votre profil !
+              </Typography>
+            </div>
+          </section>
+          <Box sx={{ backgroundColor: "#f9fafb" }}>
+            <Stack direction="row" justifyContent="space-between">
               <Box
-                flexWrap="wrap"
-                justifyContent="space-evenly"
-                display="flex"
-                flexDirection="row"
-                marginBottom="35px"
-                marginTop="35px"
+                flex={4}
+                p={{ xs: 0, md: 2 }}
+                sx={{ marginBottom: "60px" }}
+                onSubmit={handleSubmit}
               >
-                <Box>
-                  <div>
-                    <Box>
-                      {imageExists ? (
-                        <img
-                          src={formData.image}
-                          alt="insérée"
-                          height="300px"
-                          width="350px"
-                          name="image"
-                        />
-                      ) : (
-                        <img
-                          src={InsertImage}
-                          alt="insérée"
-                          height="300px"
-                          width="350px"
-                        />
-                      )}
-                    </Box>
-                    <Box justifyContent="center" display="flex" width="350px">
-                      {" "}
-                      <input
-                        type="file"
-                        accept="image/*"
-                        style={{ display: "none" }}
-                        id="contained-button-file"
-                        onChange={handleFileChange}
-                      />
-                      <label htmlFor="contained-button-file">
-                        <Button
-                          fullWidth
-                          className={classes.Button}
-                          component="span"
-                          endIcon={<InsertPhoto />}
-                        >
-                          Insérer une photo
-                        </Button>
-                      </label>
-                    </Box>
-                  </div>
-                </Box>
-
                 <Box
-                  padding="20px"
-                  maxWidth="600px"
-                  flexDirection="column"
+                  flexWrap="wrap"
+                  justifyContent="space-evenly"
                   display="flex"
-                  gap={2}
+                  flexDirection="row"
+                  marginBottom="35px"
+                  marginTop="35px"
                 >
-                  <Grid item xs={12} fullWidth>
-                    <TextField
-                      label="Nom de l'épicerie"
-                      variant="outlined"
-                      fullWidth
-                      name="nameCompany"
-                      value={formData.nameCompany}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      label="Nom du gérant"
-                      variant="outlined"
-                      fullWidth
-                      name="nameUser"
-                      value={formData.nameUser}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      label="Téléphone"
-                      variant="outlined"
-                      fullWidth
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      label="Mail"
-                      variant="outlined"
-                      fullWidth
-                      name="mail"
-                      value={formData.mail}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      label="Adresse"
-                      variant="outlined"
-                      fullWidth
-                      name="address"
-                      value={formData.address}
-                      onChange={handleChange}
-                    />
-                  </Grid>
+                  <Box>
+                    <div>
+                      <Box>
+                        {imageExists ? (
+                          <img
+                            src={formData.image}
+                            alt="insérée"
+                            height="300px"
+                            width="350px"
+                            name="image"
+                          />
+                        ) : (
+                          <img
+                            src={InsertImage}
+                            alt="insérée"
+                            height="300px"
+                            width="350px"
+                          />
+                        )}
+                      </Box>
+                      <Box justifyContent="center" display="flex" width="350px">
+                        {" "}
+                        <input
+                          type="file"
+                          accept="image/*"
+                          style={{ display: "none" }}
+                          id="contained-button-file"
+                          onChange={handleFileChange}
+                        />
+                        <label htmlFor="contained-button-file">
+                          <Button
+                            fullWidth
+                            className={classes.Button}
+                            component="span"
+                            endIcon={<InsertPhoto />}
+                          >
+                            Insérer une photo
+                          </Button>
+                        </label>
+                      </Box>
+                    </div>
+                  </Box>
+
+                  <Box
+                    padding="20px"
+                    maxWidth="600px"
+                    flexDirection="column"
+                    display="flex"
+                    gap={2}
+                  >
+                    <Grid item xs={12} fullWidth>
+                      <TextField
+                        label="Nom de l'épicerie"
+                        variant="outlined"
+                        fullWidth
+                        name="nameCompany"
+                        value={formData.nameCompany}
+                        onChange={handleChange}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        label="Nom du gérant"
+                        variant="outlined"
+                        fullWidth
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        label="Téléphone"
+                        variant="outlined"
+                        fullWidth
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        label="Mail"
+                        variant="outlined"
+                        fullWidth
+                        name="mail"
+                        value={formData.mail}
+                        onChange={handleChange}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        label="Adresse"
+                        variant="outlined"
+                        fullWidth
+                        name="adresse"
+                        value={formData.adresse}
+                        onChange={handleChange}
+                      />
+                    </Grid>
+                  </Box>
                 </Box>
-              </Box>
 
-              {errorMessage && (
-                <Typography variant="body1" color="error" gutterBottom>
-                  {errorMessage}
-                </Typography>
-              )}
+                {errorMessage && (
+                  <Typography variant="body1" color="error" gutterBottom>
+                    {errorMessage}
+                  </Typography>
+                )}
 
-              <Box justifyContent="center" display="flex">
-                <Box
-                  sx={{
-                    textAlign: "center",
-                    width: { xs: "250px", sm: "500px" },
-                  }}
-                >
-                  <TextField
-                    label="Description"
-                    variant="outlined"
+                <Box justifyContent="center" display="flex">
+                  <Box
+                    sx={{
+                      textAlign: "center",
+                      width: { xs: "250px", sm: "500px" },
+                    }}
+                  >
+                    <TextField
+                      label="Description"
+                      variant="outlined"
+                      fullWidth
+                      name="description"
+                      multiline
+                      minRows={5}
+                      value={formData.description}
+                      onChange={handleChange}
+                    />
+                  </Box>
+                </Box>
+
+                <Box justifyContent="center" display="flex" marginTop="30px">
+                  <Button
                     fullWidth
-                    name="description"
-                    multiline
-                    minRows={5}
-                    value={formData.description}
-                    onChange={handleChange}
-                  />
+                    className={classes.Button}
+                    component="span"
+                    endIcon={<Save />}
+                  >
+                    Enregistrer
+                  </Button>
                 </Box>
               </Box>
-
-              <Box justifyContent="center" display="flex" marginTop="30px">
-                <Button
-                  fullWidth
-                  className={classes.Button}
-                  component="span"
-                  endIcon={<Save />}
-                >
-                  Enregistrer
-                </Button>
-              </Box>
-            </Box>
-          </Stack>
-        </Box>
-        <Footer />
-      </div>
+            </Stack>
+          </Box>
+          <Footer />
+        </div>
     </>
   );
 }

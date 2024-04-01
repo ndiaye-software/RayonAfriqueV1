@@ -68,7 +68,7 @@ function App() {
           <Route path="/epicerie/produit/search/create" element={<EpicerieProductCreate />}/>
           <Route path="/epicerie/produit/search/:idProduct/" element={<EpicerieProductPresentation />}/>
           <Route path="/epicerie/produit/search/:idProduct/add" element={<EpicerieProductAdd/>}/>
-          <Route path="/epicerie/produit/update/:idProduct" element={<EpicerieProductUpdate />}/>
+          <Route path="/epicerie/produit/update/:idEpicerieProduct" element={<EpicerieProductUpdate />}/>
           <Route path="/epicerie/profil" element={<EpicerieProfile />}/>
           <Route path="/epicerie/contact" element={<EpicerieContact />}/>
           <Route path="/epicerie/contact/sent" element={<MessageEnvoyéEpicerie />}/>

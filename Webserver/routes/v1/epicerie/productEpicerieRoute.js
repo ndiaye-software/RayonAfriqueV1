@@ -10,8 +10,8 @@ router
     .get(epicerieproductController.getEpicerieProductByIdEpicerie);
 
 router
-    .route("/read/:idProduct")
-    .get(epicerieproductController.getProductDetailsById);
+    .route("/read/:idEpicerieProduct")
+    .get(epicerieproductController.getProductDetailsByIdProduct);
 
 router
     .route("/create")
