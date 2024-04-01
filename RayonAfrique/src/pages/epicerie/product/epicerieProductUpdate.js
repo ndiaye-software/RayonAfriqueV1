@@ -8,9 +8,17 @@ import { TextField, Button, Grid } from "@material-ui/core";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
 import hostname from "../../../hostname";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import { Close } from "@material-ui/icons";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import SaveIcon from "@mui/icons-material/Save";
+import IconButton from "@mui/material/IconButton";
 import "react-toastify/dist/ReactToastify.css";
 
 const useStyles = makeStyles(() => ({
@@ -39,6 +47,13 @@ function EpicerieProductUpdate() {
   const navigate = useNavigate();
 
   const { idEpicerieProduct } = useParams();
+  const [openDialog, setOpenDialog] = useState(false);
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+  const handleUpdate = () => {
+    setOpenDialog(true);
+  };
 
   const [formData, setFormData] = useState({
     idEpicerieProduct: idEpicerieProduct,
@@ -51,9 +66,12 @@ function EpicerieProductUpdate() {
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
-    fetch(`${hostname}/api/v1/epicerie/productEpicerie/read/${idEpicerieProduct}`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    })
+    fetch(
+      `${hostname}/api/v1/epicerie/productEpicerie/read/${idEpicerieProduct}`,
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         setFormData({
@@ -217,6 +235,41 @@ function EpicerieProductUpdate() {
                     </Grid>
                   </Box>
                 </Box>
+                <Dialog onClose={handleCloseDialog} open={openDialog}>
+                  <DialogTitle>
+                    Voulez-vous enregistrer ces modifications ?
+                  </DialogTitle>
+                  <List>
+                      <ListItem>
+                        <ListItemText primary={formData.price} />
+                        <ListItemText primary={formData.available ? "oui" : "non"} />
+                      </ListItem>
+                  </List>
+                  <Grid
+                    display="flex"
+                    flexDirection="row"
+                    justifyContent="space-evenly"
+                    marginBottom="30px"
+                  >
+                    <Tooltip title="annuler">
+                      <IconButton
+                        onClick={handleCloseDialog}
+                        aria-label="close"
+                        sx={{ bgcolor: "#922B21", color: "white" }}
+                      >
+                        <Close />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="supprimer">
+                      <IconButton
+                        onClick={handleUpdate}
+                        aria-label="delete"
+                      >
+                        <SaveIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </Grid>
+                </Dialog>
                 <div>
                   <ToastContainer theme="colored" />
                 </div>
@@ -227,6 +280,7 @@ function EpicerieProductUpdate() {
                 >
                   <Button
                     type="submit"
+                    onClick={handleUpdate}
                     className={classes.Button}
                     endIcon={<Save />}
                   >
