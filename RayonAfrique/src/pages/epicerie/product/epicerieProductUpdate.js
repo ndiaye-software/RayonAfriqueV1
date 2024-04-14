@@ -4,7 +4,8 @@ import Box from "@mui/material/Box";
 import Navbar from "../../../components/epicerie/navbarEpicerie";
 import Footer from "../../../components/main/footer";
 import Save from "@mui/icons-material/Save";
-import { TextField, Button, Grid } from "@material-ui/core";
+import { TextField, Button } from "@material-ui/core";
+import { Grid } from "@mui/material";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
 import hostname from "../../../hostname";
@@ -240,10 +241,16 @@ function EpicerieProductUpdate() {
                     Voulez-vous enregistrer ces modifications ?
                   </DialogTitle>
                   <List>
-                      <ListItem>
-                        <ListItemText primary={formData.price} />
-                        <ListItemText primary={formData.available ? "oui" : "non"} />
-                      </ListItem>
+                    <ListItem>
+                      <ListItemText primary={`prix  : ${formData.price}`} />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText
+                        primary={`disponibilité : ${
+                          formData.available ? "oui" : "non"
+                        }`}
+                      />
+                    </ListItem>
                   </List>
                   <Grid
                     display="flex"
@@ -251,21 +258,23 @@ function EpicerieProductUpdate() {
                     justifyContent="space-evenly"
                     marginBottom="30px"
                   >
+                    <Tooltip title="supprimer">
+                      <IconButton onClick={handleUpdate} aria-label="delete">
+                        <SaveIcon />
+                      </IconButton>
+                    </Tooltip>
+
                     <Tooltip title="annuler">
                       <IconButton
                         onClick={handleCloseDialog}
                         aria-label="close"
-                        sx={{ bgcolor: "#922B21", color: "white" }}
+                        sx={{
+                          bgcolor: "#922B21",
+                          color: "white",
+                          "&:hover": { bgcolor: "white", color: "#922B21" },
+                        }}
                       >
                         <Close />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="supprimer">
-                      <IconButton
-                        onClick={handleUpdate}
-                        aria-label="delete"
-                      >
-                        <SaveIcon />
                       </IconButton>
                     </Tooltip>
                   </Grid>
@@ -279,7 +288,6 @@ function EpicerieProductUpdate() {
                   marginTop="30px"
                 >
                   <Button
-                    type="submit"
                     onClick={handleUpdate}
                     className={classes.Button}
                     endIcon={<Save />}

@@ -356,14 +356,14 @@ export default function EnhancedTable() {
   const handleDeleteList = async (event) => {
     console.log(selected);
     event.preventDefault();
-  
+
     const accessToken = localStorage.getItem("accessToken");
-  
+
     if (!accessToken) {
       toast("Access token is missing");
       return;
     }
-  
+
     try {
       const response = await fetch(
         `${hostname}/api/v1/epicerie/productEpicerie/delete/listproduct`,
@@ -376,12 +376,12 @@ export default function EnhancedTable() {
           body: JSON.stringify({ productNameList: selected }), // Convertissez les données en JSON
         }
       );
-  
+
       if (response.ok) {
         const data = await response.json();
         if (data.message) {
           toast.success(data.message);
-        } 
+        }
         setTimeout(() => {
           window.location.reload();
         }, 2000);
@@ -397,7 +397,6 @@ export default function EnhancedTable() {
       console.log("Erreur lors de la suppression :", error);
     }
   };
-  
 
   const isSelected = (nom) => selected.indexOf(nom) !== -1;
 
@@ -521,18 +520,18 @@ export default function EnhancedTable() {
           justifyContent="space-evenly"
           marginBottom="30px"
         >
+          <Tooltip title="supprimer">
+            <IconButton onClick={handleDeleteList} aria-label="delete">
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
           <Tooltip title="annuler">
             <IconButton
               onClick={handleCloseDialog}
               aria-label="close"
-              sx={{ bgcolor: "#922B21", color: "white" }}
+              sx={{ bgcolor: "#922B21", color: "white" ,'&:hover':{bgcolor: "white", color: "#922B21"} }}
             >
               <Close />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="supprimer">
-            <IconButton onClick={handleDeleteList} aria-label="delete">
-              <DeleteIcon />
             </IconButton>
           </Tooltip>
         </Grid>
