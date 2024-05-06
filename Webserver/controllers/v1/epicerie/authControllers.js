@@ -5,17 +5,20 @@ const nodemailer = require("nodemailer");
 const asyncHandler = require("express-async-handler");
 const dotenv = require("dotenv");
 const emailvalidator = require("email-validator");
-const phonevalidator = require("validator");
-const axios = require('axios');
+const axios = require("axios");
 
+//Géocodage adresse
 const geocodeAddress = async (address) => {
   try {
-    const response = await axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
-      params: {
-        address: address,
-        key: process.env.MAPS_API,
-      },
-    });
+    const response = await axios.get(
+      "https://maps.googleapis.com/maps/api/geocode/json",
+      {
+        params: {
+          address: address,
+          key: process.env.MAPS_API,
+        },
+      }
+    );
 
     if (response.data.results && response.data.results.length > 0) {
       const location = response.data.results[0].geometry.location;
@@ -24,14 +27,19 @@ const geocodeAddress = async (address) => {
 
       return { latitude, longitude };
     } else {
-      throw new Error('No results found for the given address');
+      throw new Error("No results found for the given address");
     }
   } catch (error) {
-    console.error('Error geocoding address:', error.message);
+    console.error("Error geocoding address:", error.message);
     throw error;
   }
-}
+};
 
+// Vérifier le numéro de téléphone
+const isValidPhoneNumber = (phone) => {
+  const phoneRegex = /^[1-9]\d{9}$/; // Format : 10 chiffres sans préfixe
+  return phoneRegex.test(phone);
+};
 
 // @desc Login
 // @route POST /auth
@@ -62,9 +70,9 @@ const login = async (req, res) => {
 
     const accessToken = jwt.sign(
       {
-        "UserInfo": {
-          "mail": foundEpicerie.mail,
-          "id": foundEpicerie._id.toString(),
+        UserInfo: {
+          mail: foundEpicerie.mail,
+          id: foundEpicerie._id.toString(),
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
@@ -73,9 +81,9 @@ const login = async (req, res) => {
 
     const refreshToken = jwt.sign(
       {
-        "UserInfo": {
-          "mail": foundEpicerie.mail,
-          "id": foundEpicerie._id.toString(),
+        UserInfo: {
+          mail: foundEpicerie.mail,
+          id: foundEpicerie._id.toString(),
         },
       },
       process.env.REFRESH_TOKEN_SECRET,
@@ -91,7 +99,6 @@ const login = async (req, res) => {
     });
 
     return res.json({ accessToken });
-    
   } catch (error) {
     console.error("Erreur lors de la connexion :", error);
     return res
@@ -119,7 +126,9 @@ const refresh = (req, res) => {
     const foundEpicerie = await Epicerie.findOne({ mail }).exec();
 
     if (!foundEpicerie)
-      return res.status(401).json({ message: "Non autorisé Epicerie not found" });
+      return res
+        .status(401)
+        .json({ message: "Non autorisé Epicerie not found" });
 
     const accessToken = jwt.sign(
       {
@@ -155,9 +164,26 @@ const transporter = nodemailer.createTransport({
 
 //Inscription
 const signUp = asyncHandler(async (req, res) => {
-  const { name, mail, phone, password1, password2, nameCompany, image, address } = req.body;
+  const {
+    name,
+    mail,
+    phone,
+    password1,
+    password2,
+    nameCompany,
+    image,
+    address,
+  } = req.body;
 
-  if (!name || !phone || !password1 || !password2 || !mail || !nameCompany || !address) {
+  if (
+    !name ||
+    !phone ||
+    !password1 ||
+    !password2 ||
+    !mail ||
+    !nameCompany ||
+    !address
+  ) {
     return res.status(400).json({ message: "Tous les champs sont requis" });
   }
 
@@ -193,18 +219,16 @@ const signUp = asyncHandler(async (req, res) => {
       return res.status(409).json({ message: "L'email n'est pas valide" });
     }
 
-    if (!phonevalidator.isMobilePhone(phone)) {
+    if (!isValidPhoneNumber(phone)) {
       return res
         .status(409)
-        .json({ message: "Le numéro rentré n'est pas valide" });
+        .json({ message: "Le numéro de téléphone n'est pas valide" });
     }
 
     // Hash password
     const hashedPwd = await bcrypt.hash(password1, 10); // salt rounds
 
-    const maps_adresse = address.description
-
-    console.log(maps_adresse)
+    const maps_adresse = address.description;
 
     const coordinates = await geocodeAddress(maps_adresse);
     const latitude = coordinates.latitude;
@@ -216,12 +240,12 @@ const signUp = asyncHandler(async (req, res) => {
       mail,
       phone,
       nameCompany,
-      longitude : longitude,
-      latitude : latitude,
+      longitude: longitude,
+      latitude: latitude,
       image,
-      description : "",
-      password : hashedPwd,
-      adresse : maps_adresse
+      description: "",
+      password: hashedPwd,
+      adresse: maps_adresse,
     });
 
     // Sauvegarder l'utilisateur dans la base de données

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Stack, Tooltip } from "@mui/material";
+import Autocomplete from "@mui/material/Autocomplete";
+import usePlacesAutocomplete from "use-places-autocomplete";
 import Navbar from "../../../components/epicerie/navbarEpicerie";
 import Footer from "../../../components/main/footer";
 import { InsertPhoto, Save } from "@material-ui/icons";
@@ -115,8 +117,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function EpicerieProfile() {
+  const {
+    setValue,
+    suggestions: { data },
+  } = usePlacesAutocomplete({ debounce: 300 });
+
   const classes = useStyles();
+
   const [openDialog, setOpenDialog] = useState(false);
+
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
@@ -137,6 +146,20 @@ function EpicerieProfile() {
     description: "",
     image: "",
   });
+
+  useEffect(() => {
+    // Update Autocomplete value when formData.address changes
+    setValue(formData.adresse);
+  }, [formData.adresse, setValue]);
+
+  const handleAddressChange = (_, newValue) => {
+    setValue(newValue);
+    // Update the address in the formData
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      address: newValue || "", // Use an empty string if newValue is undefined
+    }));
+  };
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -162,14 +185,17 @@ function EpicerieProfile() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    console.log(formData);
 
     try {
+      const accessToken = localStorage.getItem("accessToken");
       const response = await fetch(
         `${hostname}/api/v1/epicerie/profile/update`,
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify({ ...formData }),
         }
@@ -330,6 +356,7 @@ function EpicerieProfile() {
                       onChange={handleChange}
                     />
                   </Grid>
+         
                   <Grid item xs={12}>
                     <TextField
                       label="Mail"
@@ -340,14 +367,27 @@ function EpicerieProfile() {
                       onChange={handleChange}
                     />
                   </Grid>
+
                   <Grid item xs={12}>
-                    <TextField
-                      label="Adresse"
-                      variant="outlined"
+                    <Autocomplete
+                      disablePortal
+                      id="address"
+                      options={data}
                       fullWidth
-                      name="adresse"
                       value={formData.adresse}
-                      onChange={handleChange}
+                      getOptionLabel={(option) =>
+                        typeof option === "string" ? option : option.description
+                      }
+                      filterOptions={(x) => x}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          variant="outlined"
+                          label="Adresse"
+                        />
+                      )}
+                      onInputChange={(event, newValue) => setValue(newValue)}
+                      onChange={handleAddressChange}
                     />
                   </Grid>
                 </Box>
@@ -383,18 +423,18 @@ function EpicerieProfile() {
                 <DialogTitle>
                   Voulez-vous enregistrer ces modifications ?
                 </DialogTitle>
-                <List sx={{justifyContent:"space-evenly"}}>
+                <List sx={{ justifyContent: "space-evenly" }}>
                   {imageExists && (
-                      <ListItem>
-                        {" "}
-                        <img
-                          src={formData.image}
-                          alt="insérée"
-                          height="120px"
-                          width="150px"
-                          name="image"
-                        />
-                      </ListItem>
+                    <ListItem>
+                      {" "}
+                      <img
+                        src={formData.image}
+                        alt="insérée"
+                        height="120px"
+                        width="150px"
+                        name="image"
+                      />
+                    </ListItem>
                   )}
                   <ListItem>
                     <ListItemText
@@ -428,7 +468,7 @@ function EpicerieProfile() {
                   marginBottom="30px"
                 >
                   <Tooltip title="enregistrer">
-                    <IconButton onClick={handleUpdate} aria-label="delete">
+                    <IconButton onClick={handleSubmit} aria-label="modifier">
                       <Save />
                     </IconButton>
                   </Tooltip>

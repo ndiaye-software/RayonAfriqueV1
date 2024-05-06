@@ -1,37 +1,28 @@
-"use client";
-import { useState } from "react";
-import {
-  APIProvider,
-  Map,
-  AdvancedMarker,
-  Pin,
-  InfoWindow,
-} from "@vis.gl/react-google-maps";
-export default function Intro() {
-  console.log(process.env.REACT_APP_MAPS_ID)
-  
-  const position = { lat: 53.54, lng: 10 };
-  const [open, setOpen] = useState(false);
+import { Box, Grid, Stack } from "@mui/material";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
+function PhoneField() {
   return (
-    <APIProvider apiKey={process.env.REACT_APP_MAPS_API}>
-      <div style={{ height: "100vh", width: "100%" }}>
-        <Map zoom={9} center={position} mapId={process.env.REACT_APP_MAPS_ID}>
-        <AdvancedMarker position={position} onClick={() => setOpen(true)}>
-            <Pin
-              background={"grey"}
-              borderColor={"green"}
-              glyphColor={"purple"}
-            />
-          </AdvancedMarker>
-
-          {open && (
-            <InfoWindow position={position} onCloseClick={() => setOpen(false)}>
-              <p>I'm in Hamburg</p>
-            </InfoWindow>
-          )}
-        </Map>
-      </div>
-    </APIProvider>
+    <Box sx={{ backgroundColor: "#f9fafb" }}>
+      <Stack direction="row" justifyContent="space-between">
+        <Box flex={4} p={{ xs: 0, md: 2 }} sx={{ marginBottom: "60px" }}>
+          <Box
+            flexWrap="wrap"
+            justifyContent="space-evenly"
+            display="flex"
+            flexDirection="row"
+            marginBottom="35px"
+            marginTop="35px"
+          >
+            <Grid item xs={12}>
+              <PhoneInput country={"fr"} disableDropdown name="phone" placeholder="33 6 12 34 56 78 00" onlyCountries={["fr"]} inputStyle={{height:"55px"}}/>{" "}
+            </Grid>
+          </Box>
+        </Box>
+      </Stack>
+    </Box>
   );
 }
+
+export default PhoneField;

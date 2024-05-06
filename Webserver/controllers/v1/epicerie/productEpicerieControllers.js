@@ -344,12 +344,12 @@ const updateEpicerieProduct = asyncHandler(async (req, res) => {
       epicerieProduct.price = price;
     }
 
-    if (available) {
+    if (typeof available !== 'undefined' && available !== null) {
       epicerieProduct.available = available;
     }
 
     await epicerieProduct.save();
-    res.status(200).json(epicerieProduct);
+    res.status(200).json({ message: "Produit modifié avec succès !" });
   } catch (error) {
     console.error(error);
     res
@@ -393,7 +393,7 @@ const deleteEpicerieProductById = asyncHandler(async (req, res) => {
     }
 
     // Vérifiez si le produit appartient à l'épicerie spécifiée
-    if (product.idEpicerie.toString() !== idEpicerie) {
+    if (product.idEpicerie.toString() !== userId) {
       return res
         .status(403)
         .json({ error: "Ce produit n'appartient pas à cette épicerie." });

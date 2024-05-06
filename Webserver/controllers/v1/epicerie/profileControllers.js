@@ -1,6 +1,39 @@
 const Epicerie = require("../../../models/Epicerie");
 const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
+const emailvalidator = require("email-validator");
+const axios = require('axios');
+
+// Géocodage adresse
+const geocodeAddress = async (address) => {
+  try {
+    const response = await axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
+      params: {
+        address: address,
+        key: process.env.MAPS_API,
+      },
+    });
+
+    if (response.data.results && response.data.results.length > 0) {
+      const location = response.data.results[0].geometry.location;
+      const latitude = location.lat;
+      const longitude = location.lng;
+
+      return { latitude, longitude };
+    } else {
+      throw new Error('No results found for the given address');
+    }
+  } catch (error) {
+    console.error('Error geocoding address:', error.message);
+    throw error;
+  }
+}
+
+// Vérifier le numéro de téléphone
+const isValidPhoneNumber = (phone) => {
+  const phoneRegex = /^[0-9]\d{9}$/; // Format : 10 chiffres sans préfixe
+  return phoneRegex.test(phone);
+};
 
 //Lire le profil d'une épicerie
 const readProfile = asyncHandler(async (req, res) => {
@@ -55,17 +88,27 @@ const updateProfile = asyncHandler(async (req, res) => {
       image,
       description,
       phone,
-      latitude,
-      longitude,
+      adresse
     } = req.body;
 
     // Mettez à jour les champs de l'épicerie avec les valeurs fournies
-    if (name) {
-      epicerie.name = name;
-    }
 
     if (mail) {
+      if (!emailvalidator.validate(mail)) {
+        return res.status(409).json({ message: "L'email n'est pas valide" });
+      }
       epicerie.mail = mail;
+    }
+
+    if (phone) {
+      if (!isValidPhoneNumber(phone)) {
+        return res.status(409).json({ message: "Le numéro de téléphone n'est pas valide" });
+      }
+      epicerie.phone = phone;
+    }
+
+    if (name) {
+      epicerie.name = name;
     }
 
     if (nameCompany) {
@@ -80,25 +123,27 @@ const updateProfile = asyncHandler(async (req, res) => {
       epicerie.description = description;
     }
 
-    if (phone) {
-      epicerie.phone = phone;
-    }
+    const maps_adresse = adresse
+    const coordinates = await geocodeAddress(maps_adresse);
+    const latitude = coordinates.latitude;
+    const longitude = coordinates.longitude;
 
-    if (latitude) {
+    if (adresse) {
       epicerie.latitude = latitude;
     }
 
-    if (longitude) {
+    if (adresse) {
       epicerie.longitude = longitude;
     }
 
+    console.log(epicerie)
+
+   /*
     // Sauvegardez les modifications dans la base de données
     await epicerie.save();
-
-    // Renvoyez un message de succès
     res
       .status(200)
-      .json({ message: "Profil d'épicerie mis à jour avec succès." });
+      .json({ message: "Profil d'épicerie mis à jour avec succès." }); */
   } catch (error) {
     // En cas d'erreur, renvoyez une réponse d'erreur au client
     console.error(error);

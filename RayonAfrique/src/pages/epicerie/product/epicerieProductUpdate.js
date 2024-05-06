@@ -121,9 +121,9 @@ function EpicerieProductUpdate() {
 
     try {
       const response = await fetch(
-        `${hostname}/api/v1/epicerie/productEpicerie/create`,
+        `${hostname}/api/v1/epicerie/productEpicerie/update/${idEpicerieProduct}`,
         {
-          method: "POST",
+          method: "PATCH",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`,
@@ -133,7 +133,11 @@ function EpicerieProductUpdate() {
       );
 
       if (response.ok) {
-        navigate(`/epicerie/produit`);
+        const data = await response.json();
+        toast.success(data.message);
+        setTimeout(() => {
+          navigate(`/epicerie/produit`);
+        }, 1500);
       } else {
         const data = await response.json();
         if (data.message) {
@@ -242,7 +246,7 @@ function EpicerieProductUpdate() {
                   </DialogTitle>
                   <List>
                     <ListItem>
-                      <ListItemText primary={`prix  : ${formData.price}`} />
+                      <ListItemText primary={`prix  : ${formData.price} €`} />
                     </ListItem>
                     <ListItem>
                       <ListItemText
@@ -258,15 +262,16 @@ function EpicerieProductUpdate() {
                     justifyContent="space-evenly"
                     marginBottom="30px"
                   >
-                    <Tooltip title="supprimer">
-                      <IconButton onClick={handleUpdate} aria-label="delete">
-                        <SaveIcon />
+                    <Tooltip title="annuler">
+                      <IconButton onClick={handleCloseDialog} aria-label="delete">
+                        <Close />
                       </IconButton>
                     </Tooltip>
 
-                    <Tooltip title="annuler">
+                    <Tooltip title="modifier">
                       <IconButton
-                        onClick={handleCloseDialog}
+                        type="submit"
+                        onClick={handleSubmit} 
                         aria-label="close"
                         sx={{
                           bgcolor: "#922B21",
@@ -274,7 +279,7 @@ function EpicerieProductUpdate() {
                           "&:hover": { bgcolor: "white", color: "#922B21" },
                         }}
                       >
-                        <Close />
+                        <SaveIcon />
                       </IconButton>
                     </Tooltip>
                   </Grid>

@@ -19,7 +19,7 @@ router
 
 
 router
-  .route("/update/:idEpicerie/:id")
+  .route("/update/:id")
   .patch(epicerieproductController.updateEpicerieProduct);
 
 router
