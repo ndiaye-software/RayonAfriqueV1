@@ -71,6 +71,12 @@ const updateProfile = asyncHandler(async (req, res) => {
     return;
   }
 
+  if (!req.file) {
+    return res.status(404).json({ message: "Mettez une image." });
+  }
+
+  const imageName = req.file.filename;
+
   const accessToken = req.headers.authorization.replace("Bearer ", "");
   const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
   const idEpicerie = decodedToken.UserInfo.id;
@@ -85,13 +91,10 @@ const updateProfile = asyncHandler(async (req, res) => {
       name,
       mail,
       nameCompany,
-      image,
       description,
       phone,
       adresse
     } = req.body;
-
-    // Mettez à jour les champs de l'épicerie avec les valeurs fournies
 
     if (mail) {
       if (!emailvalidator.validate(mail)) {
@@ -115,15 +118,15 @@ const updateProfile = asyncHandler(async (req, res) => {
       epicerie.nameCompany = nameCompany;
     }
 
-    if (image) {
-      epicerie.image = image;
+    if (imageName) {
+      epicerie.image = imageName;
     }
 
     if (description) {
       epicerie.description = description;
     }
 
-    const maps_adresse = adresse
+    const maps_adresse = adresse;
     const coordinates = await geocodeAddress(maps_adresse);
     const latitude = coordinates.latitude;
     const longitude = coordinates.longitude;
@@ -136,14 +139,11 @@ const updateProfile = asyncHandler(async (req, res) => {
       epicerie.longitude = longitude;
     }
 
-    console.log(epicerie)
-
-   /*
     // Sauvegardez les modifications dans la base de données
     await epicerie.save();
     res
       .status(200)
-      .json({ message: "Profil d'épicerie mis à jour avec succès." }); */
+      .json({ message: "Profil d'épicerie mis à jour avec succès." });
   } catch (error) {
     // En cas d'erreur, renvoyez une réponse d'erreur au client
     console.error(error);

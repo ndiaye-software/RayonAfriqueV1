@@ -117,6 +117,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function EpicerieProfile() {
+  const [imageSrc, setImageSrc] = useState("");
+
   const {
     setValue,
     suggestions: { data },
@@ -134,8 +136,6 @@ function EpicerieProfile() {
   };
 
   const [errorMessage, setErrorMessage] = useState("");
-
-  const [response, setResponse] = useState(false);
 
   const [formData, setFormData] = useState({
     nameCompany: "",
@@ -185,19 +185,36 @@ function EpicerieProfile() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(formData);
+
+    const accessToken = localStorage.getItem("accessToken");
+
+    if (!accessToken) {
+      toast("Access token is missing");
+      return;
+    }
 
     try {
-      const accessToken = localStorage.getItem("accessToken");
+      console.log(formData);
+
+      const formDataToSend = new FormData();
+      formDataToSend.append("nameCompany", formData.nameCompany);
+      formDataToSend.append("name", formData.name);
+      formDataToSend.append("mail", formData.mail);
+      formDataToSend.append("phone", formData.phone);
+      formDataToSend.append("description", formData.description);
+      formDataToSend.append("image", formData.image);
+      formDataToSend.append("adresse", formData.adresse);
+
+      console.log(formDataToSend);
+
       const response = await fetch(
         `${hostname}/api/v1/epicerie/profile/update`,
         {
           method: "PATCH",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`,
           },
-          body: JSON.stringify({ ...formData }),
+          body: formDataToSend,
         }
       );
 
@@ -205,8 +222,8 @@ function EpicerieProfile() {
         const data = await response.json();
         if (data.message) {
           toast.success(data.message);
+          window.location.reload();
         }
-        setResponse(true);
       } else {
         const data = await response.json();
         if (data.message) {
@@ -223,10 +240,6 @@ function EpicerieProfile() {
     }
   };
 
-  if (response) {
-    return <div> Modifications enregistrées </div>;
-  }
-
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData({
@@ -234,15 +247,25 @@ function EpicerieProfile() {
       [name]: value,
     });
   };
-
   const handleFileChange = (event) => {
     const file = event.target.files[0];
+  
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      image: file, // Conservez le fichier lui-même
+    }));
+  
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImageSrc(reader.result);
+    };
+  
     if (file) {
-      // L'utilisateur a choisi un fichier, mettez à jour l'état du formulaire
-      setFormData({ ...formData, image: URL.createObjectURL(file) });
+      reader.readAsDataURL(file);
     }
   };
-
+  
+  
   const imageExists = formData && formData.image;
 
   return (
@@ -279,9 +302,9 @@ function EpicerieProfile() {
                 <Box>
                   <div>
                     <Box>
-                      {imageExists ? (
+                      {imageSrc ? (
                         <img
-                          src={formData.image}
+                          src={imageSrc}
                           alt="insérée"
                           height="300px"
                           width="350px"
@@ -289,13 +312,19 @@ function EpicerieProfile() {
                         />
                       ) : (
                         <img
-                          src={InsertImage}
+                          src={
+                            formData.image
+                              ? require(`../../../images/${formData.image}`)
+                              : InsertImage
+                          }
                           alt="insérée"
                           height="300px"
                           width="350px"
+                          name="image"
                         />
                       )}
                     </Box>
+
                     <Box justifyContent="center" display="flex" width="350px">
                       {" "}
                       <input
@@ -356,7 +385,7 @@ function EpicerieProfile() {
                       onChange={handleChange}
                     />
                   </Grid>
-         
+
                   <Grid item xs={12}>
                     <TextField
                       label="Mail"
@@ -428,7 +457,7 @@ function EpicerieProfile() {
                     <ListItem>
                       {" "}
                       <img
-                        src={formData.image}
+                        src={imageSrc}
                         alt="insérée"
                         height="120px"
                         width="150px"
