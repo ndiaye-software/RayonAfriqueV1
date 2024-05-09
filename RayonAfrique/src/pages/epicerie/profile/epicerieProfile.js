@@ -261,7 +261,6 @@ function EpicerieProfile() {
     }
   };
 
-  const imageExists = formData && formData.image;
 
   return (
     <>
