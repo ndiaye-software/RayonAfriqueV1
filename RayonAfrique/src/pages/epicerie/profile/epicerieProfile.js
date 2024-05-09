@@ -194,8 +194,6 @@ function EpicerieProfile() {
     }
 
     try {
-      console.log(formData);
-
       const formDataToSend = new FormData();
       formDataToSend.append("nameCompany", formData.nameCompany);
       formDataToSend.append("name", formData.name);
@@ -204,8 +202,6 @@ function EpicerieProfile() {
       formDataToSend.append("description", formData.description);
       formDataToSend.append("image", formData.image);
       formDataToSend.append("adresse", formData.adresse);
-
-      console.log(formDataToSend);
 
       const response = await fetch(
         `${hostname}/api/v1/epicerie/profile/update`,
@@ -249,23 +245,22 @@ function EpicerieProfile() {
   };
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-  
+
     setFormData((prevFormData) => ({
       ...prevFormData,
       image: file, // Conservez le fichier lui-même
     }));
-  
+
     const reader = new FileReader();
     reader.onloadend = () => {
       setImageSrc(reader.result);
     };
-  
+
     if (file) {
       reader.readAsDataURL(file);
     }
   };
-  
-  
+
   const imageExists = formData && formData.image;
 
   return (
@@ -310,13 +305,25 @@ function EpicerieProfile() {
                           width="350px"
                           name="image"
                         />
+                      ) : formData.image instanceof File ? (
+                        <img
+                          src={URL.createObjectURL(formData.image)}
+                          alt="insérée"
+                          height="300px"
+                          width="350px"
+                          name="image"
+                        />
+                      ) : formData.image ? (
+                        <img
+                          src={require(`../../../images/${formData.image}`)}
+                          alt="insérée"
+                          height="300px"
+                          width="350px"
+                          name="image"
+                        />
                       ) : (
                         <img
-                          src={
-                            formData.image
-                              ? require(`../../../images/${formData.image}`)
-                              : InsertImage
-                          }
+                          src={InsertImage}
                           alt="insérée"
                           height="300px"
                           width="350px"
@@ -453,18 +460,20 @@ function EpicerieProfile() {
                   Voulez-vous enregistrer ces modifications ?
                 </DialogTitle>
                 <List sx={{ justifyContent: "space-evenly" }}>
-                  {imageExists && (
-                    <ListItem>
-                      {" "}
-                      <img
-                        src={imageSrc}
-                        alt="insérée"
-                        height="120px"
-                        width="150px"
-                        name="image"
-                      />
-                    </ListItem>
-                  )}
+                  <List sx={{ justifyContent: "space-evenly" }}>
+                    {formData.image instanceof File &&
+                      <ListItem>
+                        <img
+                          src={URL.createObjectURL(formData.image)}
+                          alt="insérée"
+                          height="120px"
+                          width="150px"
+                          name="image"
+                        />
+                      </ListItem>
+                    }
+                  </List>
+
                   <ListItem>
                     <ListItemText
                       primary={`Nom du gérant  : ${formData.name}`}
