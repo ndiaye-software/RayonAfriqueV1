@@ -9,7 +9,6 @@ import {
   IconButton,
   Tooltip,
 } from "@mui/material";
-import { Link } from "react-router-dom";
 import { LocationOn } from "@mui/icons-material";
 
 export default function ProductShop({
