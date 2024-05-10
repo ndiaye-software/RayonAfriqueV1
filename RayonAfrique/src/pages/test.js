@@ -1,28 +1,33 @@
-import { Box, Grid, Stack } from "@mui/material";
-import PhoneInput from "react-phone-input-2";
-import "react-phone-input-2/lib/style.css";
+import React, { useEffect, useState } from "react";
 
-function PhoneField() {
+function YourComponent() {
+  const [userPosition, setUserPosition] = useState(null);
+
+  useEffect(() => {
+    // Vérifiez si le navigateur prend en charge la géolocalisation
+    if ("geolocation" in navigator) {
+      // Demandez l'autorisation d'accéder à la géolocalisation
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setUserPosition({ latitude, longitude });
+        },
+        (error) => {
+          console.error("Erreur de géolocalisation :", error);
+        }
+      );
+    } else {
+      console.log("La géolocalisation n'est pas prise en charge.");
+    }
+  }, []);
+
+  console.log("Position de l'utilisateur :", userPosition);
+
   return (
-    <Box sx={{ backgroundColor: "#f9fafb" }}>
-      <Stack direction="row" justifyContent="space-between">
-        <Box flex={4} p={{ xs: 0, md: 2 }} sx={{ marginBottom: "60px" }}>
-          <Box
-            flexWrap="wrap"
-            justifyContent="space-evenly"
-            display="flex"
-            flexDirection="row"
-            marginBottom="35px"
-            marginTop="35px"
-          >
-            <Grid item xs={12}>
-              <PhoneInput country={"fr"} disableDropdown name="phone" placeholder="33 6 12 34 56 78 00" onlyCountries={["fr"]} inputStyle={{height:"55px"}}/>{" "}
-            </Grid>
-          </Box>
-        </Box>
-      </Stack>
-    </Box>
+    <div>
+      {/* Votre JSX ici */}
+    </div>
   );
 }
 
-export default PhoneField;
+export default YourComponent;

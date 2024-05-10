@@ -71,12 +71,6 @@ const updateProfile = asyncHandler(async (req, res) => {
     return;
   }
 
-  if (!req.file) {
-    return res.status(404).json({ message: "Mettez une image." });
-  }
-
-  const imageName = req.file.filename;
-
   const accessToken = req.headers.authorization.replace("Bearer ", "");
   const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
   const idEpicerie = decodedToken.UserInfo.id;
@@ -118,12 +112,17 @@ const updateProfile = asyncHandler(async (req, res) => {
       epicerie.nameCompany = nameCompany;
     }
 
-    if (imageName) {
+    if (req.file) {
+      const imageName = req.file.filename;
       epicerie.image = imageName;
     }
 
     if (description) {
       epicerie.description = description;
+    }
+
+    if (adresse) {
+      epicerie.adresse = adresse;
     }
 
     const maps_adresse = adresse;
@@ -138,6 +137,8 @@ const updateProfile = asyncHandler(async (req, res) => {
     if (adresse) {
       epicerie.longitude = longitude;
     }
+
+    console.log(epicerie);
 
     // Sauvegardez les modifications dans la base de données
     await epicerie.save();

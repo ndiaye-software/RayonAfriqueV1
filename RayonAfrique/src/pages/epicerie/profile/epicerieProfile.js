@@ -157,8 +157,10 @@ function EpicerieProfile() {
     // Update the address in the formData
     setFormData((prevFormData) => ({
       ...prevFormData,
-      address: newValue || "", // Use an empty string if newValue is undefined
-    }));
+      adresse: newValue.description || "",
+    }))
+    console.log(newValue);
+
   };
 
   useEffect(() => {
@@ -406,7 +408,8 @@ function EpicerieProfile() {
                   <Grid item xs={12}>
                     <Autocomplete
                       disablePortal
-                      id="address"
+                      id="adresse"
+                      name="adresse"
                       options={data}
                       fullWidth
                       value={formData.adresse}

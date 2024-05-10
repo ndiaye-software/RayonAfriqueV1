@@ -7,6 +7,26 @@ const Product = require("../../../models/Product");
 const geolib = require("geolib");
 const asyncHandler = require("express-async-handler");
 
+//Distance entre deux points
+const getDistance = (lat1, lon1, lat2, lon2) => {
+  const R = 6371; // Rayon de la Terre en km
+  const dLat = deg2rad(lat2 - lat1);
+  const dLon = deg2rad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(lat1)) *
+      Math.cos(deg2rad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c; // Distance en km
+  return distance;
+};
+
+const deg2rad = (deg) => {
+  return deg * (Math.PI / 180);
+};
+
 //Lister les produits des épiceries
 const getGroceryProducts = asyncHandler(async (req, res) => {
   try {
@@ -61,64 +81,15 @@ const getGroceryProducts = asyncHandler(async (req, res) => {
   }
 });
 
-//Chercher un produit à travers son :nom ou son :référence, catgeory, country, label
-const searchProduct = asyncHandler(async (req, res) => {
-  try {
-    const { name } = req.body;
-
-    const category = await Category.findOne({ categoryName: name });
-    const label = await Label.findOne({ labelName: name });
-    const country = await Country.findOne({ countryName: name });
-
-    const categoryId = category ? category._id : null;
-    const labelId = label ? label._id : null;
-    const countryId = country ? country._id : null;
-
-    // Recherchez le produit par nom, référence, label, country ou category
-    const products = await Product.find({
-      $or: [
-        { name: { $regex: name, $options: "i" } }, // Recherche par nom (insensible à la casse)
-        { reference: { $regex: name, $options: "i" } }, // Recherche par référence (insensible à la casse)
-        { label: labelId }, // Utilisez l'ID de label pour la recherche
-        { country: countryId }, // Utilisez l'ID de country pour la recherche
-        { category: categoryId }, // Utilisez l'ID de category pour la recherche
-      ],
-    })
-      .populate("category")
-      .populate("country")
-      .populate("label")
-      .lean();
-
-    if (products.length === 0) {
-      return res.status(404).json({ message: "Produit non trouvé." });
-    }
-
-    const formattedProducts = products.map((product) => ({
-      _id: product._id,
-      name: product.name,
-      reference: product.reference,
-      image: product.image,
-      description: product.description,
-      categoryName: product.category ? product.category.categoryName : null,
-      countryName: product.country ? product.country.countryName : null,
-      labelName: product.label ? product.label.labelName : null,
-    }));
-
-    res.status(200).json(formattedProducts);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Erreur lors de la recherche du produit." });
-  }
-});
-
 //Lister les épiceries vendant un :produit
 const getGroceryByProduct = asyncHandler(async (req, res) => {
   try {
     const { name } = req.params;
+    const { userPosition } = req.body;
 
-    const product = await Product.findOne({
-      name: name,
-    });
+    console.log(req.body);
+
+    const product = await Product.findOne({ name });
 
     if (!product) {
       return res.status(404).json({ error: "Produit non disponible." });
@@ -127,59 +98,59 @@ const getGroceryByProduct = asyncHandler(async (req, res) => {
     const groceries = await EpicerieProduct.find({
       idProduct: product._id,
       available: true,
-    })
-      .populate({
-        path: "idEpicerie",
-        select: "nameCompany image description phone",
-      })
-      .exec();
+    }).populate({
+      path: "idEpicerie",
+      select: "nameCompany image description phone latitude longitude",
+    });
 
-    const formattedGroceries = groceries.map((grocery) => ({
-      nomEpicerie: grocery.idEpicerie.nameCompany,
-      adresse: grocery.idEpicerie.description,
-      image: grocery.idEpicerie.image,
-      nomProduit: name,
-      prix: grocery.price,
-    }));
+    if (userPosition) {
+      const { latitude: userLat, longitude: userLon } = userPosition;
+
+      const formattedGroceries = groceries.map((grocery) => {
+        const { nameCompany, description, latitude, longitude, image } = grocery.idEpicerie;
+        const distance = getDistance(userLat, userLon, latitude, longitude);
+        return {
+          nomEpicerie: nameCompany,
+          adresse: description,
+          latitude,
+          longitude,
+          image,
+          nomProduit: name,
+          prix: grocery.price,
+          distance: distance.toFixed(2),
+        };
+      });
+
+      // Tri des épiceries par ordre de distance
+      formattedGroceries.sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
+
+      return res.status(200).json(formattedGroceries);
+    }
+
+    // Si la position de l'utilisateur n'est pas fournie, retournez les épiceries sans tri
+    const formattedGroceries = groceries.map((grocery) => {
+      const { nameCompany, description, latitude, longitude, image } = grocery.idEpicerie;
+      return {
+        nomEpicerie: nameCompany,
+        adresse: description,
+        latitude,
+        longitude,
+        image,
+        nomProduit: name,
+        prix: grocery.price, // Mettez à jour l'accès au champ price ici
+      };
+    });
 
     res.status(200).json(formattedGroceries);
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({ error: "Erreur lors de la recherche des épiceries." });
+    res.status(500).json({ error: "Erreur lors de la recherche des épiceries." });
   }
 });
 
-//Trouver l'épicerie la plus proche à travers la :distance du client et de l'épicerie et le :produit recherché
-const getGroceryByProductByPosition = asyncHandler(async (req, res) => {
-  try {
-    const { latitude, longitude, productId } = req.body;
 
-    const allGroceries = await Epicerie.find({});
-
-    const groceriesWithDistances = allGroceries.map((grocery) => {
-      const distance = geolib.getDistance(
-        { latitude, longitude },
-        { latitude: grocery.latitude, longitude: grocery.longitude }
-      );
-      return { ...grocery.toObject(), distance };
-    });
-
-    groceriesWithDistances.sort((a, b) => a.distance - b.distance);
-
-    res.status(200).json(groceriesWithDistances);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      error: "Erreur lors de la recherche des épiceries les plus proches.",
-    });
-  }
-});
 
 module.exports = {
   getGroceryProducts,
-  getGroceryByProduct,
-  searchProduct,
-  getGroceryByProductByPosition,
+  getGroceryByProduct
 };

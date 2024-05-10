@@ -18,10 +18,13 @@ export default function ProductShop({
   nomEpicerie,
   adresse,
   prix,
+  distance,
+  longitude,
+  latitude
 }) {
   return (
     <Card sx={{ width: 230, height: "fit-content" }}>
-      <CardActionArea component={Link} to={`https://www.google.com/maps/`}>
+      <CardActionArea component="a" href={`https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`} target="_blank" rel="noopener noreferrer">
         <CardMedia
           component="img"
           height="150"
@@ -37,6 +40,9 @@ export default function ProductShop({
           </Typography>
           <Typography variant="body2" color="text.secondary">
             Adresse : {adresse}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Distance : {distance} km
           </Typography>
           <Box
             sx={{

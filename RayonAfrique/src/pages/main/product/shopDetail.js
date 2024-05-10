@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "../../../components/main/SidebarDetail";
 import Navbar from "../../../components/main/navbar";
 import Footer from "../../../components/main/footer";
-import { Grid, Stack, Typography } from "@mui/material";
+import { Grid, Stack, Typography} from "@mui/material";
 import Box from "@mui/material/Box";
 import { Button } from "@material-ui/core";
 import ProductShop from "../../../components/main/ProductShop";
@@ -16,12 +16,38 @@ function ShopDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [userPosition, setUserPosition] = useState(null);
+
+  useEffect(() => {
+    // Vérifiez si le navigateur prend en charge la géolocalisation
+    if ("geolocation" in navigator) {
+      // Demandez l'autorisation d'accéder à la géolocalisation
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords; // This is where you set the user's position
+          setUserPosition({ latitude, longitude });
+        },
+        (error) => {
+          console.error("Erreur de géolocalisation :", error);
+        }
+      );
+    } else {
+      console.log("La géolocalisation n'est pas prise en charge.");
+    }
+  }, []);
+
+  console.log("Position de l'utilisateur :", userPosition);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          `${hostname}/api/v1/user/shop/grocery/${name}`
-        );
+        const response = await fetch(`${hostname}/api/v1/user/shop/grocery/${name}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userPosition }),
+        });
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -33,9 +59,10 @@ function ShopDetail() {
         setLoading(false);
       }
     };
-
-    fetchData();
-  }, [name]);
+  
+      fetchData();
+  }, [name, userPosition]); // Ajoutez userPosition à la liste des dépendances
+  
 
   const productsPerPage = 9;
   const totalPages = Math.ceil(data.length / productsPerPage);
@@ -114,6 +141,9 @@ function ShopDetail() {
                           adresse={product.adresse}
                           nomEpicerie={product.nomEpicerie}
                           prix={product.prix}
+                          distance={product.distance}
+                          longitude={product.longitude}
+                          latitude={product.latitude}
                         />
                       )}
                     </Grid>
