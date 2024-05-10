@@ -159,7 +159,6 @@ function EpicerieProfile() {
       ...prevFormData,
       adresse: newValue.description || "",
     }))
-    console.log(newValue);
 
   };
 

@@ -22,7 +22,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 const logImage = (req, res, next) => {
-    console.log(req.file);
     next();
   };
 

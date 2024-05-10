@@ -35,9 +35,7 @@ function ShopDetail() {
       console.log("La géolocalisation n'est pas prise en charge.");
     }
   }, []);
-
-  console.log("Position de l'utilisateur :", userPosition);
-
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
