@@ -354,7 +354,6 @@ export default function EnhancedTable() {
   };
 
   const handleDeleteList = async (event) => {
-    console.log(selected);
     event.preventDefault();
 
     const accessToken = localStorage.getItem("accessToken");
