@@ -29,8 +29,6 @@ export default function Reinitialisation() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    console.log(mail)
-
     try {
       const response = await fetch(
         `${hostname}/api/v1/epicerie/auth/reinitialisation`,

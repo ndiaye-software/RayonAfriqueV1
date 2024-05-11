@@ -42,6 +42,12 @@ const epicerieSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  resetPasswordToken: {
+    type: String,
+  },
+  resetPasswordExpires: {
+    type: Date,
+  },
 });
 
 const Epicerie = mongoose.model("Epicerie", epicerieSchema);

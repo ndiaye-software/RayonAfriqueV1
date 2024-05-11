@@ -47,7 +47,7 @@ function App() {
           <Route path="/test3" element={<Test3 />}/>
           <Route path="/connexion/reinitialisation-mdp" element={<Reinitialisation />}/>
           <Route path="/connexion/reinitialisation-mdp/validation" element={<ValidationReinitialisation />}/>
-          <Route path="/connexion/reinitialisation-mdp/validation/modification" element={<Modification />}/>
+          <Route path="/connexion/reinitialisation-mdp/modification/:id/:token" element={<Modification />}/>
           <Route path="/contact" element={<Contact />} />
           <Route path="/contact/sent" element={<MessageEnvoyé/>} />
           <Route path="/contact/notsent" element={<MessageNonEnvoyé/>} />

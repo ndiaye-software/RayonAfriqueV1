@@ -335,6 +335,10 @@ const SendTokenReinitialisation = asyncHandler(async (req, res) => {
       epicerie.id
     );
 
+    epicerie.resetPasswordToken = token_reinitialisation;
+    epicerie.resetPasswordExpires = Date.now() + 24 * 60 * 60 * 1000;
+    await epicerie.save();
+
     // Envoyer un e-mail de bienvenue
     const mailOptions = {
       from: "mouhamadoundiaye1290@gmail.com",
@@ -372,7 +376,7 @@ const SendTokenReinitialisation = asyncHandler(async (req, res) => {
           <p>Si vous avez effectué cette demande, veuillez cliquer sur le lien ci-dessous pour réinitialiser votre mot de passe :</p>
       
           <p style="text-align: center;">
-            <a href='rayonafrique.fr/reset-password/${epicerie.id}/${token_reinitialisation}' target='_blank' style="background-color: #922B21; color: white; font-weight: bold; cursor: pointer; border: none; padding: 10px 20px; border-radius: 5px; text-decoration: none;">
+            <a href='rayonafrique.fr/connexion/reinitialisation-mdp/modification/${epicerie.id}/${token_reinitialisation}' target='_blank' style="background-color: #922B21; color: white; font-weight: bold; cursor: pointer; border: none; padding: 10px 20px; border-radius: 5px; text-decoration: none;">
               Réinitialiser mon mot de passe
             </a>
           </p>
@@ -399,10 +403,49 @@ const SendTokenReinitialisation = asyncHandler(async (req, res) => {
   }
 });
 
+const resetPassword = asyncHandler(async (req, res) => {
+  const { id, token } = req.params;
+  const { mail, password1, password2 } = req.body;
+
+  // Vérifier si le token et l'ID correspondent à une demande de réinitialisation de mot de passe valide
+  const epicerie = await Epicerie.findOne({ _id: id, resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } });
+
+  if (!epicerie) {
+    return res.status(400).json({ message: 'Le token de réinitialisation de mot de passe est invalide ou a expiré.' });
+  }
+
+  if (password1 !== password2) {
+    return res
+      .status(400)
+      .json({ message: "Les mots de passe ne sont pas identiques." });
+  }
+
+  // Vérifier si le nouveau mot de passe est différent de l'ancien mot de passe
+  const isPasswordSame = await bcrypt.compare(password1, epicerie.password);
+
+  if (isPasswordSame) {
+    return res.status(400).json({ message: 'Le nouveau mot de passe ne peut pas être le même que l’ancien mot de passe.' });
+  }
+
+  // Hasher le nouveau mot de passe
+  const hashedPwd = await bcrypt.hash(password1, 10);
+
+  // Mettre à jour le mot de passe de l'épicerie dans la base de données
+  epicerie.password = hashedPwd;
+  epicerie.resetPasswordToken = undefined;
+  epicerie.resetPasswordExpires = undefined;
+
+  await epicerie.save();
+
+  // Envoyer une réponse de succès
+  res.status(200).json({ message: 'Votre mot de passe a été réinitialisé avec succès.' });
+});
+
 module.exports = {
   login,
   refresh,
   logout,
   signUp,
   SendTokenReinitialisation,
+  resetPassword
 };
