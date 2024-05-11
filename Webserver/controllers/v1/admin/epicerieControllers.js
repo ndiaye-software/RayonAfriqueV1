@@ -42,7 +42,8 @@ const createEpicerie = asyncHandler(async (req, res) => {
     const phoneDuplicate = await Epicerie.findOne({ phone })
       .collation({ locale: "en", strength: 2 })
       .lean()
-      .exec();
+      .exec()
+      .select('-password -description -mail -adresse -longitude -latitude -nameCompany');
 
     if (phoneDuplicate) {
       return res
@@ -53,7 +54,8 @@ const createEpicerie = asyncHandler(async (req, res) => {
     const duplicate = await Epicerie.findOne({ mail })
       .collation({ locale: "en", strength: 2 })
       .lean()
-      .exec();
+      .exec()
+      .select('-password -phone -description -adresse -longitude -latitude -nameCompany');
 
     if (duplicate) {
       return res.status(409).json({ message: "L'utilisatur existe déjà" });

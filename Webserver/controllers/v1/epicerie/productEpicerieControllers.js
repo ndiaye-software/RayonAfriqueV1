@@ -23,7 +23,7 @@ const createEpicerieProduct = asyncHandler(async (req, res) => {
     const userId = decodedToken.UserInfo.id;
 
     // Retrieve the user's epicerie by user ID
-    const epicerie = await Epicerie.findById(userId);
+    const epicerie = await Epicerie.findById(userId).select('-password');
 
     if (!epicerie) {
       return res.status(404).json({ error: "Epicerie non trouvé." });
@@ -88,7 +88,7 @@ const getEpicerieProductByIdEpicerie = asyncHandler(async (req, res) => {
     const userId = decodedToken.UserInfo.id;
 
     // Retrieve the user's epicerie by user ID
-    const epicerie = await Epicerie.findById(userId);
+    const epicerie = await Epicerie.findById(userId).select('-password');
 
     if (!epicerie) {
       return res.status(404).json({ error: "Epicerie non trouvé." });
@@ -162,7 +162,7 @@ const getProductDetailsByIdProduct = asyncHandler(async (req, res) => {
     const idEpicerie = decodedToken.UserInfo.id;
 
     // Retrieve the user's epicerie by user ID
-    const epicerie = await Epicerie.findById(idEpicerie);
+    const epicerie = await Epicerie.findById(idEpicerie).select('-password');
 
     // Check if the epicerie exists for the user
     if (!epicerie) {
@@ -244,7 +244,7 @@ const getProductDetailsByIdEpicerieProduct = asyncHandler(async (req, res) => {
     const userId = decodedToken.UserInfo.id;
 
     // Retrieve the user's epicerie by user ID
-    const epicerie = await Epicerie.findById(userId);
+    const epicerie = await Epicerie.findById(userId).select('-password');
 
     // Check if the epicerie exists for the user
     if (!epicerie) {
@@ -321,7 +321,7 @@ const updateEpicerieProduct = asyncHandler(async (req, res) => {
   const { price, available } = req.body;
 
   try {
-    const epicerie = await Epicerie.findById(idEpicerie);
+    const epicerie = await Epicerie.findById(idEpicerie).select('-password');
 
     if (!epicerie) {
       return res.status(404).json({ error: "Epicerie non trouvée." });
@@ -373,7 +373,7 @@ const deleteEpicerieProductById = asyncHandler(async (req, res) => {
   const userId = decodedToken.UserInfo.id;
 
   // Retrieve the user's epicerie by user ID
-  const epicerie = await Epicerie.findById(userId);
+  const epicerie = await Epicerie.findById(userId).select('-password');
 
   const { id } = req.params;
 
@@ -426,7 +426,7 @@ const deleteEpicerieProductsByNameList = asyncHandler(async (req, res) => {
   const userId = decodedToken.UserInfo.id;
 
   // Retrieve the user's epicerie by user ID
-  const epicerie = await Epicerie.findById(userId);
+  const epicerie = await Epicerie.findById(userId).select('-password');
 
   if (!epicerie) {
     return res.status(404).json({ error: "Epicerie non trouvée." });

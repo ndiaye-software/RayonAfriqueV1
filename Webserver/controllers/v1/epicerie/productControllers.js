@@ -28,7 +28,7 @@ const createProduct = asyncHandler(async (req, res) => {
   const accessToken = req.headers.authorization.replace("Bearer ", "");
   const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
   const userId = decodedToken.UserInfo.id;
-  const epicerie = await Epicerie.findById(userId);
+  const epicerie = await Epicerie.findById(userId).select('-password -phone -mail');
 
   if (!epicerie) {
     return res.status(404).json({ message: "Epicerie non trouvée." });
@@ -197,7 +197,7 @@ const getProduct = asyncHandler(async (req, res) => {
       process.env.ACCESS_TOKEN_SECRET
     );
     const userId = decodedToken.UserInfo.id;
-    const epicerie = await Epicerie.findById(userId);
+    const epicerie = await Epicerie.findById(userId).select('-password -phone -description -mail -adresse -longitude -latitude -nameCompany');
     if (!epicerie) {
       return res.status(404).json({ error: "Epicerie non trouvée." });
     }
@@ -245,7 +245,7 @@ const getProductById = asyncHandler(async (req, res) => {
       process.env.ACCESS_TOKEN_SECRET
     );
     const userId = decodedToken.UserInfo.id;
-    const epicerie = await Epicerie.findById(userId);
+    const epicerie = await Epicerie.findById(userId).select('-password -phone -description -mail -adresse -longitude -latitude -nameCompany');
     if (!epicerie) {
       return res.status(404).json({ error: "Epicerie non trouvé." });
     }

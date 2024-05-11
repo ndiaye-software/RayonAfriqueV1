@@ -208,7 +208,8 @@ const signUp = asyncHandler(async (req, res) => {
     const phoneDuplicate = await Epicerie.findOne({ phone })
       .collation({ locale: "en", strength: 2 })
       .lean()
-      .exec();
+      .exec()
+      .select('-password -description -mail -adresse -longitude -latitude -nameCompany');
 
     if (phoneDuplicate) {
       return res
@@ -219,7 +220,8 @@ const signUp = asyncHandler(async (req, res) => {
     const duplicate = await Epicerie.findOne({ mail })
       .collation({ locale: "en", strength: 2 })
       .lean()
-      .exec();
+      .exec()
+      .select('-password -phone -description -adresse -longitude -latitude -nameCompany');
 
     if (duplicate) {
       return res.status(409).json({ message: "L'utilisatur existe déjà" });
@@ -319,7 +321,7 @@ const signUp = asyncHandler(async (req, res) => {
 const updateEpicerieStatus = asyncHandler(async (req, res) => {
   const { code } = req.body;
 
-  const epicerie = await Epicerie.findOne({ code });
+  const epicerie = await Epicerie.findOne({ code }).select('-password -phone -description -mail -adresse -longitude -latitude -nameCompany');
 
   if (!epicerie) {
     return res.status(404).json({ message: "Code invalide" });
@@ -354,7 +356,7 @@ const SendTokenReinitialisation = asyncHandler(async (req, res) => {
   }
 
   try {
-    const epicerie = await Epicerie.findOne({ mail: mail });
+    const epicerie = await Epicerie.findOne({ mail: mail }).select('-password -phone -description -mail -adresse -longitude -latitude -nameCompany');
 
     if (!epicerie) {
       return res
@@ -436,10 +438,10 @@ const SendTokenReinitialisation = asyncHandler(async (req, res) => {
 
 const resetPassword = asyncHandler(async (req, res) => {
   const { id, token } = req.params;
-  const { mail, password1, password2 } = req.body;
+  const { password1, password2 } = req.body;
 
   // Vérifier si le token et l'ID correspondent à une demande de réinitialisation de mot de passe valide
-  const epicerie = await Epicerie.findOne({ _id: id, resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } });
+  const epicerie = await Epicerie.findOne({ _id: id, resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } }).select('-password -phone -description -mail -adresse -longitude -latitude -nameCompany');
 
   if (!epicerie) {
     return res.status(400).json({ message: 'Le token de réinitialisation de mot de passe est invalide ou a expiré.' });
