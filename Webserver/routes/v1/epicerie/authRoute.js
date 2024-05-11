@@ -20,5 +20,8 @@ router.route('/reinitialisation')
 
 router.route('/modification/:id/:token')
     .post(authController.resetPassword)
+
+router.route('/verification')
+    .post(authController.updateEpicerieStatus)
     
 module.exports = router

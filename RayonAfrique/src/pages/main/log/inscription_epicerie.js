@@ -23,6 +23,8 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import IconButton from "@mui/material/IconButton";
 import { useNavigate } from "react-router-dom";
 import hostname from "../../../hostname";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 var zxcvbn = require("zxcvbn");
 
@@ -90,19 +92,16 @@ export default function SignUp() {
     event.preventDefault();
   };
 
-  const [errorMessage, setErrorMessage] = useState("");
-
   const [formData, setFormData] = useState({
     name: "",
     nameCompany: "",
     mail: "",
     phone: "",
-    address : "",
+    address: "",
     password1: "",
     password2: "",
   });
 
-  
   useEffect(() => {
     // Update Autocomplete value when formData.address changes
     setValue(formData.address);
@@ -145,16 +144,20 @@ export default function SignUp() {
       });
 
       if (response.ok) {
-        navigate("validation");
+        const data = await response.json();
+        if (data.message) {
+          toast.success(data.message);
+        }
+        navigate("verification");
       } else {
         // Gérer les erreurs d'authentification ici
         const data = await response.json(); // Obtenir les détails de l'erreur du backend
         if (data.message) {
           // Si le backend renvoie un message d'erreur, l'afficher sur le frontend
-          setErrorMessage(data.message);
+          toast.error(data.message);
         } else {
           // Si le message d'erreur n'est pas disponible, afficher un message générique
-          setErrorMessage("Erreur lors de l'inscription");
+          toast.error("Erreur lors de l'inscription");
         }
       }
     } catch (error) {
@@ -275,10 +278,7 @@ export default function SignUp() {
                     }
                     filterOptions={(x) => x}
                     renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Adresse"
-                      />
+                      <TextField {...params} label="Adresse" />
                     )}
                     onInputChange={(event, newValue) => setValue(newValue)}
                     onChange={handleAddressChange}
@@ -339,11 +339,6 @@ export default function SignUp() {
                   </FormControl>
                 </Grid>
               </Grid>
-              {errorMessage && (
-                <Typography variant="body1" color="error" gutterBottom>
-                  {errorMessage}
-                </Typography>
-              )}
               <Button
                 type="submit"
                 fullWidth
@@ -370,6 +365,9 @@ export default function SignUp() {
                   </Link>
               </Grid>*/}
               </Grid>
+              <div>
+                <ToastContainer theme="colored" />
+              </div>
             </Box>
           </Box>
         </Container>

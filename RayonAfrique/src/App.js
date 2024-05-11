@@ -31,6 +31,7 @@ import Test2 from "./pages/test2";
 import Test3 from "./pages/test3";
 import EpicerieProductPresentation from "./pages/epicerie/product/epicerieProductPresentation";
 import EpicerieProductCreate from "./pages/epicerie/product/epicerieProductCreate";
+import VerificationMail from "./pages/main/log/mail_verification";
 
 
 function App() {
@@ -55,7 +56,8 @@ function App() {
           <Route path="/connexion" element={<Connexion />} />
           <Route path="/inscription/epicerie" element={<InscriptionEpicerie />}/>
           <Route path="/inscription/client" element={<InscriptionClient />}/>
-          <Route path="/inscription/epicerie/validation" element={<ValidationBusiness />}/>
+          <Route path="/inscription/epicerie/verification" element={<VerificationMail />}/>
+          <Route path="/inscription/epicerie/verification/validation" element={<ValidationBusiness />}/>
           <Route path="/business" element={<Business />} />
           <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
           <Route path="/produit" element={<Shop />} />

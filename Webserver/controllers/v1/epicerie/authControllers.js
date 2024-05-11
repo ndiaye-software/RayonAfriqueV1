@@ -37,7 +37,7 @@ const geocodeAddress = async (address) => {
 
 // Vérifier le numéro de téléphone
 const isValidPhoneNumber = (phone) => {
-  const phoneRegex = /^[1-9]\d{9}$/; // Format : 10 chiffres sans préfixe
+  const phoneRegex = /^[0-9]\d{9}$/; // Format : 10 chiffres sans préfixe
   return phoneRegex.test(phone);
 };
 
@@ -163,6 +163,13 @@ const transporter = nodemailer.createTransport({
 });
 
 //Inscription
+
+//// Code à 4 chiffres
+const generateCode = asyncHandler(async () => {
+  const code = Math.floor(1000 + Math.random() * 9000);
+  return code;
+});
+
 const signUp = asyncHandler(async (req, res) => {
   const {
     name,
@@ -175,16 +182,19 @@ const signUp = asyncHandler(async (req, res) => {
     address,
   } = req.body;
 
-  if (
-    !name ||
-    !phone ||
-    !password1 ||
-    !password2 ||
-    !mail ||
-    !nameCompany ||
-    !address
-  ) {
-    return res.status(400).json({ message: "Tous les champs sont requis" });
+  const missingFields = [];
+  if (!name) missingFields.push("nom de l'épicerie");
+  if (!phone) missingFields.push("numéro de téléphone");
+  if (!password1) missingFields.push("mot de passe");
+  if (!password2) missingFields.push("confirmation du mot de passe");
+  if (!mail) missingFields.push("adresse e-mail");
+  if (!nameCompany) missingFields.push("nom de la société");
+  if (!address) missingFields.push("adresse de l'épicerie");
+  
+  if (missingFields.length > 0) {
+    return res.status(400).json({
+      message: `Les champs suivants sont requis: ${missingFields.join(", ")}`,
+    });
   }
 
   try {
@@ -234,6 +244,7 @@ const signUp = asyncHandler(async (req, res) => {
     const latitude = coordinates.latitude;
     const longitude = coordinates.longitude;
 
+    const code = await generateCode();
     // Créer un nouvel utilisateur
     const newEpicerie = new Epicerie({
       name,
@@ -246,6 +257,8 @@ const signUp = asyncHandler(async (req, res) => {
       description: "",
       password: hashedPwd,
       adresse: maps_adresse,
+      status : "inactif",
+      code : code
     });
 
     // Sauvegarder l'utilisateur dans la base de données
@@ -256,36 +269,36 @@ const signUp = asyncHandler(async (req, res) => {
       from: "mouhamadoundiaye1290@gmail.com",
       to: "mouhamadoundiaye1290@gmail.com",
       subject: "Bienvenue sur notre site",
-      html: `
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <meta charset="UTF-8" />
-            <title>Bienvenue</title>
-            <style>
-              body {
-                font-family: Arial, sans-serif;
-              }
-              h1 {
-                color: #333;
-              }
-              p {
-                color: #666;
-              }
-            </style>
-          </head>
-          <body>
-            <h1>Bienvenue sur notre site !</h1>
-            <p>Nous sommes ravis de vous accueillir, <strong>${name}</strong>.</p>
-            <p>Votre adresse e-mail est : <strong>${mail}</strong></p>
-            <p>Votre numéro de téléphone est : <strong>${phone}</strong></p>
-            <p>Votre épicerie est : <strong>${nameCompany}</strong></p>
-            <p>N'hésitez pas à nous contacter si vous avez des questions.</p>
-            <p>Cordialement,</p>
-            <p>L'équipe de notre site</p>
-          </body>
-        </html>
-      `,
+      html: ` 
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="UTF-8" />
+          <title>Bienvenue</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+            }
+            h1 {
+              color: #333;
+            }
+            p {
+              color: #666;
+            }
+          </style>
+        </head>
+        <body>
+          <h1>Bienvenue sur notre site !</h1>
+          <p>Nous sommes ravis de vous accueillir, <strong>${name}</strong>.</p>
+          <p>Votre adresse e-mail est : <strong>${mail}</strong></p>
+          <p>Votre numéro de téléphone est : <strong>${phone}</strong></p>
+          <p>Votre épicerie est : <strong>${nameCompany}</strong></p>
+          <p>Votre code de confirmation est : <strong>${code}</strong></p>
+          <p>N'hésitez pas à nous contacter si vous avez des questions.</p>
+          <p>Cordialement,</p>
+          <p>L'équipe de notre site</p>
+        </body>
+      </html> `,
     };
 
     const info = await transporter.sendMail(mailOptions);
@@ -301,6 +314,24 @@ const signUp = asyncHandler(async (req, res) => {
       .json({ error: "Une erreur est survenue lors de l'inscription." });
   }
 });
+
+//// Vérification mail
+const updateEpicerieStatus = asyncHandler(async (req, res) => {
+  const { code } = req.body;
+
+  const epicerie = await Epicerie.findOne({ code });
+
+  if (!epicerie) {
+    return res.status(404).json({ message: "Code invalide" });
+  }
+
+  epicerie.status = "actif";
+  epicerie.code = undefined;
+  await epicerie.save();
+
+  res.json({ message: "Épicerie activée avec succès" });
+});
+
 
 // Réinitialisation de mot de passe
 
@@ -447,5 +478,6 @@ module.exports = {
   logout,
   signUp,
   SendTokenReinitialisation,
-  resetPassword
+  resetPassword,
+  updateEpicerieStatus
 };
