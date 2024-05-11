@@ -6,7 +6,6 @@ import Modification from "././pages/main/log/modification_mdp";
 import Contact from "././pages/main/contact/contact";
 import MessageEnvoyé from "./pages/main/contact/message_sent";
 import About from "././pages/main/about/about";
-import Authentification from "././pages/main/log/authentification";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Business from "./pages/main/business/business";
 import Shop from "./pages/main/product/shop";
@@ -16,6 +15,7 @@ import InscriptionClient from "./pages/main/log/inscription_client";
 import ValidationBusiness from "./pages/main/log/business_validation";
 import TermsAndConditions from "./pages/main/terms/termsAndConditions";
 import MessageNonEnvoyé from "./pages/main/contact/message_not_sent";
+import ValidationReinitialisation from "./pages/main/log/reinitialisation_validation";
 
 import EpicerieHome from "./pages/epicerie/home/epicerieHome";
 import EpicerieProduct from "./pages/epicerie/product/epicerieProduct";
@@ -32,6 +32,7 @@ import Test3 from "./pages/test3";
 import EpicerieProductPresentation from "./pages/epicerie/product/epicerieProductPresentation";
 import EpicerieProductCreate from "./pages/epicerie/product/epicerieProductCreate";
 
+
 function App() {
 
   return (
@@ -44,9 +45,9 @@ function App() {
           <Route path="/test" element={<Test />}/>
           <Route path="/test2" element={<Test2 />}/>
           <Route path="/test3" element={<Test3 />}/>
-          <Route path="/business/connexion/reinitialisation-mdp" element={<Reinitialisation />}/>
-          <Route path="/business/connexion/reinitialisation-mdp/modification-mdp" element={<Modification />}/>
-          <Route path="/business/connexion/authentification" element={<Authentification />}/>
+          <Route path="/connexion/reinitialisation-mdp" element={<Reinitialisation />}/>
+          <Route path="/connexion/reinitialisation-mdp/validation" element={<ValidationReinitialisation />}/>
+          <Route path="/connexion/reinitialisation-mdp/validation/modification" element={<Modification />}/>
           <Route path="/contact" element={<Contact />} />
           <Route path="/contact/sent" element={<MessageEnvoyé/>} />
           <Route path="/contact/notsent" element={<MessageNonEnvoyé/>} />

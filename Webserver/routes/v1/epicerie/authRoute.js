@@ -15,4 +15,7 @@ router.route('/logout')
 router.route('/signUp')
     .post(authController.signUp)
     
+router.route('/reinitialisation')
+    .post(authController.SendTokenReinitialisation)
+    
 module.exports = router

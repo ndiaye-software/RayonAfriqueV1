@@ -1,4 +1,4 @@
-const Epicerie = require("../../../models/Epicerie"); // Assurez-vous que le chemin vers votre modèle Epicerie est correct
+const Epicerie = require("../../../models/Epicerie");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
@@ -255,8 +255,37 @@ const signUp = asyncHandler(async (req, res) => {
     const mailOptions = {
       from: "mouhamadoundiaye1290@gmail.com",
       to: "mouhamadoundiaye1290@gmail.com",
-      subject: "Une nouvelle inscription",
-      text: `nom : ${name}, mail : ${mail}, phone : ${phone}, epicerie : ${nameCompany}`,
+      subject: "Bienvenue sur notre site",
+      html: `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="UTF-8" />
+            <title>Bienvenue</title>
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+              }
+              h1 {
+                color: #333;
+              }
+              p {
+                color: #666;
+              }
+            </style>
+          </head>
+          <body>
+            <h1>Bienvenue sur notre site !</h1>
+            <p>Nous sommes ravis de vous accueillir, <strong>${name}</strong>.</p>
+            <p>Votre adresse e-mail est : <strong>${mail}</strong></p>
+            <p>Votre numéro de téléphone est : <strong>${phone}</strong></p>
+            <p>Votre épicerie est : <strong>${nameCompany}</strong></p>
+            <p>N'hésitez pas à nous contacter si vous avez des questions.</p>
+            <p>Cordialement,</p>
+            <p>L'équipe de notre site</p>
+          </body>
+        </html>
+      `,
     };
 
     const info = await transporter.sendMail(mailOptions);
@@ -273,9 +302,107 @@ const signUp = asyncHandler(async (req, res) => {
   }
 });
 
+// Réinitialisation de mot de passe
+
+///// générer un jeton de réinitialisation de mot de passe
+const generateResetPasswordToken = async (userId) => {
+  const payload = {
+    userId: userId,
+    iat: Date.now() / 1000, // horodatage actuel en secondes
+    exp: Date.now() / 1000 + 24 * 60 * 60, // date d'expiration du jeton (24 heures à partir de maintenant)
+  };
+  const token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET);
+  return token;
+};
+
+const SendTokenReinitialisation = asyncHandler(async (req, res) => {
+  const { mail } = req.body;
+
+  if (!mail) {
+    return res.status(400).json({ message: "Le mail est requis" });
+  }
+
+  try {
+    const epicerie = await Epicerie.findOne({ mail: mail });
+
+    if (!epicerie) {
+      return res
+        .status(404)
+        .json({ message: "Ce mail n'est pas attribué à une épicerie" });
+    }
+
+    const token_reinitialisation = await generateResetPasswordToken(
+      epicerie.id
+    );
+
+    // Envoyer un e-mail de bienvenue
+    const mailOptions = {
+      from: "mouhamadoundiaye1290@gmail.com",
+      to: "mouhamadoundiaye1290@gmail.com",
+      subject: "Demande de réinitialisation de mot de passe",
+      html: `<!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="UTF-8" />
+          <title>Réinitialisation de mot de passe</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+            }
+            h1 {
+              color: #333;
+            }
+            p {
+              color: #666;
+            }
+            button {
+              background-color: #922B21;
+              color: white;
+              font-weight: bold;
+              cursor: pointer;
+              border: none;
+              padding: 10px 20px;
+              border-radius: 5px;
+            }
+          </style>
+        </head>
+        <body>
+          <h1>Réinitialisation de mot de passe</h1>
+          <p>Nous avons reçu une demande de réinitialisation de mot de passe pour votre compte.</p>
+          <p>Si vous avez effectué cette demande, veuillez cliquer sur le lien ci-dessous pour réinitialiser votre mot de passe :</p>
+      
+          <p style="text-align: center;">
+            <a href='rayonafrique.fr/reset-password/${epicerie.id}/${token_reinitialisation}' target='_blank' style="background-color: #922B21; color: white; font-weight: bold; cursor: pointer; border: none; padding: 10px 20px; border-radius: 5px; text-decoration: none;">
+              Réinitialiser mon mot de passe
+            </a>
+          </p>
+        
+          <p>Si vous n'avez pas effectué cette demande, veuillez ignorer cet e-mail. Votre mot de passe actuel reste inchangé.</p>
+          <p>Cordialement,</p>
+          <p>L'équipe de notre site</p>
+        </body>
+      </html>
+       `,
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+
+    res.json({
+      message: "Demande de réinitialisation envoyée",
+      emailInfo: info,
+    });
+  } catch (error) {
+    console.error("Erreur de l'envoi de mail du jeton", error);
+    res
+      .status(500)
+      .json({ error: "Une erreur est survenue lors de l'inscription." });
+  }
+});
+
 module.exports = {
   login,
   refresh,
   logout,
   signUp,
+  SendTokenReinitialisation,
 };
