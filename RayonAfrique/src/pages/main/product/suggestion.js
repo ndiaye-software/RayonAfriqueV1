@@ -48,6 +48,9 @@ export default function Suggestion() {
         const data = await response.json();
         if (data.message) {
           toast.success(data.message);
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 1000);
         }
       } else {
         const data = await response.json();
