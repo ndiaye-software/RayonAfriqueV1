@@ -3,12 +3,12 @@ import Sidebar from "../../../components/main/SidebarShop";
 import Navbar from "../../../components/main/navbar";
 import Footer from "../../../components/main/footer";
 import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Stack} from "@mui/material";
+import { Grid, Stack, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
-import { Button } from "@material-ui/core";
+import Button from "@mui/material/Button";
 import Autocomplete from "@mui/material/Autocomplete";
 import Product from "../../../components/main/product";
-import TextField from '@mui/material/TextField';
+import TextField from "@mui/material/TextField";
 import hostname from "../../../hostname";
 
 const useStyles = makeStyles((theme) => ({
@@ -30,12 +30,12 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     backgroundColor: "#922B21",
     minWidth: "100px",
-    alignContent:"center",
-    textAlign:"center",
+    alignContent: "center",
+    textAlign: "center",
     padding: "15px",
     fontSize: "12px",
     border: "solid",
-    borderColor:"#922B21",
+    borderColor: "#922B21",
     "&:hover": {
       backgroundColor: "#A63F35",
       boxShadow: "0 0.4rem #dfd9d9",
@@ -61,16 +61,21 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Shop() {
-
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [productNames, setProductNames] = useState([]);
+
+  const [order, setOrder] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [selectedMarque, setSelectedMarque] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+
   useEffect(() => {
     fetch(`${hostname}/api/v1/user/shop/read`)
       .then((res) => res.json())
       .then((data) => {
-        setData(data); 
-        const names = data.map(product => product.name); 
+        setData(data);
+        const names = data.map((product) => product.name);
         setProductNames(names);
       })
       .catch((err) => console.log(err));
@@ -96,6 +101,44 @@ function Shop() {
   const startIndex = (currentPage - 1) * productsPerPage;
   const visibleProducts = data.slice(startIndex, startIndex + productsPerPage);
 
+  let filteredProducts = visibleProducts;
+
+  if (order) {
+    filteredProducts = filteredProducts.sort((a, b) =>
+      order === "Nom (A-Z)"
+        ? a.name.localeCompare(b.name)
+        : b.name.localeCompare(a.name)
+    );
+  }
+
+  filteredProducts = filteredProducts.filter((val) => {
+    if (!selectedCountry) return true;
+    return val.countryName === selectedCountry;
+  });
+
+  filteredProducts = filteredProducts.filter((val) => {
+    if (!selectedMarque) return true;
+    return val.labelName === selectedMarque;
+  });
+
+  filteredProducts = filteredProducts.filter((val) => {
+    if (!selectedCategory) return true;
+    return val.categoryName === selectedCategory;
+  });
+
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredAndSearchedProducts = filteredProducts.filter((val) => {
+    if (searchTerm === "") {
+      return true;
+    } else if (val.name.toLowerCase().includes(searchTerm.toLowerCase())) {
+      return true;
+    }
+    return false;
+  });
+
   const classes = useStyles();
 
   return (
@@ -108,7 +151,12 @@ function Shop() {
             justifyContent="space-between"
             sx={{ flexDirection: { xs: "column", sm: "row" } }}
           >
-            <Sidebar />
+            <Sidebar
+              onOrderChange={setOrder}
+              onCountryChange={setSelectedCountry}
+              onMarqueChange={setSelectedMarque}
+              onCategoryChange={setSelectedCategory}
+            />
             <Box
               flex={4}
               p={{ xs: 0, md: 2 }}
@@ -139,29 +187,45 @@ function Shop() {
                           "& .MuiInputLabel-outlined.Mui-focused": {
                             color: "black",
                           },
-                          width:300
+                          width: 300,
                         }}
                         renderInput={(params) => (
-                          <TextField {...params} label="Produits" onChange={(event) => setSearchTerm(event.target.value)}/>
+                          <TextField
+                            {...params}
+                            label="Produits"
+                            onChange={handleSearch}
+                          />
                         )}
                       />
                     </Box>
                   </Grid>
                 </Box>
               </Box>
-              <Grid xs={12} container spacing={3}>
-                {visibleProducts
-                  .filter((val) => {
-                    if (searchTerm === "") {
-                      return true;
-                    } else if (
-                      val.name.includes(searchTerm)
-                    ) {
-                      return true;
-                    }
-                    return false;
-                  })
-                  .map((val, index) => {
+              {filteredAndSearchedProducts.length === 0 ? (
+                <Grid display="flex" xs={12} padding="50px" justifyContent="center" alignContent="center" alignItems="center">
+                  <Grid xs={6}>
+                    <Typography variant="body2" align="center" fontWeight={700}>
+                      Nous n'avons pas trouvé ce produit 😞
+                    </Typography>
+                    <Button
+                      href="produit/suggestion"
+                      fullWidth
+                      variant="contained"
+                      sx={{
+                        fontWeight:700,
+                        mt: 3,
+                        mb: 2,
+                        backgroundColor: "#922B21",
+                        "&:hover": { backgroundColor: "#A63F35" },
+                      }}
+                    >
+                      Suggérer un produit
+                    </Button>
+                  </Grid>
+                </Grid>
+              ) : (
+                <Grid xs={12} container spacing={3}>
+                  {filteredAndSearchedProducts.map((val, index) => {
                     return (
                       <Grid
                         display="flex"
@@ -186,7 +250,8 @@ function Shop() {
                       </Grid>
                     );
                   })}
-              </Grid>
+                </Grid>
+              )}
               <Box
                 sx={{
                   display: "flex",

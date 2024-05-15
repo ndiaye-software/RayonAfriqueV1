@@ -4,7 +4,6 @@ import {
   Box,
   List,
   Typography,
-  Button,
   IconButton,
   Drawer,
 } from "@mui/material";
@@ -14,7 +13,7 @@ import hostname from "../../hostname";
 
 const orderedList = [{ label: "Nom (A-Z)" }, { label: "Nom (Z-A)" }];
 
-const SidebarShop = () => {
+const SidebarShop = ({ onOrderChange, onCountryChange, onMarqueChange, onCategoryChange }) => {
   const [order, setOrder] = useState("");
 
   const [country, setCountry] = useState([]);
@@ -47,18 +46,22 @@ const SidebarShop = () => {
 
   const handleChangeCountry = (event) => {
     setSelectedCountry(event.target.value);
+    onCountryChange(event.target.value);
   };
   
   const handleChangeMarque = (event) => {
     setSelectedMarque(event.target.value);
+    onMarqueChange(event.target.value);
   };
   
   const handleChangeCategory = (event) => {
     setSelectedCategory(event.target.value);
+    onCategoryChange(event.target.value);
   };
 
   const handleChangeOrder = (event) => {
     setOrder(event.target.value);
+    onOrderChange(event.target.value);
   };
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -159,6 +162,7 @@ const SidebarShop = () => {
                   required
                   style={{ fontSize: "12px", color: "black" }}
                 >
+                  <MenuItem sx={{ fontSize: "12px" }} value="">Sélectionner tout</MenuItem>
                   {country.map((countryName) => {
                     return (
                       <MenuItem
@@ -195,6 +199,7 @@ const SidebarShop = () => {
                   required
                   style={{ fontSize: "12px" }}
                 >
+                  <MenuItem sx={{ fontSize: "12px" }} value="">Sélectionner tout</MenuItem>
                   {category?.map((categoryName) => {
                     return (
                       <MenuItem
@@ -209,15 +214,6 @@ const SidebarShop = () => {
                 </Select>
               </FormControl>
             </Grid>
-            <Button
-              sx={{
-                backgroundColor: "#922B21",
-                "&:hover": { backgroundColor: "#A63F35" },
-              }}
-              variant="contained"
-            >
-              Appliquer
-            </Button>
           </List>
         </Box>
       </Drawer>
@@ -301,6 +297,7 @@ const SidebarShop = () => {
                   required
                   style={{ fontSize: "12px" }}
                 >
+                  <MenuItem sx={{ fontSize: "12px" }} value="">Sélectionner tout</MenuItem>
                   {country?.map((countryName) => {
                     return (
                       <MenuItem
@@ -337,6 +334,7 @@ const SidebarShop = () => {
                   required
                   style={{ fontSize: "12px" }}
                 >
+                  <MenuItem sx={{ fontSize: "12px" }} value="">Sélectionner tout</MenuItem>
                   {category?.map((categoryName) => {
                     return (
                       <MenuItem
@@ -373,6 +371,7 @@ const SidebarShop = () => {
                   required
                   style={{ fontSize: "12px" }}
                 >
+                  <MenuItem sx={{ fontSize: "12px" }} value="">Sélectionner tout</MenuItem>
                   {marque?.map((nameCompany) => {
                     return (
                       <MenuItem
@@ -387,15 +386,6 @@ const SidebarShop = () => {
                 </Select>
               </FormControl>
             </Grid>
-            <Button
-              sx={{
-                backgroundColor: "#922B21",
-                "&:hover": { backgroundColor: "#A63F35" },
-              }}
-              variant="contained"
-            >
-              Appliquer
-            </Button>
           </List>
         </Box>
       </Box>

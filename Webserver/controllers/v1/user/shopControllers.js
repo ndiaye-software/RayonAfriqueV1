@@ -6,6 +6,8 @@ const EpicerieProduct = require("../../../models/EpicerieProduct");
 const Product = require("../../../models/Product");
 const geolib = require("geolib");
 const asyncHandler = require("express-async-handler");
+const bcrypt = require("bcrypt");
+const nodemailer = require("nodemailer");
 
 //Distance entre deux points
 const getDistance = (lat1, lon1, lat2, lon2) => {
@@ -87,8 +89,6 @@ const getGroceryByProduct = asyncHandler(async (req, res) => {
     const { name } = req.params;
     const { userPosition } = req.body;
 
-    console.log(req.body);
-
     const product = await Product.findOne({ name });
 
     if (!product) {
@@ -148,9 +148,85 @@ const getGroceryByProduct = asyncHandler(async (req, res) => {
   }
 });
 
+// Configurer le transporteur nodemailer
+const transporter = nodemailer.createTransport({
+  service: "Gmail",
+  auth: {
+    user: "mouhamadoundiaye1290@gmail.com",
+    pass: process.env.PASSWORD_EMAIL,
+  },
+});
+
+//Envoyer un mail à RayonAfrique
+const sendSuggestion = asyncHandler(async (req, res) => {
+  const { name, mail, message } = req.body;
+
+  // Vérifier que tous les paramètres requis sont présents
+  if (!name || !mail || !message) {
+    return res.status(400).json({ error: "N'oubliez de remplir tous les champs !" });
+  }
+
+  try {
+    // Envoyer un e-mail de bienvenue
+    const mailOptions = {
+      from: mail,
+      to: "mouhamadoundiaye1290@gmail.com",
+      subject: "Message",
+      html: `<!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="UTF-8" />
+          <title>Réinitialisation de mot de passe</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+            }
+            h1 {
+              color: #333;
+            }
+            p {
+              color: #666;
+            }
+            button {
+              background-color: #922B21;
+              color: white;
+              font-weight: bold;
+              cursor: pointer;
+              border: none;
+              padding: 10px 20px;
+              border-radius: 5px;
+            }
+          </style>
+        </head>
+        <body>
+          <h1>Suggestion de produit</h1>
+          <p>Nous avons reçu une suggestion de produit de la part de <strong>${name}</strong></p>
+          <p><strong>${mail}</strong></p>
+          <p>${message}</p>
+          <p>Cordialement,</p>
+          <p>L'équipe de notre site</p>
+        </body>
+      </html>
+      `,
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+
+    res.json({
+      message: "Message envoyé",
+      emailInfo: info,
+    });
+  } catch (error) {
+    console.error("Erreur lors de l'envoi du message :", error);
+    res
+      .status(500)
+      .json({ error: "Erreur lors de l'envoi du message." });
+  }
+});
 
 
 module.exports = {
   getGroceryProducts,
-  getGroceryByProduct
+  getGroceryByProduct,
+  sendSuggestion
 };

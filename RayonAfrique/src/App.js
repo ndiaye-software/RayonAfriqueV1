@@ -9,6 +9,7 @@ import About from "././pages/main/about/about";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Business from "./pages/main/business/business";
 import Shop from "./pages/main/product/shop";
+import Suggestion from "./pages/main/product/suggestion";
 import ShopDetail from "./pages/main/product/shopDetail";
 import InscriptionEpicerie from "./pages/main/log/inscription_epicerie";
 import InscriptionClient from "./pages/main/log/inscription_client";
@@ -32,6 +33,7 @@ import Test3 from "./pages/test3";
 import EpicerieProductPresentation from "./pages/epicerie/product/epicerieProductPresentation";
 import EpicerieProductCreate from "./pages/epicerie/product/epicerieProductCreate";
 import VerificationMail from "./pages/main/log/mail_verification";
+
 
 
 function App() {
@@ -62,6 +64,7 @@ function App() {
           <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
           <Route path="/produit" element={<Shop />} />
           <Route path="/produit/:name" element={<ShopDetail />} />
+          <Route path="/produit/suggestion" element={<Suggestion />} />
 
           {/* Epicerie */}
           <Route path="/epicerie/" element={<EpicerieHome />} />
