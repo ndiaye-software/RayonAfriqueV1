@@ -149,7 +149,7 @@ const refresh = (req, res) => {
 // @access Public - juste pour effacer le cookie s'il existe
 const logout = (req, res) => {
   const cookies = req.cookies;
-  if (!cookies?.jwt) return res.sendStatus(204); // Pas de contenu
+  if (!cookies?.jwt) return res.sendStatus(204); // Pas de contenu, mais succès
   res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: true });
   res.json({ message: "Cookie effacé" });
 };

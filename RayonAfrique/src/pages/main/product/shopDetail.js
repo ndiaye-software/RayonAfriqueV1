@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import Sidebar from "../../../components/main/SidebarDetail";
 import Navbar from "../../../components/main/navbar";
 import Footer from "../../../components/main/footer";
 import { Grid, Stack, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
-import { Button } from "@material-ui/core";
+import Button from "@mui/material/Button";
 import ProductShop from "../../../components/main/ProductShop";
 import { useParams } from "react-router-dom";
 import hostname from "../../../hostname";
+import { LocationOn } from "@material-ui/icons";
 
 function ShopDetail() {
   const { name } = useParams();
@@ -62,6 +62,21 @@ function ShopDetail() {
     fetchData();
   }, [name, userPosition]);
 
+  const getUserPosition = () => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setUserPosition({ latitude, longitude });
+        },
+        (error) => {
+          console.error("Erreur de géolocalisation :", error);
+        }
+      );
+    } else {
+      console.log("La géolocalisation n'est pas prise en charge.");
+    }
+  };
 
   const productsPerPage = 9;
   const totalPages = Math.ceil(data.length / productsPerPage);
@@ -105,7 +120,6 @@ function ShopDetail() {
             justifyContent="space-between"
             sx={{ flexDirection: { xs: "column", sm: "row" } }}
           >
-            <Sidebar/>
             <Box
               flex={4}
               p={{ xs: 0, md: 2 }}
@@ -116,6 +130,22 @@ function ShopDetail() {
                   <Typography variant="h5" paddingBottom="30px">
                     Disponible dans <span>{data.length}</span> épicerie(s)
                   </Typography>
+                </Box>
+
+                <Box justifyContent="center" display="flex">
+                  <Button
+                    onClick={getUserPosition}
+                    variant="contained"
+                    sx={{
+                      mt: 3,
+                      mb: 2,
+                      bgcolor: "#922B21",
+                      "&:hover": { backgroundColor: "#A63F35" },
+                    }}
+                    endIcon={<LocationOn />}
+                  >
+                    Mettre ma position
+                  </Button>
                 </Box>
 
                 <Grid item xs={12} container spacing={3}>
@@ -143,7 +173,6 @@ function ShopDetail() {
                           distance={product.distance}
                           longitude={product.longitude}
                           latitude={product.latitude}
-
                         />
                       )}
                     </Grid>

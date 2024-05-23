@@ -15,8 +15,8 @@ import Divider from "@mui/material/Divider";
 import { makeStyles } from "@material-ui/core/styles";
 import { LogoutOutlined } from "@mui/icons-material";
 import logo from "../../images/rayonafrique.svg";
-
-
+import { useNavigate } from "react-router-dom";
+import hostname from "../../hostname"; // Assurez-vous que hostname contient l'URL de base de votre backend
 const drawerWidth = 300;
 
 const useStyles = makeStyles((theme) => ({
@@ -45,6 +45,38 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function PrimarySearchAppBar(props) {
+  const navigate = useNavigate();
+
+  const Logout = async (event) => {
+    event.preventDefault();
+    const accessToken = localStorage.getItem("accessToken");
+    try {
+      const response = await fetch(`${hostname}/api/v1/user/auth/logout`, { // Vérifiez bien cette URL
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        try {
+          const data = await response.json();
+          console.log("Déconnexion réussie:", data.message);
+        } catch (e) {
+          console.warn("La réponse ne contient pas de JSON valide.");
+        }
+        localStorage.removeItem("accessToken");
+        navigate("/");
+      } else {
+        console.error("Erreur lors de la déconnexion:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la déconnexion:", error);
+    }
+  };
+
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -64,7 +96,6 @@ export default function PrimarySearchAppBar(props) {
       </Typography>
       <Divider />
       <List>
-
         <a href={`/epicerie/produit`}>
           <ListItem disablePadding>
             <ListItemButton sx={{ textAlign: "left" }}>
@@ -161,7 +192,7 @@ export default function PrimarySearchAppBar(props) {
               Contact
             </Button>
             <Tooltip title="Déconnexion">
-              <IconButton href={`/fournisseur/logout`}>
+              <IconButton onClick={Logout}>
                 <LogoutOutlined sx={{ "&:hover": { color: "#922B21" } }} />
               </IconButton>
             </Tooltip>

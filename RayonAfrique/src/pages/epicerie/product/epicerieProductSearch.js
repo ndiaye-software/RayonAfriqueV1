@@ -5,7 +5,7 @@ import Footer from "../../../components/main/footer";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Stack, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
-import { Button } from "@material-ui/core";
+import Button from "@mui/material/Button";
 import Autocomplete from "@mui/material/Autocomplete";
 import Product from "../../../components/epicerie/product";
 import TextField from "@mui/material/TextField";
@@ -67,6 +67,11 @@ function EpicerieProductSearch() {
 
   const [productNames, setProductNames] = useState([]);
 
+  const [order, setOrder] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [selectedMarque, setSelectedMarque] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     fetch(`${hostname}/api/v1/epicerie/product/read`, {
@@ -101,6 +106,44 @@ function EpicerieProductSearch() {
   const startIndex = (currentPage - 1) * productsPerPage;
   const visibleProducts = data.slice(startIndex, startIndex + productsPerPage);
 
+  let filteredProducts = visibleProducts;
+
+  if (order) {
+    filteredProducts = filteredProducts.sort((a, b) =>
+      order === "Nom (A-Z)"
+        ? a.name.localeCompare(b.name)
+        : b.name.localeCompare(a.name)
+    );
+  }
+
+  filteredProducts = filteredProducts.filter((val) => {
+    if (!selectedCountry) return true;
+    return val.countryName === selectedCountry;
+  });
+
+  filteredProducts = filteredProducts.filter((val) => {
+    if (!selectedMarque) return true;
+    return val.labelName === selectedMarque;
+  });
+
+  filteredProducts = filteredProducts.filter((val) => {
+    if (!selectedCategory) return true;
+    return val.categoryName === selectedCategory;
+  });
+
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredAndSearchedProducts = filteredProducts.filter((val) => {
+    if (searchTerm === "") {
+      return true;
+    } else if (val.name.toLowerCase().includes(searchTerm.toLowerCase())) {
+      return true;
+    }
+    return false;
+  });
+
   const classes = useStyles();
 
   return (
@@ -113,7 +156,12 @@ function EpicerieProductSearch() {
             justifyContent="space-between"
             sx={{ flexDirection: { xs: "column", sm: "row" } }}
           >
-            <Sidebar />
+            <Sidebar
+              onOrderChange={setOrder}
+              onCountryChange={setSelectedCountry}
+              onMarqueChange={setSelectedMarque}
+              onCategoryChange={setSelectedCategory}
+            />
             <Box
               flex={4}
               p={{ xs: 0, md: 2 }}
@@ -149,9 +197,7 @@ function EpicerieProductSearch() {
                           <TextField
                             {...params}
                             label="Chercher le produit"
-                            onChange={(event) =>
-                              setSearchTerm(event.target.value)
-                            }
+                            onChange={handleSearch}
                           />
                         )}
                       />
@@ -160,67 +206,69 @@ function EpicerieProductSearch() {
                 </Box>
               </Box>
               <Grid xs={12} container spacing={3}>
-                {visibleProducts
-                  .filter((val) => {
-                    if (searchTerm === "") {
-                      return true;
-                    } else if (val.name.includes(searchTerm)) {
-                      return true;
-                    } else {
-                      // Si le nom du produit ne contient pas le terme de recherche
-                      return false;
-                    }
-                  })
-                  .map((val, index) => (
-                    <Grid
-                      display="flex"
-                      padding="0px"
-                      flexDirection="column"
-                      alignItems="center"
-                      item
-                      xs={12}
-                      sm={12}
-                      md={6}
-                      lg={4}
-                      key={index}
-                    >
-                      <Product
-                        key={index}
-                        image={require(`../../../images/${val.image}`)}
-                        name={val.name}
-                        description={val.description}
-                        marque={val.labelName}
-                        id={val._id}
-                      />
-                      <Typography>{val.length}</Typography>
-                    </Grid>
-                  ))
-                  .concat(
-                    searchTerm !== "" &&
-                      visibleProducts.every(
-                        (val) => !val.name.includes(searchTerm)
-                      ) ? (
-                      // Si aucun produit ne correspond au terme de recherche
-                      <Grid
-                        display="flex"
-                        padding="0px"
-                        flexDirection="column"
-                        alignItems="center"
-                        justifyContent="center"
-                        textAlign="center"
-                        item
-                        xs={12}
+                {filteredAndSearchedProducts.length === 0 ? (
+                  <Grid
+                    display="flex"
+                    xs={12}
+                    item
+                    padding="50px"
+                    justifyContent="center"
+                    alignContent="center"
+                    alignItems="center"
+                  >
+                    <Grid xs={6} item>
+                      <Typography
+                        variant="body2"
+                        align="center"
+                        fontWeight={700}
                       >
-                        <Typography marginBottom="15px">
-                          Le produit que vous recherchez n'existe pas encore,
-                          Créez le !
-                        </Typography>
-                        <Button className={classes.Button} href="search/create">
-                          Créer un produit
-                        </Button>
-                      </Grid>
-                    ) : null
-                  )}
+                        Nous n'avons pas trouvé ce produit 😞
+                      </Typography>
+                      <Button
+                        href="search/create"
+                        fullWidth
+                        variant="contained"
+                        sx={{
+                          fontWeight: 700,
+                          mt: 3,
+                          mb: 2,
+                          backgroundColor: "#922B21",
+                          "&:hover": { backgroundColor: "#A63F35" },
+                        }}
+                      >
+                        Créer un produit
+                      </Button>
+                    </Grid>
+                  </Grid>
+                ) : (
+                  <Grid xs={12} container spacing={3} item>
+                    {filteredAndSearchedProducts.map((val, index) => {
+                      return (
+                        <Grid
+                          display="flex"
+                          padding="0px"
+                          flexDirection="column"
+                          alignItems="center"
+                          item
+                          xs={12}
+                          sm={12}
+                          md={6}
+                          lg={4}
+                          key={index}
+                        >
+                          <Product
+                            key={index}
+                            image={require(`../../../images/${val.image}`)}
+                            name={val.name}
+                            description={val.description}
+                            marque={val.labelName}
+                            id={val.id}
+                          />
+                        </Grid>
+                      );
+                    })}
+                  </Grid>
+                )}
               </Grid>
               <Box
                 sx={{
