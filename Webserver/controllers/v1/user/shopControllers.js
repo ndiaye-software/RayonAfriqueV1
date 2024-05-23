@@ -152,7 +152,7 @@ const getGroceryByProduct = asyncHandler(async (req, res) => {
 const transporter = nodemailer.createTransport({
   service: "Gmail",
   auth: {
-    user: "mouhamadoundiaye1290@gmail.com",
+    user: "rayon.afrique.shop@gmail.com",
     pass: process.env.PASSWORD_EMAIL,
   },
 });
@@ -170,7 +170,7 @@ const sendSuggestion = asyncHandler(async (req, res) => {
     // Envoyer un e-mail de bienvenue
     const mailOptions = {
       from: mail,
-      to: "mouhamadoundiaye1290@gmail.com",
+      to: "rayon.afrique.shop@gmail.com",
       subject: "Message",
       html: `<!DOCTYPE html>
       <html>

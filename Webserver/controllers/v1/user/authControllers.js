@@ -123,7 +123,7 @@ const logout = (req, res) => {
 const transporter = nodemailer.createTransport({
   service: "Gmail",
   auth: {
-    user: "mouhamadoundiaye1290@gmail.com",
+    user: "rayon.afrique.shop@gmail.com",
     pass: process.env.PASSWORD_EMAIL,
   },
 });
@@ -197,8 +197,8 @@ const signUp = asyncHandler(async (req, res) => {
 
     // Envoyer un e-mail de bienvenue
     const mailOptions = {
-      from: "mouhamadoundiaye1290@gmail.com",
-      to: "mouhamadoundiaye1290@gmail.com",
+      from: "rayon.afrique.shop@gmail.com",
+      to: "rayon.afrique.shop@gmail.com",
       subject: "Une nouvelle inscription",
       text: `nom : ${name}, mail : ${mail}, phone : ${phone}`,
     };

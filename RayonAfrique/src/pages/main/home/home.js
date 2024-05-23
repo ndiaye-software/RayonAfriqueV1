@@ -266,12 +266,11 @@ const Home = () => {
             </Typography>
 
             <Box maxWidth="500px" sx={{ fontWeight: "700", color: "white" }}>
-              <Typography variant="body1">
                 Avec RayonAfrique, trouvez aisément les emplacements où les
                 produits du marché africain sont disponibles, vous offrant une
                 expérience de shopping unique et pratique.
-              </Typography>
             </Box>
+
             <Grid
               className={classes.buttonContainer}
               justifyContent="space-evenly"
@@ -294,7 +293,7 @@ const Home = () => {
         </Typography>
 
         <div className={classes.section2}>
-        <Card
+          <Card
             sx={{
               maxWidth: 325,
               transition: "transform 0.3s ease",
@@ -374,7 +373,6 @@ const Home = () => {
 
       <PresentationComponent />
 
-      
       <section>
         <Typography variant="h1" className={classes.header}>
           Pourquoi RayonAfrique ?

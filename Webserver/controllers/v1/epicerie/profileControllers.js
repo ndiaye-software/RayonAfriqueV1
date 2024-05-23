@@ -76,7 +76,7 @@ const updateProfile = asyncHandler(async (req, res) => {
   const idEpicerie = decodedToken.UserInfo.id;
 
   try {
-    const epicerie = await Epicerie.findById(idEpicerie).select('-password -_id');
+    const epicerie = await Epicerie.findById(idEpicerie).select('-password');
 
     if (!epicerie) {
       return res.status(404).json({ error: "Epicerie non trouvée." });
@@ -155,6 +155,7 @@ const updateProfile = asyncHandler(async (req, res) => {
       });
   }
 });
+
 
 module.exports = {
   readProfile,

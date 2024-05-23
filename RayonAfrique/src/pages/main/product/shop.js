@@ -202,8 +202,8 @@ function Shop() {
                 </Box>
               </Box>
               {filteredAndSearchedProducts.length === 0 ? (
-                <Grid display="flex" xs={12} padding="50px" justifyContent="center" alignContent="center" alignItems="center">
-                  <Grid xs={6}>
+                <Grid display="flex" xs={12} item padding="50px" justifyContent="center" alignContent="center" alignItems="center">
+                  <Grid xs={6} item>
                     <Typography variant="body2" align="center" fontWeight={700}>
                       Nous n'avons pas trouvé ce produit 😞
                     </Typography>
@@ -224,7 +224,7 @@ function Shop() {
                   </Grid>
                 </Grid>
               ) : (
-                <Grid xs={12} container spacing={3}>
+                <Grid xs={12} container spacing={3} item>
                   {filteredAndSearchedProducts.map((val, index) => {
                     return (
                       <Grid

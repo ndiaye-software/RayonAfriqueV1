@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt");
 const transporter = nodemailer.createTransport({
   service: "Gmail",
   auth: {
-    user: "mouhamadoundiaye1290@gmail.com",
+    user: "rayon.afrique.shop@gmail.com",
     pass: process.env.PASSWORD_EMAIL,
   },
 });
@@ -24,11 +24,35 @@ const SendMail = asyncHandler(async (req, res) => {
     // Envoyer un e-mail de bienvenue
     const mailOptions = {
       from: mail,
-      to: "mouhamadoundiaye1290@gmail.com",
-      subject: "Message",
-      text: `mail : ${mail} ,\n
-             name : ${name} ,\n
-             message : ${message}`,
+      to: "rayon.afrique.shop@gmail.com",
+      subject: "Prise de contact",
+      html: ` 
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="UTF-8" />
+          <title>Message</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+            }
+            h1 {
+              color: #333;
+            }
+            p {
+              color: #666;
+            }
+          </style>
+        </head>
+        <body>
+          <h1>Contact</h1>
+          <p><strong>${name}</strong> vous a contacté.</p>
+          <p>mail : <strong>${mail}</strong></p>
+          <p><strong>${message}</strong></p>
+          <p>Cordialement,</p>
+          <p>L'équipe de notre site</p>
+        </body>
+      </html> `,
     };
 
     const info = await transporter.sendMail(mailOptions);

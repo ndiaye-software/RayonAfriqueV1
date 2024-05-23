@@ -362,7 +362,7 @@ function EpicerieProfile() {
                   display="flex"
                   gap={2}
                 >
-                  <Grid item xs={12} fullWidth>
+                  <Grid item xs={12}>
                     <TextField
                       label="Nom de l'épicerie"
                       variant="outlined"

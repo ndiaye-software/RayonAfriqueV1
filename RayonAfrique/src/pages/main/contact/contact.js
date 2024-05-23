@@ -39,7 +39,7 @@ export default function Contact() {
     event.preventDefault();
   
     try {
-      const response = await fetch(`${hostname}/api/v1/contact/send`, {
+      const response = await fetch(`${hostname}/api/v1/user/contact/send`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

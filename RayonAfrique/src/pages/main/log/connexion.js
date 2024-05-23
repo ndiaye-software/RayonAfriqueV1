@@ -66,7 +66,7 @@ export default function Connexion() {
       <Navbar />
       <Grid container sx={{ minHeight: "100vh" }}>
         <Container
-          container
+          container="true"
           maxWidth="sm"
           sx={{
             paddingTop: 5,
