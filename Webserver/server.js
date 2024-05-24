@@ -32,14 +32,13 @@ const productEpicerieRouteEpicerie = require("./routes/v1/epicerie/productEpicer
 const labelRouteEpicerie = require("./routes/v1/epicerie/labelRoute");
 
 // Admin
+const authRouteAdmin = require("./routes/v1/admin/authRoute");
 const categoryRouteAdmin = require("./routes/v1/admin/categoryRoute");
 const countryRouteAdmin = require("./routes/v1/admin/countryRoute");
 const labelRouteAdmin = require("./routes/v1/admin/labelRoute");
 const productRouteAdmin = require("./routes/v1/admin/productRoute");
 const productEpicerieRouteAdmin = require("./routes/v1/admin/productEpicerieRoute");
 const epicerieRouteAdmin = require("./routes/v1/admin/epicerieRoute");
-const cartRouteAdmin = require("./routes/v1/admin/cartRoute");
-const userRouteAdmin = require("./routes/v1/admin/userRoute");
 const kpiRouteAdmin = require("./routes/v1/admin/kpiRoute");
 
 console.log("You are on:", colors.blue(process.env.NODE_ENV));
@@ -76,14 +75,13 @@ app.use("/api/v1/epicerie/label", labelRouteEpicerie);
 app.use("/api/v1/epicerie/productEpicerie", productEpicerieRouteEpicerie);
 
 // AdminRoute
+app.use("/api/v1/admin/auth", authRouteAdmin);
 app.use("/api/v1/admin/category", categoryRouteAdmin);
 app.use("/api/v1/admin/country", countryRouteAdmin);
 app.use("/api/v1/admin/label", labelRouteAdmin);
 app.use("/api/v1/admin/product", productRouteAdmin);
 app.use("/api/v1/admin/productEpicerie", productEpicerieRouteAdmin);
 app.use("/api/v1/admin/epicerie", epicerieRouteAdmin);
-app.use("/api/v1/admin/cart", cartRouteAdmin);
-app.use("/api/v1/admin/user", userRouteAdmin);
 app.use("/api/v1/admin/kpi", kpiRouteAdmin);
 
 app.use("/", require("./routes/root"));

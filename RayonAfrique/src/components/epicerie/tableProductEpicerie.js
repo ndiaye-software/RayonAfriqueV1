@@ -95,7 +95,7 @@ const headCells = [
     id: "prix",
     numeric: true,
     disablePadding: false,
-    label: "Prix",
+    label: "Prix en €",
   },
   {
     id: "disponibilité",

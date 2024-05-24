@@ -199,7 +199,9 @@ function EpicerieProductCreate() {
 
       if (response.ok) {
         const data = await response.json();
-        navigate(`/epicerie/produit/search/${data.id}/add`);
+        setTimeout(() => {
+          navigate(`/epicerie/produit/search/${data.id}/add`);
+        }, 1500);
       } else {
         const data = await response.json();
         if (data.message) {
