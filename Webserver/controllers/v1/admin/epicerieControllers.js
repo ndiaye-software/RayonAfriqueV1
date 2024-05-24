@@ -3,8 +3,23 @@ const asyncHandler = require("express-async-handler");
 const emailvalidator = require("email-validator");
 const phonevalidator = require("validator");
 const bcrypt = require("bcrypt");
+const Admin = require("../../../models/Admin");
 
 const createEpicerie = asyncHandler(async (req, res) => {
+  if (!req.headers.authorization) {
+    res.status(402).json({ error: "Authorization header missing" });
+    return;
+  }
+
+  const accessToken = req.headers.authorization.replace("Bearer ", "");
+  const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+  const userId = decodedToken.UserInfo.id;
+  const admin = await Admin.findById(userId).select("-password -phone -mail");
+
+  if (!admin) {
+    return res.status(404).json({ message: "Access Denied" });
+  }
+
   const {
     name,
     mail,
@@ -102,6 +117,22 @@ const createEpicerie = asyncHandler(async (req, res) => {
 });
 
 const readEpicerie = asyncHandler(async (req, res) => {
+
+  if (!req.headers.authorization) {
+    res.status(402).json({ error: "Authorization header missing" });
+    return;
+  }
+
+  const accessToken = req.headers.authorization.replace("Bearer ", "");
+  const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+  const userId = decodedToken.UserInfo.id;
+  const admin = await Admin.findById(userId).select("-password -phone -mail");
+
+  if (!admin) {
+    return res.status(404).json({ message: "Access Denied" });
+  }
+
+
   try {
     const epiceries = await Epicerie.find().select("-password");
 
@@ -124,6 +155,21 @@ const readEpicerie = asyncHandler(async (req, res) => {
 });
 
 const updateEpicerie = asyncHandler(async (req, res) => {
+
+  if (!req.headers.authorization) {
+    res.status(402).json({ error: "Authorization header missing" });
+    return;
+  }
+
+  const accessToken = req.headers.authorization.replace("Bearer ", "");
+  const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+  const userId = decodedToken.UserInfo.id;
+  const admin = await Admin.findById(userId).select("-password -phone -mail");
+
+  if (!admin) {
+    return res.status(404).json({ message: "Access Denied" });
+  }
+
   try {
     const { id } = req.params;
     const updatedEpicerie = await Epicerie.findByIdAndUpdate(id, req.body, {
@@ -148,6 +194,22 @@ const updateEpicerie = asyncHandler(async (req, res) => {
 });
 
 const readEpicerieById = asyncHandler(async (req, res) => {
+
+  if (!req.headers.authorization) {
+    res.status(402).json({ error: "Authorization header missing" });
+    return;
+  }
+
+  const accessToken = req.headers.authorization.replace("Bearer ", "");
+  const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+  const userId = decodedToken.UserInfo.id;
+  const admin = await Admin.findById(userId).select("-password -phone -mail");
+
+  if (!admin) {
+    return res.status(404).json({ message: "Access Denied" });
+  }
+
+
   try {
     const { id } = req.params;
     const epicerie = await Epicerie.findById(id).select("-password");

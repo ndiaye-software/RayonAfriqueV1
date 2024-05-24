@@ -1,8 +1,23 @@
 const EpicerieProduct = require("../../../models/EpicerieProduct");
 const Product = require("../../../models/Product");
 const asyncHandler = require("express-async-handler");
+const Admin = require("../../../models/Admin");
 
 const createEpicerieProduct = asyncHandler(async (req, res) => {
+
+  if (!req.headers.authorization) {
+    res.status(402).json({ error: "Authorization header missing" });
+    return;
+  }
+
+  const accessToken = req.headers.authorization.replace("Bearer ", "");
+  const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+  const userId = decodedToken.UserInfo.id;
+  const admin = await Admin.findById(userId).select("-password -phone -mail");
+
+  if (!admin) {
+    return res.status(404).json({ message: "Access Denied" });
+  }
   const { idEpicerie, idProduct, price, available } = req.body;
 
   if (!idEpicerie || !idProduct || !price || !available) {
@@ -26,6 +41,21 @@ const createEpicerieProduct = asyncHandler(async (req, res) => {
 });
 
 const getEpicerieProduct = asyncHandler(async (req, res) => {
+
+  if (!req.headers.authorization) {
+    res.status(402).json({ error: "Authorization header missing" });
+    return;
+  }
+
+  const accessToken = req.headers.authorization.replace("Bearer ", "");
+  const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+  const userId = decodedToken.UserInfo.id;
+  const admin = await Admin.findById(userId).select("-password -phone -mail");
+
+  if (!admin) {
+    return res.status(404).json({ message: "Access Denied" });
+  }
+
   try {
     const epicerieProduct = await EpicerieProduct.find()
       .populate({
@@ -67,6 +97,21 @@ const getEpicerieProduct = asyncHandler(async (req, res) => {
 });
 
 const getEpicerieProductByIdEpicerie = asyncHandler(async (req, res) => {
+
+  if (!req.headers.authorization) {
+    res.status(402).json({ error: "Authorization header missing" });
+    return;
+  }
+
+  const accessToken = req.headers.authorization.replace("Bearer ", "");
+  const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+  const userId = decodedToken.UserInfo.id;
+  const admin = await Admin.findById(userId).select("-password -phone -mail");
+
+  if (!admin) {
+    return res.status(404).json({ message: "Access Denied" });
+  }
+
   try {
     const { idEpicerie } = req.params;
 
@@ -112,6 +157,21 @@ const getEpicerieProductByIdEpicerie = asyncHandler(async (req, res) => {
 });
 
 const updateEpicerieProduct = asyncHandler(async (req, res) => {
+
+  if (!req.headers.authorization) {
+    res.status(402).json({ error: "Authorization header missing" });
+    return;
+  }
+
+  const accessToken = req.headers.authorization.replace("Bearer ", "");
+  const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+  const userId = decodedToken.UserInfo.id;
+  const admin = await Admin.findById(userId).select("-password -phone -mail");
+
+  if (!admin) {
+    return res.status(404).json({ message: "Access Denied" });
+  }
+
   const { id } = req.params;
   const { idEpicerie, idProduct, price, available } = req.body;
 
@@ -149,6 +209,21 @@ const updateEpicerieProduct = asyncHandler(async (req, res) => {
 });
 
 const deleteEpicerieProduct = asyncHandler(async (req, res) => {
+
+  if (!req.headers.authorization) {
+    res.status(402).json({ error: "Authorization header missing" });
+    return;
+  }
+
+  const accessToken = req.headers.authorization.replace("Bearer ", "");
+  const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+  const userId = decodedToken.UserInfo.id;
+  const admin = await Admin.findById(userId).select("-password -phone -mail");
+
+  if (!admin) {
+    return res.status(404).json({ message: "Access Denied" });
+  }
+  
   const { id } = req.params;
 
   if (!id) {

@@ -1,7 +1,23 @@
 const Product = require("../../../models/Product");
 const asyncHandler = require("express-async-handler");
+const Admin = require("../../../models/Admin");
 
 const createProduct = asyncHandler(async (req, res) => {
+
+  if (!req.headers.authorization) {
+    res.status(402).json({ error: "Authorization header missing" });
+    return;
+  }
+
+  const accessToken = req.headers.authorization.replace("Bearer ", "");
+  const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+  const userId = decodedToken.UserInfo.id;
+  const admin = await Admin.findById(userId).select("-password -phone -mail");
+
+  if (!admin) {
+    return res.status(404).json({ message: "Access Denied" });
+  }
+
   const {
     name,
     reference,
@@ -56,6 +72,21 @@ const createProduct = asyncHandler(async (req, res) => {
 });
 
 const getProduct = asyncHandler(async (req, res) => {
+
+  if (!req.headers.authorization) {
+    res.status(402).json({ error: "Authorization header missing" });
+    return;
+  }
+
+  const accessToken = req.headers.authorization.replace("Bearer ", "");
+  const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+  const userId = decodedToken.UserInfo.id;
+  const admin = await Admin.findById(userId).select("-password -phone -mail");
+
+  if (!admin) {
+    return res.status(404).json({ message: "Access Denied" });
+  }
+
   try {
     // Recherche des produits de l'épicerie spécifiée par idEpicerie
     const product = await Product.find()
@@ -91,6 +122,21 @@ const getProduct = asyncHandler(async (req, res) => {
 });
 
 const getProductById = asyncHandler(async (req, res) => {
+
+  if (!req.headers.authorization) {
+    res.status(402).json({ error: "Authorization header missing" });
+    return;
+  }
+
+  const accessToken = req.headers.authorization.replace("Bearer ", "");
+  const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+  const userId = decodedToken.UserInfo.id;
+  const admin = await Admin.findById(userId).select("-password -phone -mail");
+
+  if (!admin) {
+    return res.status(404).json({ message: "Access Denied" });
+  }
+
   try {
     const { idProduct } = req.params; // Récupérez l'ID du produit à partir des paramètres de l'URL
 
@@ -130,6 +176,21 @@ const getProductById = asyncHandler(async (req, res) => {
 
 
 const updateProduct = asyncHandler(async (req, res) => {
+
+  if (!req.headers.authorization) {
+    res.status(402).json({ error: "Authorization header missing" });
+    return;
+  }
+
+  const accessToken = req.headers.authorization.replace("Bearer ", "");
+  const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+  const userId = decodedToken.UserInfo.id;
+  const admin = await Admin.findById(userId).select("-password -phone -mail");
+
+  if (!admin) {
+    return res.status(404).json({ message: "Access Denied" });
+  }
+
   const { idProduct } = req.params;
   const {
     name,
@@ -192,6 +253,21 @@ const updateProduct = asyncHandler(async (req, res) => {
 });
 
 const deleteProduct = asyncHandler(async (req, res) => {
+
+  if (!req.headers.authorization) {
+    res.status(402).json({ error: "Authorization header missing" });
+    return;
+  }
+
+  const accessToken = req.headers.authorization.replace("Bearer ", "");
+  const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+  const userId = decodedToken.UserInfo.id;
+  const admin = await Admin.findById(userId).select("-password -phone -mail");
+
+  if (!admin) {
+    return res.status(404).json({ message: "Access Denied" });
+  }
+
   const { idProduct } = req.params;
 
   if (!idProduct) {

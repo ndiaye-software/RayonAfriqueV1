@@ -1,8 +1,25 @@
 const Country = require("../../../models/Country");
 const asyncHandler = require("express-async-handler");
+const Admin = require("../../../models/Admin");
 
 //Créer un pays
 const createCountry = asyncHandler (async (req, res) => {
+  
+  if (!req.headers.authorization) {
+    res.status(402).json({ error: "Authorization header missing" });
+    return;
+  }
+
+  const accessToken = req.headers.authorization.replace("Bearer ", "");
+  const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+  const userId = decodedToken.UserInfo.id;
+  const admin = await Admin.findById(userId).select("-password -phone -mail");
+
+  if (!admin) {
+    return res.status(404).json({ message: "Access Denied" });
+  }
+
+
   try {
     const { countryName } = req.body;
 
@@ -20,6 +37,22 @@ const createCountry = asyncHandler (async (req, res) => {
 
 //Lister les pays créés
 const readCountry = asyncHandler (async (req, res) => {
+
+  if (!req.headers.authorization) {
+    res.status(402).json({ error: "Authorization header missing" });
+    return;
+  }
+
+  const accessToken = req.headers.authorization.replace("Bearer ", "");
+  const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+  const userId = decodedToken.UserInfo.id;
+  const admin = await Admin.findById(userId).select("-password -phone -mail");
+
+  if (!admin) {
+    return res.status(404).json({ message: "Access Denied" });
+  }
+
+
   try {
     const countries = await Country.find();
 
@@ -34,6 +67,22 @@ const readCountry = asyncHandler (async (req, res) => {
 
 //Modifier un pays
 const updateCountry = asyncHandler(async (req, res) => {
+
+  if (!req.headers.authorization) {
+    res.status(402).json({ error: "Authorization header missing" });
+    return;
+  }
+
+  const accessToken = req.headers.authorization.replace("Bearer ", "");
+  const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+  const userId = decodedToken.UserInfo.id;
+  const admin = await Admin.findById(userId).select("-password -phone -mail");
+
+  if (!admin) {
+    return res.status(404).json({ message: "Access Denied" });
+  }
+
+
   const { id } = req.params;
   
   const { countryName } = req.body;
@@ -71,6 +120,21 @@ const updateCountry = asyncHandler(async (req, res) => {
 
 //Supprimer un pays
 const deleteCountry = asyncHandler(async (req, res) => {
+
+  if (!req.headers.authorization) {
+    res.status(402).json({ error: "Authorization header missing" });
+    return;
+  }
+
+  const accessToken = req.headers.authorization.replace("Bearer ", "");
+  const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+  const userId = decodedToken.UserInfo.id;
+  const admin = await Admin.findById(userId).select("-password -phone -mail");
+
+  if (!admin) {
+    return res.status(404).json({ message: "Access Denied" });
+  }
+
   const { id } = req.params;
 
   // Confirm data

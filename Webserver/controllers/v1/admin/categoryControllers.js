@@ -1,8 +1,24 @@
 const Category = require("../../../models/Category");
 const asyncHandler = require("express-async-handler");
+const Admin = require("../../../models/Admin");
 
 //Créer une catégorie
 const createCategory = asyncHandler(async (req, res) => {
+  
+  if (!req.headers.authorization) {
+    res.status(402).json({ error: "Authorization header missing" });
+    return;
+  }
+
+  const accessToken = req.headers.authorization.replace("Bearer ", "");
+  const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+  const userId = decodedToken.UserInfo.id;
+  const admin = await Admin.findById(userId).select("-password -phone -mail");
+
+  if (!admin) {
+    return res.status(404).json({ message: "Access Denied" });
+  }
+
   try {
     const { categoryName } = req.body;
 
@@ -36,6 +52,21 @@ const readCategory = asyncHandler(async (req, res) => {
 
 //Modifier une catégorie à travers son :id
 const updateCategory = asyncHandler(async (req, res) => {
+
+  if (!req.headers.authorization) {
+    res.status(402).json({ error: "Authorization header missing" });
+    return;
+  }
+
+  const accessToken = req.headers.authorization.replace("Bearer ", "");
+  const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+  const userId = decodedToken.UserInfo.id;
+  const admin = await Admin.findById(userId).select("-password -phone -mail");
+
+  if (!admin) {
+    return res.status(404).json({ message: "Access Denied" });
+  }
+
   const { id } = req.params;
   
   const { categoryName } = req.body;
@@ -73,6 +104,21 @@ const updateCategory = asyncHandler(async (req, res) => {
 
 //Supprimer une catégorie à travers son :id
 const deleteCategory = asyncHandler(async (req, res) => {
+
+  if (!req.headers.authorization) {
+    res.status(402).json({ error: "Authorization header missing" });
+    return;
+  }
+
+  const accessToken = req.headers.authorization.replace("Bearer ", "");
+  const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+  const userId = decodedToken.UserInfo.id;
+  const admin = await Admin.findById(userId).select("-password -phone -mail");
+
+  if (!admin) {
+    return res.status(404).json({ message: "Access Denied" });
+  }
+
   const { id } = req.params;
 
   // Confirm data
