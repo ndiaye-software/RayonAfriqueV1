@@ -8,9 +8,15 @@ import ProductShop from "../../../components/main/ProductShop";
 import { useParams } from "react-router-dom";
 import hostname from "../../../hostname";
 import { LocationOn } from "@material-ui/icons";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+  // ...styles similaires à ceux utilisés dans la première page
+}));
 
 function ShopDetail() {
   const { name } = useParams();
+  useStyles();
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
