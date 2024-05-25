@@ -372,7 +372,7 @@ const Professionnel = () => {
                     </Grid>
                     <Grid
                       item
-                      xs={11}
+                      xs={10}
                       variant="body2"
                       color="inherit"
                       sx={{ display: "flex", alignItems: "center" }}

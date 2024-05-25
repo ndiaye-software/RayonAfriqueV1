@@ -208,8 +208,8 @@ const signUp = asyncHandler(async (req, res) => {
     const phoneDuplicate = await Epicerie.findOne({ phone })
       .collation({ locale: "en", strength: 2 })
       .lean()
-      .exec()
-      .select('-password -description -mail -adresse -longitude -latitude -nameCompany');
+      .select('-password -description -mail -adresse -longitude -latitude -nameCompany')
+      .exec();
 
     if (phoneDuplicate) {
       return res
