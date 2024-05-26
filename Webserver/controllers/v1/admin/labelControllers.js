@@ -1,6 +1,7 @@
 const Label = require("../../../models/Label");
 const asyncHandler = require("express-async-handler");
 const Admin = require("../../../models/Admin");
+const jwt = require("jsonwebtoken");
 
 //Créer un pays
 const createLabel = asyncHandler (async (req, res) => {

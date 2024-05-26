@@ -359,11 +359,11 @@ export default function SignUp() {
                     Déjà un compte ? Connectez-vous!
                   </Link>
                 </Grid>
-                {/*<Grid item>
-                  <Link href="/inscription/client" variant="body2">
-                    Vous êtes client ?
+                <Grid item>
+                  <Link href="/inscription/marque" variant="body2">
+                    {"Vous êtes une marque ?"}
                   </Link>
-              </Grid>*/}
+              </Grid>
               </Grid>
               <div>
                 <ToastContainer theme="colored" />

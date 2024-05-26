@@ -19,7 +19,7 @@ import {
   Handshake,
   KeyboardDoubleArrowDown,
   ShareLocation,
-  Visibility,
+  LiveTv,
 } from "@mui/icons-material";
 import map from "../../../images/map.svg";
 import shopping from "../../../images/shopping.svg";
@@ -266,9 +266,9 @@ const Home = () => {
             </Typography>
 
             <Box maxWidth="500px" sx={{ fontWeight: "700", color: "white" }}>
-                Avec RayonAfrique, trouvez aisément les emplacements où les
-                produits du marché africain sont disponibles, vous offrant une
-                expérience de shopping unique et pratique.
+              Avec RayonAfrique, trouvez aisément les emplacements où les
+              produits du marché africain sont disponibles, vous offrant une
+              expérience de shopping unique et pratique.
             </Box>
 
             <Grid
@@ -558,9 +558,12 @@ const Home = () => {
                 Marque
               </Typography>
               <Typography variant="body2" color="inherit">
-                Prêt à faire briller votre marque de produits africains ?
-                Partagez-la sur notre plateforme et attirez une toute nouvelle
-                clientèle !
+                <strong>
+                  Inscrivez-vous pour pouvoir être alerté en premier de nos
+                  services
+                </strong>{" "}
+                pour partager votre marque sur notre plateforme et attirer une
+                toute nouvelle clientèle !
                 <Box paddingTop="20px" paddingLeft="20px">
                   <Grid container>
                     <Grid
@@ -601,7 +604,7 @@ const Home = () => {
                       color="inherit"
                       sx={{ display: "flex", alignItems: "center" }}
                     >
-                      <Visibility
+                      <LiveTv
                         sx={{
                           backgroundColor: "#922B21",
                           borderRadius: "50%",
@@ -619,7 +622,8 @@ const Home = () => {
                       sx={{ display: "flex", alignItems: "center" }}
                     >
                       <Typography variant="body2" color="inherit">
-                        Gangner en visibilité en promouvant vos produits
+                        Gangner en visibilité en promouvant vos produits avec
+                        des publicités
                       </Typography>
                     </Grid>
                   </Grid>

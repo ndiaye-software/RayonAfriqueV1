@@ -1,9 +1,25 @@
 const Product = require("../../../models/Product");
 const asyncHandler = require("express-async-handler");
 const Admin = require("../../../models/Admin");
+const Label = require("../../../models/Label");
+const Category = require("../../../models/Category");
+const Country = require("../../../models/Country");
+const jwt = require("jsonwebtoken");
+
+function StringFormatter(chaine) {
+  if (chaine.includes(" ")) {
+    // La chaîne contient plusieurs mots
+    return chaine
+      .split(" ")
+      .map((mot) => mot.charAt(0).toUpperCase() + mot.slice(1).toLowerCase())
+      .join(" ");
+  } else {
+    // La chaîne ne contient qu'un seul mot
+    return chaine.charAt(0).toUpperCase() + chaine.slice(1).toLowerCase();
+  }
+}
 
 const createProduct = asyncHandler(async (req, res) => {
-
   if (!req.headers.authorization) {
     res.status(402).json({ error: "Authorization header missing" });
     return;
@@ -18,32 +34,131 @@ const createProduct = asyncHandler(async (req, res) => {
     return res.status(404).json({ message: "Access Denied" });
   }
 
+  const imageName = req.file.filename;
+
   const {
     name,
     reference,
     ingredients,
     description,
-    image,
-    category,
-    country,
-    label,
+    category: categoryName,
+    country: countryName,
+    label: labelName,
+    autreCategory,
+    autreCountry,
+    autreLabel,
   } = req.body;
 
-  if (!name || !category || !country || !image || !label) {
-    return res.status(400).json({ message: "Tous les champs sont requis" });
+  const missingFields = [];
+  if (!name) missingFields.push("nom produit");
+  if (!categoryName && !autreCategory)
+    missingFields.push("catégorie du produit");
+  if (!countryName && !autreCountry) missingFields.push("pays du produit");
+  if (!labelName && !autreLabel) missingFields.push("marque du produit");
+  if (!imageName || !req.file || !req.file.filename)
+    missingFields.push("image");
+
+  if (missingFields.length > 0) {
+    return res.status(400).json({
+      message: `Les champs suivants sont requis: ${missingFields.join(", ")}`,
+    });
   }
 
   try {
+    // Recherche des catégories, labels et pays dans la base de données
+    let [category, label, country] = await Promise.all([
+      Category.findOne({ categoryName }),
+      Label.findOne({ labelName }),
+      Country.findOne({ countryName }),
+    ]);
+
+    // Create new category if not found
+    if (!category && autreCategory) {
+      const existingCategory = await Category.findOne({
+        categoryName: autreCategory,
+      });
+      if (existingCategory) {
+        return res
+          .status(409)
+          .json({
+            message: `La catégorie '${autreCategory}' existe déjà. Sélectionnez-le !`,
+          });
+      }
+      const autreCategoryFormatted = StringFormatter(autreCategory);
+      category = new Category({ categoryName: autreCategoryFormatted });
+      category = await category.save();
+    } else if (!category) {
+      return res
+        .status(404)
+        .json({ message: `La catégorie '${categoryName}' n'existe pas.` });
+    }
+
+    // Create new label if not found
+    if (!label && autreLabel) {
+      const existingLabel = await Label.findOne({ labelName: autreLabel });
+      if (existingLabel) {
+        return res
+          .status(409)
+          .json({
+            message: `La marque '${autreLabel}' existe déjà. Sélectionnez-le !`,
+          });
+      }
+      const autreLabelFormatted = StringFormatter(autreLabel);
+      label = new Label({ labelName: autreLabelFormatted });
+      label = await label.save();
+    } else if (!label) {
+      return res
+        .status(404)
+        .json({ message: `Le label '${labelName}' n'existe pas.` });
+    }
+
+    // Create new country if not found
+    if (!country && autreCountry) {
+      const existingCountry = await Country.findOne({
+        countryName: autreCountry,
+      });
+      if (existingCountry) {
+        return res
+          .status(409)
+          .json({
+            message: `La pays '${autreCountry}' existe déjà. Sélectionnez-le !`,
+          });
+      }
+      const autreCountryFormatted = StringFormatter(autreCountry);
+      country = new Country({ countryName: autreCountryFormatted });
+      country = await country.save();
+    } else if (!country) {
+      return res
+        .status(404)
+        .json({ message: `Le pays '${countryName}' n'existe pas.` });
+    }
+
+    if (!category) {
+      return res
+        .status(404)
+        .json({ message: `La catégorie '${categoryName}' n'existe pas.` });
+    }
+    if (!label) {
+      return res
+        .status(404)
+        .json({ message: `Le label '${labelName}' n'existe pas.` });
+    }
+
+    if (!country) {
+      return res
+        .status(404)
+        .json({ message: `Le pays '${countryName}' n'existe pas.` });
+    }
+
     // Vérifier si le produit existe déjà en utilisant tous les champs
     let existingProduct = await Product.findOne({
       name,
       reference,
       ingredients,
       description,
-      image,
-      category,
-      country,
-      label,
+      category: category._id,
+      country: country._id,
+      label: label._id,
     });
 
     if (existingProduct) {
@@ -53,26 +168,28 @@ const createProduct = asyncHandler(async (req, res) => {
 
     // Si le produit n'existe pas, le créer
     const product = new Product({
-      name,
-      reference,
-      ingredients,
-      description,
-      image,
-      category,
-      country,
-      label,
+      name: StringFormatter(name),
+      reference: StringFormatter(reference),
+      ingredients: StringFormatter(ingredients),
+      description: StringFormatter(description),
+      image: imageName,
+      category: category._id,
+      country: country._id,
+      label: label._id,
     });
-
-    await product.save();
-    res.status(201).json(product);
+    const savedProduct = await product.save();
+    res.status(201).json({ id: savedProduct._id });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Erreur lors de la création du produit" });
+    if (error.code === 11000 && error.keyPattern && error.keyPattern.name) {
+      res.status(400).json({ message: "Ce produit existe déjà." });
+    } else {
+      console.error(error);
+      res.status(500).json({ error: "Erreur lors de la création du produit" });
+    }
   }
 });
 
 const getProduct = asyncHandler(async (req, res) => {
-
   if (!req.headers.authorization) {
     res.status(402).json({ error: "Authorization header missing" });
     return;
@@ -101,7 +218,7 @@ const getProduct = asyncHandler(async (req, res) => {
         .json({ message: "Aucun produit trouvé pour cette épicerie." });
     }
 
-    const formattedProduct = product.map(product => ({
+    const formattedProduct = product.map((product) => ({
       _id: product._id,
       name: product.name,
       reference: product.reference,
@@ -122,7 +239,6 @@ const getProduct = asyncHandler(async (req, res) => {
 });
 
 const getProductById = asyncHandler(async (req, res) => {
-
   if (!req.headers.authorization) {
     res.status(402).json({ error: "Authorization header missing" });
     return;
@@ -174,9 +290,7 @@ const getProductById = asyncHandler(async (req, res) => {
   }
 });
 
-
 const updateProduct = asyncHandler(async (req, res) => {
-
   if (!req.headers.authorization) {
     res.status(402).json({ error: "Authorization header missing" });
     return;
@@ -191,59 +305,29 @@ const updateProduct = asyncHandler(async (req, res) => {
     return res.status(404).json({ message: "Access Denied" });
   }
 
+  // const { idProduct } = req.params;
   const { idProduct } = req.params;
-  const {
-    name,
-    reference,
-    ingredients,
-    description,
-    image,
-    category,
-    country,
-    label,
-  } = req.body;
 
   try {
-    const product = await Product.findById(idProduct);
+    const updatedProduct = await Product.findByIdAndUpdate(
+      idProduct,
+      req.body,
+      { new: true }
+    );
 
-    if (!product) {
-      return res.status(404).json({ error: "Produit d'épicerie non trouvé." });
-    }
+    const formattedResult = {
+      _id: updatedProduct._id,
+      name: updatedProduct.name,
+      reference: updatedProduct.reference,
+      ingredients: updatedProduct.ingredients,
+      description: updatedProduct.description,
+      image: updatedProduct.image,
+      category: updatedProduct.category,
+      country: updatedProduct.country,
+      label: updatedProduct.label,
+    };
 
-    if (name) {
-      product.name = name;
-    }
-
-    if (reference) {
-      product.reference = reference;
-    }
-
-    if (ingredients) {
-      product.ingredients = ingredients;
-    }
-
-    if (description) {
-      product.description = description;
-    }
-
-    if (image) {
-      product.image = image;
-    }
-
-    if (category) {
-      product.category = category;
-    }
-
-    if (country) {
-      product.country = country;
-    }
-
-    if (label) {
-      product.label = label;
-    }
-
-    await product.save();
-    res.status(200).json(product);
+    res.status(200).json(formattedResult);
   } catch (error) {
     console.error(error);
     res
@@ -252,8 +336,8 @@ const updateProduct = asyncHandler(async (req, res) => {
   }
 });
 
-const deleteProduct = asyncHandler(async (req, res) => {
 
+const deleteProduct = asyncHandler(async (req, res) => {
   if (!req.headers.authorization) {
     res.status(402).json({ error: "Authorization header missing" });
     return;
@@ -283,7 +367,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
 
     const result = await Product.deleteOne();
 
-    const reply = `Product with ID ${result._id} deleted`;
+    const reply = `Product ${result.name} deleted`;
 
     res.status(200).json(reply);
   } catch (error) {
@@ -294,10 +378,59 @@ const deleteProduct = asyncHandler(async (req, res) => {
   }
 });
 
+const searchProductByName = asyncHandler(async (req, res) => {
+  
+  if (!req.headers.authorization) {
+    res.status(402).json({ error: "Authorization header missing" });
+    return;
+  }
+
+  const accessToken = req.headers.authorization.replace("Bearer ", "");
+  const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+  const userId = decodedToken.UserInfo.id;
+  const admin = await Admin.findById(userId).select("-password -phone -mail");
+
+  if (!admin) {
+    return res.status(404).json({ message: "Access Denied" });
+  }
+  
+  try {
+    const { name } = req.body;
+    const product = await Product.findOne({
+      name: { $regex: name, $options: "i" }, // Recherche par nom du produit
+    });
+
+    if (!product) {
+      return res
+        .status(404)
+        .json({ message: "Aucun produit trouvé avec ce nom." });
+    }
+
+    const formattedResult = {
+      _id: product._id,
+      name: product.name,
+      reference: product.reference,
+      image: product.image,
+      description: product.description,
+      categoryName: product.category ? product.category.categoryName : null,
+      countryName: product.country ? product.country.countryName : null,
+      labelName: product.label ? product.label.labelName : null,
+    };
+
+    res.status(200).json(formattedResult);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "Erreur lors de la recherche du produit." });
+  }
+});
+
 module.exports = {
   createProduct,
   getProduct,
   getProductById,
   updateProduct,
   deleteProduct,
+  searchProductByName
 };

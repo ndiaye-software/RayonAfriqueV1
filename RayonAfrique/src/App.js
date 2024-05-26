@@ -12,7 +12,6 @@ import Shop from "./pages/main/product/shop";
 import Suggestion from "./pages/main/product/suggestion";
 import ShopDetail from "./pages/main/product/shopDetail";
 import InscriptionEpicerie from "./pages/main/log/inscription_epicerie";
-import InscriptionClient from "./pages/main/log/inscription_client";
 import ValidationBusiness from "./pages/main/log/business_validation";
 import TermsAndConditions from "./pages/main/terms/termsAndConditions";
 import MessageNonEnvoyé from "./pages/main/contact/message_not_sent";
@@ -33,6 +32,7 @@ import Test3 from "./pages/test3";
 import EpicerieProductPresentation from "./pages/epicerie/product/epicerieProductPresentation";
 import EpicerieProductCreate from "./pages/epicerie/product/epicerieProductCreate";
 import VerificationMail from "./pages/main/log/mail_verification";
+import InscriptionMarque from "./pages/main/log/inscription_marque";
 
 
 
@@ -57,7 +57,8 @@ function App() {
           <Route path="/about-us" element={<About />} />
           <Route path="/connexion" element={<Connexion />} />
           <Route path="/inscription/epicerie" element={<InscriptionEpicerie />}/>
-          <Route path="/inscription/client" element={<InscriptionClient />}/>
+          <Route path="/inscription/marque" element={<InscriptionMarque />}/>
+          <Route path="/inscription/marque/validation" element={<InscriptionMarque />}/>
           <Route path="/inscription/epicerie/verification" element={<VerificationMail />}/>
           <Route path="/inscription/epicerie/verification/validation" element={<ValidationBusiness />}/>
           <Route path="/business" element={<Business />} />

@@ -20,7 +20,7 @@ import {
   Handshake,
   KeyboardDoubleArrowDown,
   ShareLocation,
-  Visibility,
+  LiveTv
 } from "@mui/icons-material";
 
 const useStyles = makeStyles((theme) => ({
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
 
   header2: {
     fontSize: "2vw",
-    backgroundColor:"#f9fafb",
+    backgroundColor: "#f9fafb",
     fontWeight: "bolder",
     color: "black",
     textAlign: "center",
@@ -448,23 +448,23 @@ const Professionnel = () => {
                 </Box>
               </Typography>
               <Grid
-              display="flex"
-              flexDirection="column"
-              justifyContent="center"
-              alignContent="center"
-              alignItems="center"
-              paddingBottom="30px"
-            >
-              {" "}
-              <Button
-                startIcon={<KeyboardDoubleArrowDown />}
-                className={classes.InscriptionButton}
-                href="/inscription/epicerie"
-                variant="contained"
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+                alignContent="center"
+                alignItems="center"
+                paddingBottom="30px"
               >
-                S'inscrire
-              </Button>{" "}
-            </Grid>
+                {" "}
+                <Button
+                  startIcon={<KeyboardDoubleArrowDown />}
+                  className={classes.InscriptionButton}
+                  href="/inscription/epicerie"
+                  variant="contained"
+                >
+                  S'inscrire
+                </Button>{" "}
+              </Grid>
             </CardContent>
           </Card>
           <Card sx={{ maxWidth: 425 }}>
@@ -474,9 +474,12 @@ const Professionnel = () => {
                 Marque
               </Typography>
               <Typography variant="body2" color="inherit">
-                Prêt à faire briller votre marque de produits africains ?
-                Partagez-la sur notre plateforme et attirez une toute nouvelle
-                clientèle !
+                <strong>
+                  Inscrivez-vous pour pouvoir être alerté en premier de nos
+                  services
+                </strong>{" "}
+                pour partager votre marque sur notre plateforme et attirer une
+                toute nouvelle clientèle !
                 <Box paddingTop="20px" paddingLeft="20px">
                   <Grid container>
                     <Grid
@@ -517,7 +520,7 @@ const Professionnel = () => {
                       color="inherit"
                       sx={{ display: "flex", alignItems: "center" }}
                     >
-                      <Visibility
+                      <LiveTv
                         sx={{
                           backgroundColor: "#922B21",
                           borderRadius: "50%",
@@ -535,7 +538,7 @@ const Professionnel = () => {
                       sx={{ display: "flex", alignItems: "center" }}
                     >
                       <Typography variant="body2" color="inherit">
-                        Gangner en visibilité en promouvant vos produits
+                      Gangner en visibilité en promouvant vos produits avec des publicités
                       </Typography>
                     </Grid>
                   </Grid>

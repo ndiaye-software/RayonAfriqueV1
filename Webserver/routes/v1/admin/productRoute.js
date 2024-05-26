@@ -16,5 +16,8 @@ router.route('/update/:idProduct')
 
 router.route('/delete/:idProduct')
     .delete(productController.deleteProduct)
+
+router.route('/search/')
+    .post(productController.searchProductByName)
     
 module.exports = router
