@@ -21,6 +21,7 @@ import { Grid } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import IconButton from "@mui/material/IconButton";
 import "react-toastify/dist/ReactToastify.css";
+import { Helmet } from "react-helmet";
 
 const useStyles = makeStyles((theme) => ({
   section1_div_h1: {
@@ -158,8 +159,7 @@ function EpicerieProfile() {
     setFormData((prevFormData) => ({
       ...prevFormData,
       adresse: newValue.description || "",
-    }))
-
+    }));
   };
 
   useEffect(() => {
@@ -262,10 +262,15 @@ function EpicerieProfile() {
     }
   };
 
-
   return (
     <>
       <div>
+        <Helmet>
+          <meta
+            name="description"
+            content="RayonAfrique - epicerie africaine - Profil "
+          />
+        </Helmet>
         <Navbar />
         <section className={classes.banner}>
           <div className={classes.bannerImg}></div>
@@ -462,7 +467,7 @@ function EpicerieProfile() {
                 </DialogTitle>
                 <List sx={{ justifyContent: "space-evenly" }}>
                   <List sx={{ justifyContent: "space-evenly" }}>
-                    {formData.image instanceof File &&
+                    {formData.image instanceof File && (
                       <ListItem>
                         <img
                           src={URL.createObjectURL(formData.image)}
@@ -472,7 +477,7 @@ function EpicerieProfile() {
                           name="image"
                         />
                       </ListItem>
-                    }
+                    )}
                   </List>
 
                   <ListItem>

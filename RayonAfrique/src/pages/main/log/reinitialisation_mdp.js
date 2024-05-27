@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -13,6 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import hostname from "../../../hostname";
+import { Helmet } from "react-helmet";
 
 export default function Reinitialisation() {
   const [errorMessage, setErrorMessage] = useState("");
@@ -65,6 +66,9 @@ export default function Reinitialisation() {
 
   return (
     <div>
+      <Helmet>
+        <meta name="description" content="RayonAfrique - réinitialisation mot de passe" />
+      </Helmet>
       <Navbar />
       <Grid container>
         <Container

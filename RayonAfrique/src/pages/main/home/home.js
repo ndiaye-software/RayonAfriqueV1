@@ -14,6 +14,7 @@ import CardMedia from "@mui/material/CardMedia";
 import maps from "../../../images/map.jpg";
 import professionnal from "../../../images/professionnal.jpg";
 import produits from "../../../images/produits.jpg";
+import { Helmet } from "react-helmet";
 import {
   Accessibility,
   Handshake,
@@ -251,6 +252,10 @@ const Home = () => {
 
   return (
     <div>
+      <Helmet>
+        <meta name="description" content="RayonAfrique - Produits et épiceries africains" />
+      </Helmet>
+      
       <Navbar />
 
       <Box className={classes.banner}>

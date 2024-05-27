@@ -5,6 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Box, Typography } from "@material-ui/core";
 import { Grid } from "@mui/material";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 const useStyles = makeStyles(() => ({
   section: {
@@ -52,6 +53,12 @@ const TermsAndConditions = () => {
 
   return (
     <div>
+      <Helmet>
+        <meta
+          name="description"
+          content="RayonAfrique - Conditions générales"
+        />
+      </Helmet>
       <Navbar />
 
       <section className={classes.section}>

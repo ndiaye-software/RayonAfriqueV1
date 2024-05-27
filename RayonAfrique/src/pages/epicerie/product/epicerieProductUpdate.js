@@ -21,6 +21,7 @@ import { ToastContainer, toast } from "react-toastify";
 import SaveIcon from "@mui/icons-material/Save";
 import IconButton from "@mui/material/IconButton";
 import "react-toastify/dist/ReactToastify.css";
+import { Helmet } from "react-helmet";
 
 const useStyles = makeStyles(() => ({
   Button: {
@@ -156,6 +157,12 @@ function EpicerieProductUpdate() {
   return (
     <>
       <div>
+        <Helmet>
+          <meta
+            name="description"
+            content="RayonAfrique - epicerie africaine - modification produit africain"
+          />
+        </Helmet>
         <Navbar />
         {formData && (
           <Box sx={{ backgroundColor: "#f9fafb" }}>
@@ -263,7 +270,10 @@ function EpicerieProductUpdate() {
                     marginBottom="30px"
                   >
                     <Tooltip title="annuler">
-                      <IconButton onClick={handleCloseDialog} aria-label="delete">
+                      <IconButton
+                        onClick={handleCloseDialog}
+                        aria-label="delete"
+                      >
                         <Close />
                       </IconButton>
                     </Tooltip>
@@ -271,7 +281,7 @@ function EpicerieProductUpdate() {
                     <Tooltip title="modifier">
                       <IconButton
                         type="submit"
-                        onClick={handleSubmit} 
+                        onClick={handleSubmit}
                         aria-label="close"
                         sx={{
                           bgcolor: "#922B21",

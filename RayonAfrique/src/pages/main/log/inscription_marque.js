@@ -23,6 +23,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import hostname from "../../../hostname";
+import { Helmet } from "react-helmet";
 
 const useStyles = makeStyles(() => ({
   section2: {
@@ -93,6 +94,12 @@ export default function SignInSide() {
 
   return (
     <ThemeProvider theme={defaultTheme}>
+      <Helmet>
+        <meta
+          name="description"
+          content="RayonAfrique - inscription marque"
+        />
+      </Helmet>
       <Navbar />
       <Grid container component="main">
         <CssBaseline />
@@ -279,7 +286,7 @@ export default function SignInSide() {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Email/>
+                      <Email />
                     </InputAdornment>
                   ),
                 }}

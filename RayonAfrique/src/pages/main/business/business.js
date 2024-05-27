@@ -15,6 +15,7 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Caissier from "../../../images/Caissier.jpg";
 import Business from "../../../images/business.jpg";
+import { Helmet } from "react-helmet";
 import {
   Accessibility,
   Handshake,
@@ -225,6 +226,12 @@ const Professionnel = () => {
 
   return (
     <div>
+      <Helmet>
+        <meta
+          name="description"
+          content="RayonAfrique - marque et épiceries africaines - professionels"
+        />
+      </Helmet>
       <Navbar />
 
       <section className={classes.banner}>

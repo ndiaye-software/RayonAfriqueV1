@@ -5,6 +5,7 @@ import mission from "../../../images/mission.jpg";
 import team from "../../../images/teamabout.svg";
 import { makeStyles } from "@material-ui/core/styles";
 import { Box, Typography } from "@material-ui/core";
+import { Helmet } from "react-helmet";
 
 const useStyles = makeStyles((theme) => ({
   section: {
@@ -29,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: "300px",
     borderRadius: "10px",
     [theme.breakpoints.down("xs")]: {
-      maxWidth:"300px"
+      maxWidth: "300px",
     },
   },
 }));
@@ -39,6 +40,12 @@ const About = () => {
 
   return (
     <div>
+      <Helmet>
+        <meta
+          name="description"
+          content="RayonAfrique - A propos"
+        />
+      </Helmet>
       <Navbar />
 
       <section className={classes.section}>

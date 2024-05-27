@@ -13,7 +13,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Container from "@mui/material/Container";
 import { SendOutlined } from "@material-ui/icons";
-
+import { Helmet } from "react-helmet";
 
 export default function Suggestion() {
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ export default function Suggestion() {
         if (data.message) {
           toast.success(data.message);
           setTimeout(() => {
-            window.location.href = '/';
+            window.location.href = "/";
           }, 1000);
         }
       } else {
@@ -68,6 +68,9 @@ export default function Suggestion() {
 
   return (
     <div>
+      <Helmet>
+        <meta name="description" content="RayonAfrique - Suggestion de produits africains" />
+      </Helmet>
       <Navbar />
       <Grid container sx={{ minHeight: "100vh" }}>
         <Container

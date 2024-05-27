@@ -5,6 +5,7 @@ import SuccessImage from "../../../images/success.svg";
 import { makeStyles } from "@material-ui/core/styles";
 import { Box, Button } from "@mui/material";
 import { Login } from "@mui/icons-material";
+import { Helmet } from "react-helmet";
 
 const useStyles = makeStyles(() => ({
   section1: {
@@ -94,6 +95,12 @@ const ValidationEpicerie = () => {
 
   return (
     <div>
+      <Helmet>
+        <meta
+          name="description"
+          content="RayonAfrique - validation inscription épicerie"
+        />
+      </Helmet>
       <div sx={{ minHeight: "100vh" }}>
         <Navbar />
         <div className={classes.section1}>

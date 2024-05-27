@@ -13,6 +13,7 @@ import hostname from "../../../hostname";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Helmet } from "react-helmet";
 
 const useStyles = makeStyles(() => ({
   Button: {
@@ -164,7 +165,6 @@ function EpicerieProductCreate() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
 
     const accessToken = localStorage.getItem("accessToken");
 
@@ -220,6 +220,12 @@ function EpicerieProductCreate() {
   return (
     <>
       <div>
+        <Helmet>
+          <meta
+            name="description"
+            content="RayonAfrique - epicerie africaine - création produit africain"
+          />
+        </Helmet>
         <Navbar />
         <Box
           sx={{ backgroundColor: "#f9fafb" }}

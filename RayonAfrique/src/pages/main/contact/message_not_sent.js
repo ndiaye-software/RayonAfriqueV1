@@ -3,6 +3,7 @@ import Navbar from "../../../components/main/navbar";
 import Footer from "../../../components/main/footer";
 import MailNotSent from "../../../images/error.svg";
 import { makeStyles } from "@material-ui/core/styles";
+import { Helmet } from "react-helmet";
 
 const useStyles = makeStyles(() => ({
   section1: {
@@ -70,7 +71,6 @@ const useStyles = makeStyles(() => ({
       borderBottomWidth: 0,
     },
   },
-
 }));
 
 const MessageNonEnvoyé = () => {
@@ -78,6 +78,12 @@ const MessageNonEnvoyé = () => {
 
   return (
     <div>
+      <Helmet>
+        <meta
+          name="description"
+          content="RayonAfrique - Echec envoi message"
+        />
+      </Helmet>
       <div sx={{ minHeight: "100vh" }}>
         <Navbar />
         <div className={classes.section1}>
@@ -92,7 +98,7 @@ const MessageNonEnvoyé = () => {
             <h1 className={classes.section1_div_h1}>ERREUR !</h1>
 
             <h3 className={classes.section1_div_h3}>
-              Votre message n'a pas été envoyé 
+              Votre message n'a pas été envoyé
             </h3>
 
             <h3 className={classes.section1_div_h3}>

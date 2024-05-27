@@ -1,115 +1,137 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { IconButton } from '@mui/material';
-import InputAdornment from '@mui/material/InputAdornment';
-import { Visibility, VisibilityOff } from '@material-ui/icons';
+import * as React from "react";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { IconButton } from "@mui/material";
+import InputAdornment from "@mui/material/InputAdornment";
+import { Visibility, VisibilityOff } from "@material-ui/icons";
 import Navbar from "../../../components/main/navbar";
 import Footer from "../../../components/main/footer";
-import Link from '@mui/material/Link';
-
+import Link from "@mui/material/Link";
+import { Helmet } from "react-helmet";
 
 export default function Authentification() {
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    console.log({
+      email: data.get("email"),
+      password: data.get("password"),
+    });
+  };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-        email: data.get('email'),
-        password: data.get('password'),
-        });
-    };
+  const [showPassword, setShowPassword] = React.useState(false);
 
-    const [showPassword, setShowPassword] = React.useState(false);
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
-  
-    const handleMouseDownPassword = (event) => {
-      event.preventDefault();
-    };
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
 
   return (
     <div>
-    <Navbar/>
-    <Grid container> 
-      <Container  maxWidth="sm" sx={{paddingTop:15, paddingLeft:3, paddingRight:3, paddingBottom:5 }}>
-        <Box
+      <Helmet>
+        <meta
+          name="description"
+          content="RayonAfrique - Authentification"
+        />
+      </Helmet>
+      <Navbar />
+      <Grid container>
+        <Container
+          maxWidth="sm"
           sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            padding:2,
-            borderRadius:"15px"
+            paddingTop: 15,
+            paddingLeft: 3,
+            paddingRight: 3,
+            paddingBottom: 5,
           }}
         >
-          <Avatar sx={{ m: 2, backgroundColor:"#088A85"}}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Authentification
-          </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Authentification"
-                  type={showPassword ? 'text' : 'password'}
-                  id="password"
-                  autoComplete="new-password"
-                  InputProps={{
-                    endAdornment:(
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                          edge="end"
-                        >
-                          {showPassword ? <Visibility/> : <VisibilityOff />}
-                        </IconButton>
-                      </InputAdornment>
-                    )
-                  }}
-                />
-              </Grid>
-              
-              <Grid item xs={12} textAlign="center">
-                <Typography sx={{fontWeight: 'light', fontStyle:"italic"}}>
-                  Veuillez entrer le code d'authentification envoyé à vos coordonnées.
-                </Typography>
-            </Grid>
-
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2,  backgroundColor:"#088A85", '&:hover': { backgroundColor: "#00BFA6"}}}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              padding: 2,
+              borderRadius: "15px",
+            }}
+          >
+            <Avatar sx={{ m: 2, backgroundColor: "#088A85" }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Authentification
+            </Typography>
+            <Box
+              component="form"
+              noValidate
+              onSubmit={handleSubmit}
+              sx={{ mt: 3 }}
             >
-              Se connecter
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Renvoyer le code
-                </Link>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    name="password"
+                    label="Authentification"
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    autoComplete="new-password"
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                          >
+                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </Grid>
+
+                <Grid item xs={12} textAlign="center">
+                  <Typography sx={{ fontWeight: "light", fontStyle: "italic" }}>
+                    Veuillez entrer le code d'authentification envoyé à vos
+                    coordonnées.
+                  </Typography>
+                </Grid>
               </Grid>
-            </Grid>
-        
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{
+                  mt: 3,
+                  mb: 2,
+                  backgroundColor: "#088A85",
+                  "&:hover": { backgroundColor: "#00BFA6" },
+                }}
+              >
+                Se connecter
+              </Button>
+              <Grid container>
+                <Grid item xs>
+                  <Link href="#" variant="body2">
+                    Renvoyer le code
+                  </Link>
+                </Grid>
+              </Grid>
+            </Box>
           </Box>
-        </Box>
-      </Container>
-    </Grid>
-    <Footer/>
+        </Container>
+      </Grid>
+      <Footer />
     </div>
   );
 }

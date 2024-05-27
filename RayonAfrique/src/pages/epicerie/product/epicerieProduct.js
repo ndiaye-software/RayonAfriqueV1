@@ -7,6 +7,7 @@ import { Button, Typography } from "@material-ui/core";
 import TableProduct from "../../../components/epicerie/tableProductEpicerie";
 import { Box, Stack } from "@mui/material";
 import { Add } from "@material-ui/icons";
+import { Helmet } from "react-helmet";
 
 const useStyles = makeStyles((theme) => ({
   section1_div_h1: {
@@ -109,6 +110,12 @@ const EpicerieProduct = () => {
 
   return (
     <div>
+      <Helmet>
+        <meta
+          name="description"
+          content="RayonAfrique - epicerie - produit "
+        />
+      </Helmet>
       <Navbar />
 
       <section className={classes.banner}>

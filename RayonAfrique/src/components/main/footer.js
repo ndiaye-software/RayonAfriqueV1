@@ -3,7 +3,7 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
-import { Facebook, Instagram, Twitter } from "@mui/icons-material";
+import { Facebook, Audiotrack} from "@mui/icons-material";
 import { Box } from "@mui/material";
 
 export default function Footer() {
@@ -40,28 +40,25 @@ export default function Footer() {
               Paris, France
             </Typography>
             <Typography variant="body2" color="white">
-              rayon.afrique@gmail.com
+              rayon.afrique.shop@gmail.com
             </Typography>
             <Typography variant="body2" color="white">
-              Phone: +33 6 77 77 77
+              Phone: +33 06 21 56 53 14
             </Typography>
           </Grid>
           <Grid item xs={12} sm={4}>
             <Typography variant="h6" color="white" gutterBottom>
               Suivez nous !
             </Typography>
-            <Link href="https://www.facebook.com/" color="inherit">
+            <Link href="https://www.facebook.com/profile.php?id=61559921465353" color="inherit">
               <Facebook />
             </Link>
             <Link
-              href="https://www.instagram.com/"
+              href="https://www.tiktok.com/@rayonafrique?lang=fr"
               color="inherit"
               sx={{ pl: 1, pr: 1 }}
             >
-              <Instagram />
-            </Link>
-            <Link href="https://www.twitter.com/" color="inherit">
-              <Twitter />
+              <Audiotrack />
             </Link>
           </Grid>
         </Grid>

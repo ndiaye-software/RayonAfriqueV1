@@ -25,6 +25,7 @@ import { useNavigate } from "react-router-dom";
 import hostname from "../../../hostname";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Helmet } from "react-helmet";
 
 var zxcvbn = require("zxcvbn");
 
@@ -167,6 +168,12 @@ export default function SignUp() {
 
   return (
     <div>
+      <Helmet>
+        <meta
+          name="description"
+          content="RayonAfrique - inscription épicerie"
+        />
+      </Helmet>
       <Navbar />
       <Grid container sx={{ minHeight: "100vh" }}>
         <Container
@@ -363,7 +370,7 @@ export default function SignUp() {
                   <Link href="/inscription/marque" variant="body2">
                     {"Vous êtes une marque ?"}
                   </Link>
-              </Grid>
+                </Grid>
               </Grid>
               <div>
                 <ToastContainer theme="colored" />

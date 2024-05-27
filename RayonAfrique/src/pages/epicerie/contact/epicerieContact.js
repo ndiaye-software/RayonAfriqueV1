@@ -12,19 +12,19 @@ import Typography from "@mui/material/Typography";
 import contact from "../../../images/contact.jpg";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Footer from "../../../components/main/footer";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import hostname from "../../../hostname";
+import { Helmet } from "react-helmet";
 
 const defaultTheme = createTheme();
 
 export default function ContactEpicerie() {
-
   const navigate = useNavigate();
-  
+
   const [formData, setFormData] = useState({
-    name:"",
+    name: "",
     mail: "",
-    message : ""
+    message: "",
   });
 
   const handleChange = (event) => {
@@ -37,30 +37,34 @@ export default function ContactEpicerie() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+
     try {
       const response = await fetch(`${hostname}/api/v1/user/contact/send`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
 
-  
       if (response.ok) {
-        navigate('sent'); 
+        navigate("sent");
       } else {
-        navigate('notsent');
+        navigate("notsent");
       }
     } catch (error) {
-      console.error('Erreur lors de l\'envoi de la requête :', error);
+      console.error("Erreur lors de l'envoi de la requête :", error);
     }
   };
-  
 
   return (
     <ThemeProvider theme={defaultTheme}>
+      <Helmet>
+        <meta
+          name="description"
+          content="RayonAfrique - epicerie - contact"
+        />
+      </Helmet>
       <Navbar />
       <Grid container component="main">
         <CssBaseline />
@@ -137,7 +141,7 @@ export default function ContactEpicerie() {
               <TextField
                 required
                 id="message"
-                name = "message"
+                name="message"
                 margin="normal"
                 label="Votre message"
                 value={formData.message}

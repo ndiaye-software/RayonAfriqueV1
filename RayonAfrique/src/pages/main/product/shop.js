@@ -10,6 +10,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Product from "../../../components/main/product";
 import TextField from "@mui/material/TextField";
 import hostname from "../../../hostname";
+import { Helmet } from "react-helmet";
 
 const useStyles = makeStyles((theme) => ({
   Box1: {
@@ -144,6 +145,9 @@ function Shop() {
   return (
     <>
       <div>
+        <Helmet>
+          <meta name="description" content="RayonAfrique - Recherche de produits africains" />
+        </Helmet>
         <Box backgroundColor="#f9fafb">
           <Navbar />
           <Stack
@@ -202,7 +206,15 @@ function Shop() {
                 </Box>
               </Box>
               {filteredAndSearchedProducts.length === 0 ? (
-                <Grid display="flex" xs={12} item padding="50px" justifyContent="center" alignContent="center" alignItems="center">
+                <Grid
+                  display="flex"
+                  xs={12}
+                  item
+                  padding="50px"
+                  justifyContent="center"
+                  alignContent="center"
+                  alignItems="center"
+                >
                   <Grid xs={6} item>
                     <Typography variant="body2" align="center" fontWeight={700}>
                       Nous n'avons pas trouvé ce produit 😞
@@ -212,7 +224,7 @@ function Shop() {
                       fullWidth
                       variant="contained"
                       sx={{
-                        fontWeight:700,
+                        fontWeight: 700,
                         mt: 3,
                         mb: 2,
                         backgroundColor: "#922B21",

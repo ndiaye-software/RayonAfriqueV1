@@ -3,6 +3,7 @@ import Navbar from "../../../components/epicerie/navbarEpicerie";
 import Footer from "../../../components/main/footer";
 import MailSent from "../../../images/mail_sent.svg";
 import { makeStyles } from "@material-ui/core/styles";
+import { Helmet } from "react-helmet";
 
 const useStyles = makeStyles(() => ({
   section1: {
@@ -70,7 +71,6 @@ const useStyles = makeStyles(() => ({
       borderBottomWidth: 0,
     },
   },
-
 }));
 
 const MessageEnvoyéEpicerie = () => {
@@ -78,6 +78,9 @@ const MessageEnvoyéEpicerie = () => {
 
   return (
     <div>
+      <Helmet>
+        <meta name="description" content="RayonAfrique - epicerie - Succès envoi message" />
+      </Helmet>
       <div sx={{ minHeight: "100vh" }}>
         <Navbar />
         <div className={classes.section1}>

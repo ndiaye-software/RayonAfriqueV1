@@ -12,6 +12,7 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Helmet } from "react-helmet";
 
 const useStyles = makeStyles(() => ({
   Button: {
@@ -132,6 +133,12 @@ function EpicerieProductAdd() {
   return (
     <>
       <div>
+      <Helmet>
+          <meta
+            name="description"
+            content="RayonAfrique - epicerie africaine - Ajout"
+          />
+        </Helmet>
         <Navbar />
         <Box sx={{ backgroundColor: "#f9fafb" }}>
           <Stack direction="column" justifyContent="center">

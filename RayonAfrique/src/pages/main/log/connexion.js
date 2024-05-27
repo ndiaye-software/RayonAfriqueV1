@@ -14,6 +14,7 @@ import hostname from "../../../hostname";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Helmet } from "react-helmet";
 
 export default function Connexion() {
   const navigate = useNavigate();
@@ -63,6 +64,12 @@ export default function Connexion() {
 
   return (
     <div>
+      <Helmet>
+        <meta
+          name="description"
+          content="RayonAfrique - connexion - épicerie"
+        />
+      </Helmet>
       <Navbar />
       <Grid container sx={{ minHeight: "100vh" }}>
         <Container

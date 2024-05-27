@@ -13,6 +13,7 @@ import hostname from "../../../hostname";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Helmet } from "react-helmet";
 
 export default function VerificationMail() {
   const navigate = useNavigate();
@@ -65,6 +66,9 @@ export default function VerificationMail() {
 
   return (
     <div>
+      <Helmet>
+        <meta name="description" content="RayonAfrique - verification mail" />
+      </Helmet>
       <Navbar />
       <Grid container sx={{ minHeight: "100vh" }}>
         <Container

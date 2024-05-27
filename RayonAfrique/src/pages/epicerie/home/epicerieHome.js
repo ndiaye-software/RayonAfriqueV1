@@ -11,6 +11,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 const useStyles = makeStyles((theme) => ({
   section1_div_h1: {
@@ -127,11 +128,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const EpicerieHome = () => {
-
   const classes = useStyles();
 
   return (
     <div>
+      <Helmet>
+        <meta
+          name="description"
+          content="RayonAfrique - epicerie africaine - homepage"
+        />
+      </Helmet>
+
       <Navbar />
 
       <section className={classes.banner}>
@@ -200,7 +207,6 @@ const EpicerieHome = () => {
               </Typography>
             </CardContent>
           </Card>
-
         </div>
 
         <Typography variant="h1" className={classes.header1}>

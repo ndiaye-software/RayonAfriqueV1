@@ -18,6 +18,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { FormControl } from "@material-ui/core";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import frontend_name from "../../../frontend_name";
+import { Helmet } from "react-helmet";
 
 var zxcvbn = require("zxcvbn");
 
@@ -142,6 +143,9 @@ export default function Modification() {
 
   return (
     <div>
+      <Helmet>
+        <meta name="description" content="RayonAfrique - modification mot de passe" />
+      </Helmet>
       <Navbar />
       <Grid container sx={{ minHeight: "100vh" }}>
         <Container

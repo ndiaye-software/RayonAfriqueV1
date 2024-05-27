@@ -3,6 +3,7 @@ import Navbar from "../../../components/main/navbar";
 import Footer from "../../../components/main/footer";
 import SecurityImage from "../../../images/security.svg";
 import { makeStyles } from "@material-ui/core/styles";
+import { Helmet } from "react-helmet";
 
 const useStyles = makeStyles(() => ({
   section1: {
@@ -46,17 +47,17 @@ const useStyles = makeStyles(() => ({
   },
 
   section1_div_h3: {
-    display:"flex",
+    display: "flex",
     fontSize: "17px",
     background: "#922B21",
     WebkitBackgroundClip: "text",
     WebkitTextFillColor: "transparent",
     whiteSpace: "normal",
-    flexWrap : "wrap",
+    flexWrap: "wrap",
     hyphens: "auto",
     wordBreak: "break-all",
     animation: "$typing1 3s, $cursor1 .4s step-end infinite alternate",
-  },  
+  },
   "@keyframes typing1": {
     "0%": {
       width: 0,
@@ -90,12 +91,18 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const ValidationReinitialisation  = () => {
+const ValidationReinitialisation = () => {
   const classes = useStyles();
 
   return (
     <div>
       <div sx={{ minHeight: "100vh" }}>
+        <Helmet>
+          <meta
+            name="description"
+            content="RayonAfrique - réinitialisation validation"
+          />
+        </Helmet>
         <Navbar />
         <div className={classes.section1}>
           <img
@@ -106,14 +113,12 @@ const ValidationReinitialisation  = () => {
           />
 
           <div>
-            <h1 className={classes.section1_div_h1}>
-              RayonAfrique !{" "}
-            </h1>
+            <h1 className={classes.section1_div_h1}>RayonAfrique ! </h1>
 
             <h3 className={classes.section1_div_h3}>
-              Un lien de réinitialisation vous a été envoyé dans votre boîte mail
+              Un lien de réinitialisation vous a été envoyé dans votre boîte
+              mail
             </h3>
-
           </div>
         </div>
       </div>

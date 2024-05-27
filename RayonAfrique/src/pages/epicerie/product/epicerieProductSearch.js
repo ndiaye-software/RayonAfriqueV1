@@ -10,6 +10,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Product from "../../../components/epicerie/product";
 import TextField from "@mui/material/TextField";
 import hostname from "../../../hostname";
+import { Helmet } from "react-helmet";
 
 const useStyles = makeStyles((theme) => ({
   Box1: {
@@ -149,6 +150,12 @@ function EpicerieProductSearch() {
   return (
     <>
       <div>
+        <Helmet>
+          <meta
+            name="description"
+            content="RayonAfrique - epicerie africaine - recherche produit africain"
+          />
+        </Helmet>
         <Box backgroundColor="#f9fafb">
           <Navbar />
           <Stack

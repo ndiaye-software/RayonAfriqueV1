@@ -25,9 +25,6 @@ import EpicerieProfile from "./pages/epicerie/profile/epicerieProfile";
 import EpicerieContact from "./pages/epicerie/contact/epicerieContact";
 import MessageEnvoyéEpicerie from "./pages/epicerie/contact/message_sent";
 import MessageNonEnvoyéEpicerie from "./pages/epicerie/contact/message_not_sent";
-import Test from "./pages/test";
-import Test2 from "./pages/test2";
-import Test3 from "./pages/test3";
 import EpicerieProductPresentation from "./pages/epicerie/product/epicerieProductPresentation";
 import EpicerieProductCreate from "./pages/epicerie/product/epicerieProductCreate";
 import VerificationMail from "./pages/main/log/mail_verification";
@@ -46,9 +43,6 @@ function App() {
           
           {/* Main */}
           <Route path="/" element={<Home />} />
-          <Route path="/test" element={<Test />}/>
-          <Route path="/test2" element={<Test2 />}/>
-          <Route path="/test3" element={<Test3 />}/>
           <Route path="/connexion/reinitialisation-mdp" element={<Reinitialisation />}/>
           <Route path="/connexion/reinitialisation-mdp/validation" element={<ValidationReinitialisation />}/>
           <Route path="/connexion/reinitialisation-mdp/modification/:id/:token" element={<Modification />}/>

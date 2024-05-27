@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import hostname from "../../../hostname";
 import { useParams } from "react-router-dom";
 import { Button } from "@material-ui/core";
+import { Helmet } from "react-helmet";
 
 const useStyles = makeStyles(() => ({
   Button: {
@@ -76,6 +77,12 @@ function EpicerieProductPresentation() {
   return (
     <>
       <div>
+        <Helmet>
+          <meta
+            name="description"
+            content="RayonAfrique - epicerie africaine - présentation produit africain"
+          />
+        </Helmet>
         <Box backgroundColor="#f9fafb">
           <Navbar />
           <Stack

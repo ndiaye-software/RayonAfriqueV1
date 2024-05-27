@@ -3,6 +3,7 @@ import Navbar from "../../../components/main/navbar";
 import Footer from "../../../components/main/footer";
 import SuccessImage from "../../../images/success.svg";
 import { makeStyles } from "@material-ui/core/styles";
+import { Helmet } from "react-helmet";
 
 const useStyles = makeStyles(() => ({
   section1: {
@@ -92,6 +93,12 @@ const ValidationMarque = () => {
 
   return (
     <div>
+      <Helmet>
+        <meta
+          name="description"
+          content="RayonAfrique - validation inscription marque"
+        />
+      </Helmet>
       <div sx={{ minHeight: "100vh" }}>
         <Navbar />
         <div className={classes.section1}>
@@ -112,14 +119,12 @@ const ValidationMarque = () => {
             </h3>
 
             <h3 className={classes.section1_div_h3}>
-            Vous serez informé dès la sortie de nos 
+              Vous serez informé dès la sortie de nos
             </h3>
 
-            
             <h3 className={classes.section1_div_h3}>
-            fonctionnalités pour les marques de produits africains !
+              fonctionnalités pour les marques de produits africains !
             </h3>
-
           </div>
         </div>
       </div>
