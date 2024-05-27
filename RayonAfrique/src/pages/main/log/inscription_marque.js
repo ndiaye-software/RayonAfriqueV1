@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Navbar from "../../../components/main/navbar";
 import Footer from "../../../components/main/footer";
 import Avatar from "@mui/material/Avatar";
@@ -17,7 +17,12 @@ import Business from "../../../images/business.jpg";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import { makeStyles } from "@material-ui/core/styles";
-import { Accessibility, Handshake, LiveTv } from "@mui/icons-material";
+import { Accessibility, Handshake, LiveTv, Email } from "@mui/icons-material";
+import InputAdornment from "@mui/material/InputAdornment";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import hostname from "../../../hostname";
 
 const useStyles = makeStyles(() => ({
   section2: {
@@ -34,13 +39,54 @@ const useStyles = makeStyles(() => ({
 const defaultTheme = createTheme();
 
 export default function SignInSide() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    name: "",
+    nameCompany: "",
+    mail: "",
+  });
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({
+      ...formData,
+      [name]: value,
     });
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const response = await fetch(`${hostname}/api/v1/marque/auth/SignUp`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...formData }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.message) {
+          toast.success(data.message);
+        }
+        navigate("verification");
+      } else {
+        // Gérer les erreurs d'authentification ici
+        const data = await response.json(); // Obtenir les détails de l'erreur du backend
+        if (data.message) {
+          // Si le backend renvoie un message d'erreur, l'afficher sur le frontend
+          toast.error(data.message);
+        } else {
+          // Si le message d'erreur n'est pas disponible, afficher un message générique
+          toast.error("Erreur lors de l'inscription");
+        }
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'envoi de la requête :", error);
+    }
   };
 
   const classes = useStyles();
@@ -60,9 +106,12 @@ export default function SignInSide() {
                 </Typography>
                 <Typography variant="body2" color="inherit">
                   Prêt à faire briller votre marque de produits africains ?
-                  <strong>Inscrivez-vous pour pouvoir être alerté en premier de nos
-                  services</strong> pour partager votre marque sur notre plateforme et
-                  attirer une toute nouvelle clientèle !
+                  <strong>
+                    Inscrivez-vous pour pouvoir être alerté en premier de nos
+                    services
+                  </strong>{" "}
+                  pour partager votre marque sur notre plateforme et attirer une
+                  toute nouvelle clientèle !
                   <Box paddingTop="20px" paddingLeft="20px">
                     <Grid container>
                       <Grid
@@ -121,7 +170,8 @@ export default function SignInSide() {
                         sx={{ display: "flex", alignItems: "center" }}
                       >
                         <Typography variant="body2" color="inherit">
-                          Créer des publicités et faÎtes votre marque gagner en visibilité
+                          Créer des publicités et faÎtes gagner votre marque en
+                          visibilité
                         </Typography>
                       </Grid>
                     </Grid>
@@ -151,7 +201,8 @@ export default function SignInSide() {
                         sx={{ display: "flex", alignItems: "center" }}
                       >
                         <Typography variant="body2" color="inherit">
-                          Contacter nos épiceries partenaires et créer de nouveaux partenariats
+                          Contacter nos épiceries partenaires et créer de
+                          nouveaux partenariats
                         </Typography>
                       </Grid>
                     </Grid>
@@ -201,6 +252,8 @@ export default function SignInSide() {
                 label="Votre nom"
                 type="name"
                 id="name"
+                value={formData.name}
+                onChange={handleChange}
               />
               <TextField
                 margin="normal"
@@ -209,16 +262,27 @@ export default function SignInSide() {
                 name="nameCompany"
                 label="Nom de votre marque"
                 id="nameCompany"
+                value={formData.nameCompany}
+                onChange={handleChange}
               />
               <TextField
                 margin="normal"
                 required
                 fullWidth
-                id="email"
+                id="mail"
                 label="Adresse mail"
-                name="email"
+                name="mail"
                 autoComplete="email"
                 autoFocus
+                value={formData.mail}
+                onChange={handleChange}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Email/>
+                    </InputAdornment>
+                  ),
+                }}
               />
               <Button
                 type="submit"
@@ -242,6 +306,9 @@ export default function SignInSide() {
                 </Grid>
               </Grid>
             </Box>
+            <div>
+              <ToastContainer theme="colored" />
+            </div>
           </Box>
         </Grid>
       </Grid>

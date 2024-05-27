@@ -20,7 +20,7 @@ import {
   Handshake,
   KeyboardDoubleArrowDown,
   ShareLocation,
-  LiveTv
+  LiveTv,
 } from "@mui/icons-material";
 
 const useStyles = makeStyles((theme) => ({
@@ -355,7 +355,7 @@ const Professionnel = () => {
                   <Grid container>
                     <Grid
                       item
-                      xs={1}
+                      xs={2}
                       variant="body2"
                       color="inherit"
                       sx={{ display: "flex", alignItems: "center" }}
@@ -538,7 +538,8 @@ const Professionnel = () => {
                       sx={{ display: "flex", alignItems: "center" }}
                     >
                       <Typography variant="body2" color="inherit">
-                      Gangner en visibilité en promouvant vos produits avec des publicités
+                        Créer des publicités et faÎtes gagner votre marque en
+                        visibilité
                       </Typography>
                     </Grid>
                   </Grid>

@@ -41,6 +41,9 @@ const productEpicerieRouteAdmin = require("./routes/v1/admin/productEpicerieRout
 const epicerieRouteAdmin = require("./routes/v1/admin/epicerieRoute");
 const kpiRouteAdmin = require("./routes/v1/admin/kpiRoute");
 
+// Marque
+const authRouteMarque = require("./routes/v1/marque/authRoute");
+
 console.log("You are on:", colors.blue(process.env.NODE_ENV));
 
 connectDB();
@@ -83,6 +86,9 @@ app.use("/api/v1/admin/product", productRouteAdmin);
 app.use("/api/v1/admin/productEpicerie", productEpicerieRouteAdmin);
 app.use("/api/v1/admin/epicerie", epicerieRouteAdmin);
 app.use("/api/v1/admin/kpi", kpiRouteAdmin);
+
+// MarqueRoute
+app.use("/api/v1/marque/auth", authRouteMarque);
 
 app.use("/", require("./routes/root"));
 

@@ -89,7 +89,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const ValidationBusiness = () => {
+const ValidationEpicerie = () => {
   const classes = useStyles();
 
   return (
@@ -131,4 +131,4 @@ const ValidationBusiness = () => {
   );
 };
 
-export default ValidationBusiness;
+export default ValidationEpicerie;

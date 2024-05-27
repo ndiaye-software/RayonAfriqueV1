@@ -88,7 +88,7 @@ export default function Connexion() {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Connexion
+              Connexion - Epicerie
             </Typography>
             <Box
               component="form"
