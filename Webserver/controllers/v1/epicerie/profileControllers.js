@@ -53,6 +53,10 @@ const readProfile = asyncHandler(async (req, res) => {
       return res.status(404).json({ error: "Epicerie non trouvée." });
     }
 
+    if (epicerie.status == "inactif") {
+      return res.status(404).json({ message: "Veuillez activez votre compte" });
+    }
+
     // Si l'épicerie est trouvée et que le compte correspond, renvoyez ses informations au client
     res.status(200).json(epicerie);
   } catch (error) {
@@ -81,6 +85,11 @@ const updateProfile = asyncHandler(async (req, res) => {
     if (!epicerie) {
       return res.status(404).json({ error: "Epicerie non trouvée." });
     }
+
+    if (epicerie.status == "inactif") {
+      return res.status(404).json({ message: "Veuillez activez votre compte" });
+    }
+    
     const {
       name,
       mail,

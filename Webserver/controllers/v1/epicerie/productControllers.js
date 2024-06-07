@@ -34,6 +34,10 @@ const createProduct = asyncHandler(async (req, res) => {
     return res.status(404).json({ message: "Epicerie non trouvée." });
   }
 
+  if (epicerie.status == "inactif") {
+    return res.status(404).json({ message: "Veuillez activez votre compte" });
+  }
+
   if (!req.file) {
     return res.status(404).json({ message: "Mettez une image." });
   }
@@ -202,6 +206,10 @@ const getProduct = asyncHandler(async (req, res) => {
       return res.status(404).json({ error: "Epicerie non trouvée." });
     }
 
+    if (epicerie.status == "inactif") {
+      return res.status(404).json({ message: "Veuillez activez votre compte" });
+    }
+
     // Recherche des produits de l'épicerie spécifiée par idEpicerie
     const product = await Product.find()
       .populate("category")
@@ -248,6 +256,10 @@ const getProductById = asyncHandler(async (req, res) => {
     const epicerie = await Epicerie.findById(userId).select('-password -phone -description -mail -adresse -longitude -latitude -nameCompany');
     if (!epicerie) {
       return res.status(404).json({ error: "Epicerie non trouvé." });
+    }
+
+    if (epicerie.status == "inactif") {
+      return res.status(404).json({ message: "Veuillez activez votre compte" });
     }
 
     const { idProduct } = req.params; // Récupérez l'ID du produit à partir des paramètres de l'URL

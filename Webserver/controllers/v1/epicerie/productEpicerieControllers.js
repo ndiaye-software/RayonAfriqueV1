@@ -29,6 +29,10 @@ const createEpicerieProduct = asyncHandler(async (req, res) => {
       return res.status(404).json({ error: "Epicerie non trouvé." });
     }
 
+    if (epicerie.status == "inactif") {
+      return res.status(404).json({ message: "Veuillez activez votre compte" });
+    }
+
     const { idProduct, price, available } = req.body;
 
     const missingFields = [];
@@ -92,6 +96,10 @@ const getEpicerieProductByIdEpicerie = asyncHandler(async (req, res) => {
 
     if (!epicerie) {
       return res.status(404).json({ error: "Epicerie non trouvé." });
+    }
+
+    if (epicerie.status == "inactif") {
+      return res.status(404).json({ error: "Veuillez activez votre compte" });
     }
 
     // Retrieve epicerie products using the user ID
@@ -163,6 +171,10 @@ const getProductDetailsByIdProduct = asyncHandler(async (req, res) => {
 
     // Retrieve the user's epicerie by user ID
     const epicerie = await Epicerie.findById(idEpicerie).select('-password');
+
+    if (epicerie.status == "inactif") {
+      return res.status(404).json({ message: "Veuillez activez votre compte" });
+    }
 
     // Check if the epicerie exists for the user
     if (!epicerie) {
@@ -251,6 +263,10 @@ const getProductDetailsByIdEpicerieProduct = asyncHandler(async (req, res) => {
       return res.status(404).json({ error: "Epicerie not found." });
     }
 
+    if (epicerie.status == "inactif") {
+      return res.status(404).json({ message: "Veuillez activez votre compte" });
+    }
+
     // Extract the product ID from the request parameters
     const { idEpicerieProduct } = req.params;
 
@@ -327,6 +343,10 @@ const updateEpicerieProduct = asyncHandler(async (req, res) => {
       return res.status(404).json({ error: "Epicerie non trouvée." });
     }
 
+    if (epicerie.status == "inactif") {
+      return res.status(404).json({ message: "Veuillez activez votre compte" });
+    }
+
     const epicerieProduct = await EpicerieProduct.findById(id);
 
     if (!epicerieProduct) {
@@ -381,6 +401,10 @@ const deleteEpicerieProductById = asyncHandler(async (req, res) => {
     return res.status(404).json({ error: "Epicerie non trouvée." });
   }
 
+  if (epicerie.status == "inactif") {
+    return res.status(404).json({ message: "Veuillez activez votre compte" });
+  }
+
   if (!id) {
     return res.status(400).json({ message: "ID du produit requis." });
   }
@@ -430,6 +454,10 @@ const deleteEpicerieProductsByNameList = asyncHandler(async (req, res) => {
 
   if (!epicerie) {
     return res.status(404).json({ error: "Epicerie non trouvée." });
+  }
+
+  if (epicerie.status == "inactif") {
+    return res.status(404).json({ message: "Veuillez activez votre compte" });
   }
 
   const { productNameList } = req.body;
