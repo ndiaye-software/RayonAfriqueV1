@@ -219,9 +219,9 @@ const signUp = asyncHandler(async (req, res) => {
     // Check for duplicate mail
     const duplicate = await Epicerie.findOne({ mail })
       .collation({ locale: "en", strength: 2 })
+      .select('-password -phone -description -adresse -longitude -latitude -nameCompany')
       .lean()
-      .exec()
-      .select('-password -phone -description -adresse -longitude -latitude -nameCompany');
+      .exec();
 
     if (duplicate) {
       return res.status(409).json({ message: "L'utilisatur existe déjà" });
@@ -269,7 +269,7 @@ const signUp = asyncHandler(async (req, res) => {
     // Envoyer un e-mail de bienvenue
     const mailOptions = {
       from: "rayon.afrique.shop@gmail.com",
-      to: "rayon.afrique.shop@gmail.com",
+      to: ["rayon.afrique.shop@gmail.com", mail],
       subject: "Bienvenue sur notre site",
       html: ` 
       <!DOCTYPE html>
@@ -375,7 +375,7 @@ const SendTokenReinitialisation = asyncHandler(async (req, res) => {
     // Envoyer un e-mail de bienvenue
     const mailOptions = {
       from: "rayon.afrique.shop@gmail.com",
-      to: "rayon.afrique.shop@gmail.com",
+      to: mail,
       subject: "Demande de réinitialisation de mot de passe",
       html: `<!DOCTYPE html>
       <html>

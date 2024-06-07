@@ -59,6 +59,7 @@ function ShopDetail() {
         }
         const data = await response.json();
         setData(data);
+        console.log(data);
         setLoading(false);
       } catch (error) {
         setError(error);
@@ -175,10 +176,22 @@ function ShopDetail() {
                       lg={4}
                       key={index}
                     >
-                      {product.image && (
+                      {product.image ? (
                         <ProductShop
                           key={index}
                           image={require(`../../../images/${product.image}`)}
+                          nomProduit={product.nomProduit}
+                          adresse={product.adresse}
+                          nomEpicerie={product.nomEpicerie}
+                          prix={product.prix}
+                          distance={product.distance}
+                          longitude={product.longitude}
+                          latitude={product.latitude}
+                        />
+                      ) : (
+                        <ProductShop
+                          key={index}
+                          image={null}
                           nomProduit={product.nomProduit}
                           adresse={product.adresse}
                           nomEpicerie={product.nomEpicerie}

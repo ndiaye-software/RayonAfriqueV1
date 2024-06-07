@@ -28,7 +28,7 @@ export default function ProductShop({
           component="img"
           height="150"
           image={image}
-          alt="green iguana"
+          alt="image épicerie"
         />
         <CardContent sx={{ paddingTop: "5px", paddingBottom: "5px" }}>
           <Typography gutterBottom variant="h6" fontSize="17px" component="div">

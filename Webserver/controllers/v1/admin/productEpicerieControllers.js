@@ -80,7 +80,7 @@ const getEpicerieProduct = asyncHandler(async (req, res) => {
       formattedProducts.push({
         _id: product._id,
         idEpicerie: product.idEpicerie,
-        idEpicerieProduct: product.idProduct._id,
+        idProduct: product.idProduct._id,
         name: product.idProduct.name,
         reference: product.idProduct.reference,
         description: product.idProduct.description,
@@ -182,7 +182,7 @@ const updateEpicerieProduct = asyncHandler(async (req, res) => {
   }
 
   const { id } = req.params;
-  const { idEpicerie, idProduct, price, available } = req.body;
+  const { price, available } = req.body;
 
   try {
     const epicerieProduct = await EpicerieProduct.findById(id);
@@ -191,21 +191,8 @@ const updateEpicerieProduct = asyncHandler(async (req, res) => {
       return res.status(404).json({ error: "Produit d'épicerie non trouvé." });
     }
 
-    if (idEpicerie) {
-      epicerieProduct.idEpicerie = idEpicerie;
-    }
-
-    if (idProduct) {
-      epicerieProduct.idProduct = idProduct;
-    }
-
-    if (price) {
-      epicerieProduct.price = price;
-    }
-
-    if (available) {
-      epicerieProduct.available = available;
-    }
+    // Utilisation de la méthode set() pour mettre à jour les champs
+    epicerieProduct.set({ price, available });
 
     await epicerieProduct.save();
     res.status(200).json(epicerieProduct);
@@ -216,6 +203,7 @@ const updateEpicerieProduct = asyncHandler(async (req, res) => {
       .json({ error: "Erreur lors de la mise à jour du produit d'épicerie." });
   }
 });
+
 
 const deleteEpicerieProduct = asyncHandler(async (req, res) => {
 
@@ -232,7 +220,7 @@ const deleteEpicerieProduct = asyncHandler(async (req, res) => {
   if (!admin) {
     return res.status(404).json({ message: "Access Denied" });
   }
-  
+
   const { id } = req.params;
 
   if (!id) {
@@ -240,15 +228,13 @@ const deleteEpicerieProduct = asyncHandler(async (req, res) => {
   }
 
   try {
-    const product = await EpicerieProduct.findById(id);
+    const result = await EpicerieProduct.findByIdAndDelete(id);
 
-    if (!product) {
+    if (!result) {
       return res.status(404).json({ error: "Produit d'épicerie non trouvé." });
     }
 
-    await EpicerieProduct.deleteOne();
-
-    const reply = `Product deleted`;
+    const reply = `ProductEpicerie with id : ${result._id} deleted`;
 
     res.status(200).json(reply);
   } catch (error) {
@@ -258,6 +244,7 @@ const deleteEpicerieProduct = asyncHandler(async (req, res) => {
       .json({ error: "Erreur lors de la suppression du produit d'épicerie." });
   }
 });
+
 
 module.exports = {
   createEpicerieProduct,

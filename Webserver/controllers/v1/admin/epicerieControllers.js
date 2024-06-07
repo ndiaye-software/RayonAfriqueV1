@@ -171,7 +171,7 @@ const createEpicerie = asyncHandler(async (req, res) => {
     // Envoyer un e-mail de bienvenue
     const mailOptions = {
       from: "rayon.afrique.shop@gmail.com",
-      to: "rayon.afrique.shop@gmail.com",
+      to: ["rayon.afrique.shop@gmail.com", mail],
       subject: "Bienvenue sur notre site",
       html: ` 
           <!DOCTYPE html>

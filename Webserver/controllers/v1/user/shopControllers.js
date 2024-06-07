@@ -100,18 +100,18 @@ const getGroceryByProduct = asyncHandler(async (req, res) => {
       available: true,
     }).populate({
       path: "idEpicerie",
-      select: "nameCompany image description phone latitude longitude",
+      select: "nameCompany image description phone latitude longitude adresse",
     });
 
     if (userPosition) {
       const { latitude: userLat, longitude: userLon } = userPosition;
 
       const formattedGroceries = groceries.map((grocery) => {
-        const { nameCompany, description, latitude, longitude, image } = grocery.idEpicerie;
+        const { nameCompany, adresse, latitude, longitude, image } = grocery.idEpicerie;
         const distance = getDistance(userLat, userLon, latitude, longitude);
         return {
           nomEpicerie: nameCompany,
-          adresse: description,
+          adresse,
           latitude,
           longitude,
           image,
@@ -129,10 +129,10 @@ const getGroceryByProduct = asyncHandler(async (req, res) => {
 
     // Si la position de l'utilisateur n'est pas fournie, retournez les épiceries sans tri
     const formattedGroceries = groceries.map((grocery) => {
-      const { nameCompany, description, latitude, longitude, image } = grocery.idEpicerie;
+      const { nameCompany, adresse, latitude, longitude, image } = grocery.idEpicerie;
       return {
         nomEpicerie: nameCompany,
-        adresse: description,
+        adresse,
         latitude,
         longitude,
         image,

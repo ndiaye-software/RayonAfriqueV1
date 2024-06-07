@@ -152,8 +152,6 @@ const signUp = asyncHandler(async (req, res) => {
     password2,
   } = req.body;
 
-  console.log(req.body);
-
   const missingFields = [];
   if (!name) missingFields.push("nom de l'admin");
   if (!phone) missingFields.push("Téléphone");
@@ -218,7 +216,7 @@ const signUp = asyncHandler(async (req, res) => {
     // Envoyer un e-mail de bienvenue
     const mailOptions = {
       from: "rayon.afrique.shop@gmail.com",
-      to: "rayon.afrique.shop@gmail.com",
+      to: ["rayon.afrique.shop@gmail.com", mail],
       subject: "Bienvenue sur notre site",
       html: ` 
       <!DOCTYPE html>
@@ -322,7 +320,7 @@ const SendTokenReinitialisation = asyncHandler(async (req, res) => {
     // Envoyer un e-mail de bienvenue
     const mailOptions = {
       from: "rayon.afrique.shop@gmail.com",
-      to: "rayon.afrique.shop@gmail.com",
+      to: mail,
       subject: "Demande de réinitialisation de mot de passe",
       html: `<!DOCTYPE html>
       <html>
