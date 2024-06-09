@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo} from "react";
 import PropTypes from "prop-types";
 import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -265,8 +265,8 @@ export default function EnhancedTable() {
     })
       .then((res) => {
         if (!res.ok) {
-          throw new Error(`HTTP error! Status: ${res.status}`);
-        }
+          const data = res.json();
+          throw new Error(data.message);}
         return res.json();
       })
       .then((formData) => {
@@ -275,7 +275,6 @@ export default function EnhancedTable() {
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
-        setError("Error fetching data");
       });
   }, []);
 
@@ -528,7 +527,11 @@ export default function EnhancedTable() {
             <IconButton
               onClick={handleCloseDialog}
               aria-label="close"
-              sx={{ bgcolor: "#922B21", color: "white" ,'&:hover':{bgcolor: "white", color: "#922B21"} }}
+              sx={{
+                bgcolor: "#922B21",
+                color: "white",
+                "&:hover": { bgcolor: "white", color: "#922B21" },
+              }}
             >
               <Close />
             </IconButton>
@@ -541,7 +544,7 @@ export default function EnhancedTable() {
 
       <div>
         {/* Render your component content here */}
-        {error && <p>Error: {error}</p>}
+        {error && <p> {error}</p>}
       </div>
     </Box>
   );

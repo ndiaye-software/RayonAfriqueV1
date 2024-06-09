@@ -98,7 +98,9 @@ const login = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    return res.json({ accessToken });
+    const status = foundEpicerie.status ?? null;
+
+    return res.json({ accessToken, status });
   } catch (error) {
     console.error("Erreur lors de la connexion :", error);
     return res

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -16,12 +15,11 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Helmet } from "react-helmet";
 
-export default function Connexion() {
+export default function ApproveMail() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    mail: "",
-    password: "",
+    code: "",
   });
 
   const handleChange = (event) => {
@@ -36,25 +34,23 @@ export default function Connexion() {
     event.preventDefault();
 
     try {
-      const response = await fetch(`${hostname}/api/v1/epicerie/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        `${hostname}/api/v1/epicerie/auth/verification`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ...formData }),
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data.status);
-        const { accessToken } = data.accessToken;
-        localStorage.setItem("accessToken", accessToken);
-        if ((data.status === "actif")) {
-          navigate(`/epicerie`);
+        if (data.message) {
+          toast.success(data.message);
         }
-        if ((data.status === "inactif" || data.status === null)) {
-          navigate(`/connexion/verification`);
-        }
+        navigate("validation");
       } else {
         const data = await response.json();
         if (data.message) {
@@ -71,15 +67,12 @@ export default function Connexion() {
   return (
     <div>
       <Helmet>
-        <meta
-          name="description"
-          content="RayonAfrique - connexion - épicerie"
-        />
+        <meta name="description" content="RayonAfrique - verification mail" />
       </Helmet>
       <Navbar />
       <Grid container sx={{ minHeight: "100vh" }}>
         <Container
-          container="true"
+          container
           maxWidth="sm"
           sx={{
             paddingTop: 5,
@@ -101,7 +94,7 @@ export default function Connexion() {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Connexion - Epicerie
+              Mail - Vérification
             </Typography>
             <Box
               component="form"
@@ -109,30 +102,32 @@ export default function Connexion() {
               noValidate
               sx={{ mt: 1 }}
             >
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Adresse mail"
-                name="mail"
-                value={formData.mail}
-                onChange={handleChange}
-                autoComplete="email"
-                autoFocus
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Mot de passe"
-                type="password"
-                id="password"
-                value={formData.password}
-                onChange={handleChange}
-                autoComplete="current-password"
-              />
+              <Grid item xs={12}>
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="code"
+                  label="Code"
+                  name="code"
+                  placeholder="1234"
+                  autoFocus
+                  value={formData.code}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Box
+                justifyContent="space-evenly"
+                display="flex"
+                marginTop="30px"
+              >
+                <Typography>
+                  Oups ! Validez votre adresse mail ! Nous vous avons envoyé un
+                  code dans votre boîte mail, Entrez ce code dans la page de
+                  vérification afin de profitez des avantages de votre compte
+                  RayonAfrique !
+                </Typography>
+              </Box>
               <div>
                 <ToastContainer theme="colored" />
               </div>
@@ -147,20 +142,8 @@ export default function Connexion() {
                   "&:hover": { backgroundColor: "#A63F35" },
                 }}
               >
-                Se connecter
+                Valider
               </Button>
-              <Grid container>
-                <Grid item xs>
-                  <Link href="/connexion/reinitialisation-mdp" variant="body2">
-                    Mot de passe oublié?
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <Link href="/inscription/epicerie" variant="body2">
-                    {"Pas de compte ? Inscrivez vous"}
-                  </Link>
-                </Grid>
-              </Grid>
             </Box>
           </Box>
         </Container>

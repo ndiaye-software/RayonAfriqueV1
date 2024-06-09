@@ -99,7 +99,8 @@ const getEpicerieProductByIdEpicerie = asyncHandler(async (req, res) => {
     }
 
     if (epicerie.status == "inactif") {
-      return res.status(404).json({ error: "Veuillez activez votre compte" });
+      console.log("Validez votre compte")
+      return res.status(404).json({ message: "Veuillez activez votre compte" });
     }
 
     // Retrieve epicerie products using the user ID

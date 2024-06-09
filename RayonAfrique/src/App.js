@@ -31,6 +31,8 @@ import VerificationMail from "./pages/main/log/mail_verification";
 import InscriptionMarque from "./pages/main/log/inscription_marque";
 import ValidationEpicerie from "./pages/main/log/validation_epicerie";
 import ValidationMarque from "./pages/main/log/validation_marque";
+import ApproveMail from "./pages/epicerie/log/mail_verification";
+import ApproveEpicerie from "./pages/epicerie/log/validation_epicerie";
 
 
 
@@ -63,6 +65,8 @@ function App() {
           <Route path="/produit/suggestion" element={<Suggestion />} />
 
           {/* Epicerie */}
+          <Route path="/connexion/verification" element={<ApproveMail />} />
+          <Route path="/connexion/verification/validation" element={<ApproveEpicerie />} />
           <Route path="/epicerie/" element={<EpicerieHome />} />
           <Route path="/epicerie/produit" element={<EpicerieProduct />}/>
           <Route path="/epicerie/produit/add" element={<EpicerieProductAdd />}/>
