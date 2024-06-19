@@ -73,7 +73,7 @@ const login = async (req, res) => {
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: '10s' } // Short expiration for testing
+      { expiresIn: '15m' }
     );
 
     const refreshToken = jwt.sign(
@@ -84,7 +84,7 @@ const login = async (req, res) => {
         },
       },
       process.env.REFRESH_TOKEN_SECRET,
-      { expiresIn: '20s' } // Short expiration for testing
+      { expiresIn: '7d' }
     );
 
     res.cookie('jwt', refreshToken, {
@@ -133,7 +133,7 @@ const refresh = async (req, res) => {
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: '40s' }
+      { expiresIn: '15m' }
     );
 
     res.json({ accessToken });

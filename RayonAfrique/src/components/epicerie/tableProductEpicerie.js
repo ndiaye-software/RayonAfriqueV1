@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo} from "react";
+import React, { useState, useEffect, useMemo, useCallback} from "react";
 import PropTypes from "prop-types";
 import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -248,35 +248,94 @@ export default function EnhancedTable() {
     setOpenDialog(false);
   };
 
-  useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
+  const redirectToLogin = () => {
+    localStorage.removeItem("accessToken");
+    toast.error("Votre session a expiré. Veuillez vous reconnecter.");
+    window.location.href = "/connexion";
+  };
 
-    if (!accessToken) {
-      setError("Access token is missing");
-      return;
+  const handleRefreshToken = useCallback(async () => {
+    try {
+      const response = await fetch(`${hostname}/api/v1/epicerie/auth/refresh`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: 'include',
+      });
+  
+      if (response.ok) {
+        const { accessToken } = await response.json();
+        localStorage.setItem("accessToken", accessToken);
+        return accessToken;
+      } else {
+        const data = await response.json();
+        if (data.message) {
+          toast.error(data.message);
+        } else {
+          toast("Erreur d'authentification");
+        }
+        redirectToLogin();
+      }
+    } catch (error) {
+      console.error("Erreur lors de la connexion :", error);
+      redirectToLogin();
     }
+  }, []);
 
-    fetch(`${hostname}/api/v1/epicerie/productEpicerie/read`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          const data = res.json();
-          throw new Error(data.message);}
-        return res.json();
-      })
-      .then((formData) => {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const accessToken = localStorage.getItem("accessToken");
+  
+        if (!accessToken) {
+          setError("Access token is missing");
+          return;
+        }
+  
+        let response = await fetch(`${hostname}/api/v1/epicerie/productEpicerie/read`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+  
+        if (response.status === 401 || response.status === 403) {
+          // Token expired or unauthorized, attempt to refresh token
+          console.log("Token expired or unauthorized. Refreshing token...");
+          const newAccessToken = await handleRefreshToken();
+  
+          if (newAccessToken) {
+            // Retry fetching data with the new access token
+            response = await fetch(`${hostname}/api/v1/epicerie/productEpicerie/read`, {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${newAccessToken}`,
+              },
+            });
+          } else {
+            throw new Error("Failed to refresh token");
+          }
+        }
+  
+        if (!response.ok) {
+          const data = await response.json();
+          throw new Error(data.message);
+        }
+  
+        const formData = await response.json();
         setFormData(formData);
         setError(null);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error fetching data:", error);
-      });
-  }, []);
+        setError("Failed to fetch data. Please try again later.");
+      }
+    };
+  
+    fetchData();
+  }, [handleRefreshToken]);
 
   // Calcul des lignes après la récupération des données
   if (formData && formData.length > 0) {

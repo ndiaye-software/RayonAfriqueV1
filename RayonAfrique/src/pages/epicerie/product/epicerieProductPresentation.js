@@ -196,6 +196,7 @@ function EpicerieProductPresentation() {
               </Box>
             </Box>
           </Stack>
+          
           <div>
             <ToastContainer theme="colored" />
           </div>

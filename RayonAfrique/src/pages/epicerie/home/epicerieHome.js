@@ -12,9 +12,6 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import Badge from "@mui/material/Badge";
-import Tooltip from "@mui/material/Tooltip";
-import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -184,38 +181,29 @@ const EpicerieHome = () => {
             </CardContent>
           </Card>
 
-          <Tooltip>
-            <Badge
-              badgeContent={
-                <NotificationsActiveIcon style={{ color: "white" }} />
-              }
-              color="error"
-            >
-              <Card
-                component={Link}
-                to={`profil`}
-                sx={{
-                  width: 275,
-                  transition: "transform 0.3s ease",
-                  "&:hover": {
-                    transform: "translateY(-10px)",
-                    boxShadow: "0px 6px 10px rgba(0, 0, 0, 0.1)",
-                    cursor: "pointer",
-                  },
-                }}
-              >
-                <CardMedia component="img" height="150" image={`${profil}`} />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    Arrangez votre profil
-                  </Typography>
-                  <Typography variant="body2" color="inherit">
-                    Arrangez votre profil pour attirer vos utilisateurs !
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Badge>
-          </Tooltip>
+          <Card
+            component={Link}
+            to={`profil`}
+            sx={{
+              width: 275,
+              transition: "transform 0.3s ease",
+              "&:hover": {
+                transform: "translateY(-10px)",
+                boxShadow: "0px 6px 10px rgba(0, 0, 0, 0.1)",
+                cursor: "pointer",
+              },
+            }}
+          >
+            <CardMedia component="img" height="150" image={`${profil}`} />
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                Arrangez votre profil
+              </Typography>
+              <Typography variant="body2" color="inherit">
+                Arrangez votre profil pour attirer vos utilisateurs !
+              </Typography>
+            </CardContent>
+          </Card>
         </div>
 
         <div>
