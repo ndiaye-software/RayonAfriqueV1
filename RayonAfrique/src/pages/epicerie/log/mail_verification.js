@@ -122,9 +122,8 @@ export default function ApproveMail() {
                 marginTop="30px"
               >
                 <Typography>
-                  Oups ! Validez votre adresse mail ! Nous vous avons envoyé un
-                  code dans votre boîte mail, Entrez ce code dans la page de
-                  vérification afin de profitez des avantages de votre compte
+                  Oups 🤭 ! Validez votre adresse mail ! Nous vous avons envoyé un
+                  code dans votre boîte mail, Entrez ce code afin de profiter des avantages de votre compte
                   RayonAfrique !
                 </Typography>
               </Box>

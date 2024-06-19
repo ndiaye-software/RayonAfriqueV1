@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Stack, Tooltip, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Navbar from "../../../components/epicerie/navbarEpicerie";
@@ -43,17 +43,87 @@ function EpicerieProductAdd() {
 
   const { idProduct } = useParams();
 
+  const redirectToLogin = () => {
+    localStorage.removeItem("accessToken");
+    toast.error("Votre session a expiré. Veuillez vous reconnecter.");
+    window.location.href = "/connexion";
+  };
+
+  const handleRefreshToken = useCallback(async () => {
+    try {
+      const response = await fetch(`${hostname}/api/v1/epicerie/auth/refresh`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: 'include',
+      });
+  
+      if (response.ok) {
+        const { accessToken } = await response.json();
+        localStorage.setItem("accessToken", accessToken);
+        return accessToken; // Return the new access token
+      } else {
+        const data = await response.json();
+        if (data.message) {
+          toast.error(data.message);
+        } else {
+          toast("Erreur d'authentification");
+        }
+        redirectToLogin();
+      }
+    } catch (error) {
+      console.error("Erreur lors de la connexion :", error);
+      redirectToLogin();
+    }
+  }, []);
+
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
-    fetch(`${hostname}/api/v1/epicerie/product/read/${idProduct}`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    })
-      .then((res) => res.json())
-      .then((data) => {
+  
+    const fetchProductData = async () => {
+      try {
+        const response = await fetch(
+          `${hostname}/api/v1/epicerie/product/read/${idProduct}`,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
+  
+        if (response.status === 401 || response.status === 403) {
+          console.log("Erreur 401 403");
+          const newAccessToken = await handleRefreshToken();
+          console.log(newAccessToken);
+          if (newAccessToken) {
+            const retryResponse = await fetch(
+              `${hostname}/api/v1/epicerie/product/read/${idProduct}`,
+              {
+                headers: { Authorization: `Bearer ${newAccessToken}` },
+              }
+            );
+            if (!retryResponse.ok) {
+              throw new Error(`Error ${retryResponse.status}: ${retryResponse.statusText}`);
+            }
+            const data = await retryResponse.json();
+            setData(data);
+            return;
+          }
+        }
+  
+        if (!response.ok) {
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+  
+        const data = await response.json();
         setData(data);
-      })
-      .catch((err) => console.log(err));
-  }, [idProduct]);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    fetchProductData();
+  }, [idProduct, handleRefreshToken]);
+  
 
   const [disponibilité, setDispo] = React.useState(options[0]?.label || "");
 

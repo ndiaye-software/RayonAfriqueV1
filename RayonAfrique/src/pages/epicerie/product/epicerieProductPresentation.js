@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Navbar from "../../../components/epicerie/navbarEpicerie";
 import Footer from "../../../components/main/footer";
 import { makeStyles } from "@material-ui/core/styles";
@@ -8,6 +8,7 @@ import hostname from "../../../hostname";
 import { useParams } from "react-router-dom";
 import { Button } from "@material-ui/core";
 import { Helmet } from "react-helmet";
+import { ToastContainer, toast } from "react-toastify";
 
 const useStyles = makeStyles(() => ({
   Button: {
@@ -35,30 +36,83 @@ function EpicerieProductPresentation() {
 
   const { idProduct } = useParams();
 
+  const redirectToLogin = () => {
+    localStorage.removeItem("accessToken");
+    toast.error("Votre session a expiré. Veuillez vous reconnecter.");
+    window.location.href = "/connexion";
+  };
+
+  const handleRefreshToken = useCallback(async () => {
+    try {
+      const response = await fetch(`${hostname}/api/v1/epicerie/auth/refresh`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        const { accessToken } = await response.json();
+        localStorage.setItem("accessToken", accessToken);
+        return accessToken; // Return the new access token
+      } else {
+        const data = await response.json();
+        if (data.message) {
+          toast.error(data.message);
+        } else {
+          toast("Erreur d'authentification");
+        }
+        redirectToLogin();
+      }
+    } catch (error) {
+      console.error("Erreur lors de la connexion :", error);
+      redirectToLogin();
+    }
+  }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const accessToken = localStorage.getItem("accessToken");
-        const response = await fetch(
+        let response = await fetch(
           `${hostname}/api/v1/epicerie/product/read/${idProduct}`,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
           }
         );
+
+        if (response.status === 401 || response.status === 403) {
+          console.log("Erreur 401 403");
+          const newAccessToken = await handleRefreshToken();
+          console.log(newAccessToken);
+          if (newAccessToken) {
+            response = await fetch(
+              `${hostname}/api/v1/epicerie/product/read/${idProduct}`,
+              {
+                headers: { Authorization: `Bearer ${newAccessToken}` },
+              }
+            );
+          } else {
+            throw new Error("Failed to refresh token");
+          }
+        }
+
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
+
         const data = await response.json();
         setData(data);
-        setLoading(false);
       } catch (error) {
         setError(error);
+      } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, [idProduct]);
+  }, [idProduct, handleRefreshToken]);
 
   const classes = useStyles();
 
@@ -142,6 +196,9 @@ function EpicerieProductPresentation() {
               </Box>
             </Box>
           </Stack>
+          <div>
+            <ToastContainer theme="colored" />
+          </div>
           <Box display="flex" justifyContent="center" marginBottom="30px">
             <Button href={`${idProduct}/add`} className={classes.Button}>
               Ajouter ce produit

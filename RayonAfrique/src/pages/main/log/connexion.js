@@ -41,14 +41,17 @@ export default function Connexion() {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: 'include',
         body: JSON.stringify(formData),
       });
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data.status);
-        const { accessToken } = data.accessToken;
+        
+        const  accessToken  = data.accessToken;
         localStorage.setItem("accessToken", accessToken);
+
+
         if ((data.status === "actif")) {
           navigate(`/epicerie`);
         }

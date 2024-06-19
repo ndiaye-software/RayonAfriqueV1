@@ -113,7 +113,7 @@ const EpicerieProduct = () => {
       <Helmet>
         <meta
           name="description"
-          content="RayonAfrique - epicerie - produit "
+          content="RayonAfrique - epicerie - produit"
         />
       </Helmet>
       <Navbar />

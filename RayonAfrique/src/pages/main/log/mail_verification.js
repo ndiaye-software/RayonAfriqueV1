@@ -133,6 +133,15 @@ export default function VerificationMail() {
                 Valider
               </Button>
             </Box>
+            <Box
+                justifyContent="space-evenly"
+                display="flex"
+                marginTop="30px"
+              >
+                <Typography>
+                  Veuillez vérifier votre boîte mail 📧 !
+                </Typography>
+              </Box>
           </Box>
         </Container>
       </Grid>

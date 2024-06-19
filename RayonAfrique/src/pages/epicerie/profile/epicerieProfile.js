@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Box, Stack, Tooltip } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import usePlacesAutocomplete from "use-places-autocomplete";
@@ -128,16 +128,7 @@ function EpicerieProfile() {
   const classes = useStyles();
 
   const [openDialog, setOpenDialog] = useState(false);
-
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-  };
-  const handleUpdate = () => {
-    setOpenDialog(true);
-  };
-
   const [errorMessage, setErrorMessage] = useState("");
-
   const [formData, setFormData] = useState({
     nameCompany: "",
     name: "",
@@ -149,26 +140,97 @@ function EpicerieProfile() {
   });
 
   useEffect(() => {
-    // Update Autocomplete value when formData.address changes
     setValue(formData.adresse);
   }, [formData.adresse, setValue]);
 
   const handleAddressChange = (_, newValue) => {
     setValue(newValue);
-    // Update the address in the formData
     setFormData((prevFormData) => ({
       ...prevFormData,
       adresse: newValue.description || "",
     }));
   };
 
+  const redirectToLogin = () => {
+    localStorage.removeItem("accessToken");
+    toast.error("Votre session a expiré. Veuillez vous reconnecter.");
+    window.location.href = "/connexion";
+  };
+
+  const handleRefreshToken = useCallback(async () => {
+    try {
+      const response = await fetch(`${hostname}/api/v1/epicerie/auth/refresh`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: 'include',
+      });
+  
+      if (response.ok) {
+        const { accessToken } = await response.json();
+        localStorage.setItem("accessToken", accessToken);
+        return accessToken; // Return the new access token
+      } else {
+        const data = await response.json();
+        if (data.message) {
+          toast.error(data.message);
+        } else {
+          toast("Erreur d'authentification");
+        }
+        redirectToLogin();
+      }
+    } catch (error) {
+      console.error("Erreur lors de la connexion :", error);
+      redirectToLogin();
+    }
+  }, []);
+
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
-    fetch(`${hostname}/api/v1/epicerie/profile/read`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    })
-      .then((res) => res.json())
-      .then((data) => {
+  
+    const fetchProfileData = async () => {
+      try {
+        const response = await fetch(
+          `${hostname}/api/v1/epicerie/profile/read`,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
+  
+        if (response.status === 401 || response.status === 403) {
+          console.log("Erreur 401 403");
+          const newAccessToken = await handleRefreshToken();
+          console.log(newAccessToken);
+          if (newAccessToken) {
+            const retryResponse = await fetch(
+              `${hostname}/api/v1/epicerie/profile/read`,
+              {
+                headers: { Authorization: `Bearer ${newAccessToken}` },
+              }
+            );
+            if (!retryResponse.ok) {
+              throw new Error(`Error ${retryResponse.status}: ${retryResponse.statusText}`);
+            }
+            const data = await retryResponse.json();
+            setFormData({
+              nameCompany: data.nameCompany || "",
+              name: data.name || "",
+              phone: data.phone || "",
+              mail: data.mail || "",
+              adresse: data.adresse || "",
+              description: data.description || "",
+              image: data.image || "",
+            });
+            return;
+          }
+        }
+  
+        if (!response.ok) {
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+  
+        const data = await response.json();
         setFormData({
           nameCompany: data.nameCompany || "",
           name: data.name || "",
@@ -178,12 +240,14 @@ function EpicerieProfile() {
           description: data.description || "",
           image: data.image || "",
         });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    fetchProfileData();
+  }, [handleRefreshToken]);
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -224,16 +288,14 @@ function EpicerieProfile() {
       } else {
         const data = await response.json();
         if (data.message) {
-          // Si le backend renvoie un message d'erreur, l'afficher sur le frontend
           toast.error(data.message);
         } else {
-          // Si le message d'erreur n'est pas disponible, afficher un message générique
-          toast.error("Erreur lors de la mise à jour du profil else");
+          toast.error("Erreur lors de la mise à jour du profil");
         }
       }
     } catch (error) {
       console.error("Erreur lors de l'envoi de la requête :", error);
-      setErrorMessage("Erreur lors de la mise à jour du profil error");
+      setErrorMessage("Erreur lors de la mise à jour du profil");
     }
   };
 
@@ -244,12 +306,12 @@ function EpicerieProfile() {
       [name]: value,
     });
   };
+
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-
     setFormData((prevFormData) => ({
       ...prevFormData,
-      image: file, // Conservez le fichier lui-même
+      image: file,
     }));
 
     const reader = new FileReader();
@@ -260,6 +322,14 @@ function EpicerieProfile() {
     if (file) {
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const handleUpdate = () => {
+    setOpenDialog(true);
   };
 
   return (
@@ -338,7 +408,6 @@ function EpicerieProfile() {
                     </Box>
 
                     <Box justifyContent="center" display="flex" width="350px">
-                      {" "}
                       <input
                         type="file"
                         accept="image/*"

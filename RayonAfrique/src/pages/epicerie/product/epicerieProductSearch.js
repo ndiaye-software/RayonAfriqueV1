@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Sidebar from "../../../components/main/SidebarShop";
 import Navbar from "../../../components/epicerie/navbarEpicerie";
 import Footer from "../../../components/main/footer";
@@ -11,6 +11,7 @@ import Product from "../../../components/epicerie/product";
 import TextField from "@mui/material/TextField";
 import hostname from "../../../hostname";
 import { Helmet } from "react-helmet";
+import { ToastContainer, toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
   Box1: {
@@ -73,19 +74,77 @@ function EpicerieProductSearch() {
   const [selectedMarque, setSelectedMarque] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
 
+  const redirectToLogin = () => {
+    localStorage.removeItem("accessToken");
+    toast.error("Votre session a expiré. Veuillez vous reconnecter.");
+    window.location.href = "/connexion";
+  };
+
+  const handleRefreshToken = useCallback(async () => {
+    try {
+      const response = await fetch(`${hostname}/api/v1/epicerie/auth/refresh`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        const { accessToken } = await response.json();
+        localStorage.setItem("accessToken", accessToken);
+        return accessToken; // Return the new access token
+      } else {
+        const data = await response.json();
+        if (data.message) {
+          toast.error(data.message);
+        } else {
+          toast("Erreur d'authentification");
+        }
+        redirectToLogin();
+      }
+    } catch (error) {
+      console.error("Erreur lors de la connexion :", error);
+      redirectToLogin();
+    }
+  }, []);
+
   useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-    fetch(`${hostname}/api/v1/epicerie/product/read`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    })
-      .then((res) => res.json())
-      .then((data) => {
+    const fetchData = async () => {
+      try {
+        const accessToken = localStorage.getItem("accessToken");
+        let response = await fetch(`${hostname}/api/v1/epicerie/product/read`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+
+        if (response.status === 401 || response.status === 403) {
+          console.log("Erreur 401 403");
+          const newAccessToken = await handleRefreshToken();
+          console.log(newAccessToken);
+          if (newAccessToken) {
+            response = await fetch(`${hostname}/api/v1/epicerie/product/read`, {
+              headers: { Authorization: `Bearer ${newAccessToken}` },
+            });
+          } else {
+            throw new Error("Failed to refresh token");
+          }
+        }
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
         setData(data);
         const names = data.map((product) => product.name);
         setProductNames(names);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, [handleRefreshToken]);
 
   const productsPerPage = 15;
   const totalPages = Math.ceil(data.length / productsPerPage);
@@ -299,6 +358,9 @@ function EpicerieProductSearch() {
               </Box>
             </Box>
           </Stack>
+          <div>
+            <ToastContainer theme="colored" />
+          </div>
           <Footer />
         </Box>
       </div>

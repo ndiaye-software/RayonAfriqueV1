@@ -15,7 +15,6 @@ import Divider from "@mui/material/Divider";
 import { makeStyles } from "@material-ui/core/styles";
 import logo from "../../images/rayonafrique.svg";
 import { BookmarkBorderOutlined, PersonOutline } from "@material-ui/icons";
-// import Badge from "@mui/material/Badge";
 import Tooltip from "@mui/material/Tooltip";
 
 const drawerWidth = 300;
@@ -202,17 +201,6 @@ export default function PrimarySearchAppBar(props) {
                 <PersonOutline />
               </Tooltip>
             </IconButton>
-            {/* <IconButton
-              className={classes.button}
-              href="/cart"
-              sx={{ color: "black" }}
-            >
-              <Tooltip title="Produits enregistrés" arrow>
-                <Badge badgeContent="0" color="error">
-                  <BookmarkBorderOutlined />
-                </Badge>
-              </Tooltip>
-            </IconButton>*/}
           </Box>
         </Toolbar>
       </AppBar>

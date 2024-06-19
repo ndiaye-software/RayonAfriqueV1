@@ -44,6 +44,7 @@ const isValidPhoneNumber = (phone) => {
 // @desc Login
 // @route POST /auth
 // @access Public
+// Login Controller
 const login = async (req, res) => {
   const { mail, password } = req.body;
 
@@ -52,21 +53,17 @@ const login = async (req, res) => {
   }
 
   try {
-    // Recherche dans le modèle User
     const foundEpicerie = await Epicerie.findOne({ mail }).exec();
 
     if (!foundEpicerie) {
-      return res
-        .status(401)
-        .json({ message: "Email ou mot de passe incorrect" });
+      return res.status(401).json({ message: "Email ou mot de passe incorrect" });
     }
 
     const match = await bcrypt.compare(password, foundEpicerie.password);
 
-    if (!match)
-      return res
-        .status(401)
-        .json({ message: "Email ou mot de passe incorrect" });
+    if (!match) {
+      return res.status(401).json({ message: "Email ou mot de passe incorrect" });
+    }
 
     const accessToken = jwt.sign(
       {
@@ -76,7 +73,7 @@ const login = async (req, res) => {
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "60m" }
+      { expiresIn: '10s' } // Short expiration for testing
     );
 
     const refreshToken = jwt.sign(
@@ -87,14 +84,13 @@ const login = async (req, res) => {
         },
       },
       process.env.REFRESH_TOKEN_SECRET,
-      { expiresIn: "7d" } // the user does not have to login each day
+      { expiresIn: '20s' } // Short expiration for testing
     );
 
-    // Créez un cookie sécurisé avec le token de rafraîchissement
-    res.cookie("jwt", refreshToken, {
+    res.cookie('jwt', refreshToken, {
       httpOnly: true,
       secure: true,
-      sameSite: "None",
+      sameSite: 'None',
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -103,43 +99,41 @@ const login = async (req, res) => {
     return res.json({ accessToken, status });
   } catch (error) {
     console.error("Erreur lors de la connexion :", error);
-    return res
-      .status(500)
-      .json({ error: "Une erreur est survenue lors de la connexion." });
+    return res.status(500).json({ error: "Une erreur est survenue lors de la connexion." });
   }
 };
 
-// @desc Refresh
-// @route GET /auth/refresh
-// @access Public - car le jeton d'accès a expiré
-const refresh = (req, res) => {
+// Refresh Controller
+const refresh = async (req, res) => {
+
   const cookies = req.cookies;
 
-  const { mail } = req.body;
-
-  if (!cookies?.jwt)
-    return res.status(401).json({ message: "Non autorisé cookies" });
+  if (!cookies?.jwt) {
+    return res.status(401).json({ message: "Non autorisé" });
+  }
 
   const refreshToken = cookies.jwt;
 
-  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err) => {
-    if (err) return res.status(403).json({ message: "Interdit" });
+  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ message: "Interdit" });
+    }
 
-    const foundEpicerie = await Epicerie.findOne({ mail }).exec();
+    const foundEpicerie = await Epicerie.findOne({ mail : decoded.UserInfo.mail }).exec();
 
-    if (!foundEpicerie)
-      return res
-        .status(401)
-        .json({ message: "Non autorisé Epicerie not found" });
+    if (!foundEpicerie) {
+      return res.status(401).json({ message: "Non autorisé" });
+    }
 
     const accessToken = jwt.sign(
       {
-        EpicerieInfo: {
+        UserInfo: {
           mail: foundEpicerie.mail,
+          id: foundEpicerie._id.toString(),
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "60m" }
+      { expiresIn: '40s' }
     );
 
     res.json({ accessToken });
