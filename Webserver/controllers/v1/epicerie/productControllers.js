@@ -222,7 +222,7 @@ const getProduct = asyncHandler(async (req, res) => {
     }
 
     const formattedProduct = product.map((product) => ({
-      _id: product._id,
+      id: product._id,
       name: product.name,
       reference: product.reference,
       image: product.image,

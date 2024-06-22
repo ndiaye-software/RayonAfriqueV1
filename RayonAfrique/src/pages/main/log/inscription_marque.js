@@ -95,10 +95,7 @@ export default function SignInSide() {
   return (
     <ThemeProvider theme={defaultTheme}>
       <Helmet>
-        <meta
-          name="description"
-          content="RayonAfrique - inscription marque"
-        />
+        <meta name="description" content="RayonAfrique - inscription marque" />
       </Helmet>
       <Navbar />
       <Grid container component="main">
@@ -119,102 +116,102 @@ export default function SignInSide() {
                   </strong>{" "}
                   pour partager votre marque sur notre plateforme et attirer une
                   toute nouvelle clientèle !
-                  <Box paddingTop="20px" paddingLeft="20px">
-                    <Grid container>
-                      <Grid
-                        item
-                        xs={2}
-                        variant="body2"
-                        color="inherit"
-                        sx={{ display: "flex", alignItems: "center" }}
-                      >
-                        <Accessibility
-                          sx={{
-                            backgroundColor: "#922B21",
-                            borderRadius: "50%",
-                            padding: "5px",
-                            fontSize: "35px",
-                            color: "white",
-                          }}
-                        />
-                      </Grid>
-                      <Grid
-                        item
-                        xs={10}
-                        variant="body2"
-                        color="inherit"
-                        sx={{ display: "flex", alignItems: "center" }}
-                      >
-                        <Typography variant="body2" color="inherit">
-                          Rendez l'achat de vos produits plus facile en les
-                          rendant plus accessibles
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                    <Grid container paddingTop="20px">
-                      <Grid
-                        item
-                        xs={2}
-                        variant="body2"
-                        color="inherit"
-                        sx={{ display: "flex", alignItems: "center" }}
-                      >
-                        <LiveTv
-                          sx={{
-                            backgroundColor: "#922B21",
-                            borderRadius: "50%",
-                            padding: "5px",
-                            fontSize: "35px",
-                            color: "white",
-                          }}
-                        />
-                      </Grid>
-                      <Grid
-                        item
-                        xs={10}
-                        variant="body2"
-                        color="inherit"
-                        sx={{ display: "flex", alignItems: "center" }}
-                      >
-                        <Typography variant="body2" color="inherit">
-                          Créer des publicités et faÎtes gagner votre marque en
-                          visibilité
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                    <Grid container paddingTop="20px">
-                      <Grid
-                        item
-                        xs={2}
-                        variant="body2"
-                        color="inherit"
-                        sx={{ display: "flex", alignItems: "center" }}
-                      >
-                        <Handshake
-                          sx={{
-                            backgroundColor: "#922B21",
-                            borderRadius: "50%",
-                            padding: "5px",
-                            fontSize: "35px",
-                            color: "white",
-                          }}
-                        />
-                      </Grid>
-                      <Grid
-                        item
-                        xs={10}
-                        variant="body2"
-                        color="inherit"
-                        sx={{ display: "flex", alignItems: "center" }}
-                      >
-                        <Typography variant="body2" color="inherit">
-                          Contacter nos épiceries partenaires et créer de
-                          nouveaux partenariats
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Box>
                 </Typography>
+                <Box paddingTop="20px" paddingLeft="20px">
+                  <Grid container>
+                    <Grid
+                      item
+                      xs={2}
+                      variant="body2"
+                      color="inherit"
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      <Accessibility
+                        sx={{
+                          backgroundColor: "#922B21",
+                          borderRadius: "50%",
+                          padding: "5px",
+                          fontSize: "35px",
+                          color: "white",
+                        }}
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      xs={10}
+                      variant="body2"
+                      color="inherit"
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      <Typography variant="body2" color="inherit">
+                        Rendez l'achat de vos produits plus facile en les
+                        rendant plus accessibles
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                  <Grid container paddingTop="20px">
+                    <Grid
+                      item
+                      xs={2}
+                      variant="body2"
+                      color="inherit"
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      <LiveTv
+                        sx={{
+                          backgroundColor: "#922B21",
+                          borderRadius: "50%",
+                          padding: "5px",
+                          fontSize: "35px",
+                          color: "white",
+                        }}
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      xs={10}
+                      variant="body2"
+                      color="inherit"
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      <Typography variant="body2" color="inherit">
+                        Créer des publicités et faÎtes gagner votre marque en
+                        visibilité
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                  <Grid container paddingTop="20px">
+                    <Grid
+                      item
+                      xs={2}
+                      variant="body2"
+                      color="inherit"
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      <Handshake
+                        sx={{
+                          backgroundColor: "#922B21",
+                          borderRadius: "50%",
+                          padding: "5px",
+                          fontSize: "35px",
+                          color: "white",
+                        }}
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      xs={10}
+                      variant="body2"
+                      color="inherit"
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      <Typography variant="body2" color="inherit">
+                        Contacter nos épiceries partenaires et créer de nouveaux
+                        partenariats
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Box>
               </CardContent>
               <Grid
                 display="flex"

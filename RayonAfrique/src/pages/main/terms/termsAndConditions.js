@@ -232,7 +232,7 @@ const TermsAndConditions = () => {
                 partenariats.
               </Typography>
             </Box>
-            <Box className={classes.text}>
+            {/*<Box className={classes.text}>
               <Typography variant="h6">2.3 Fournisseurs</Typography>
             </Box>
             <Box className={classes.text}>
@@ -242,7 +242,7 @@ const TermsAndConditions = () => {
                 des partenariats. Les informations fournies par les fournisseurs
                 doivent être précises et à jour.
               </Typography>
-            </Box>
+            </Box>*/}
             <Box id="user" className={classes.text}>
               <Typography variant="h5">3. Compte Utilisateur</Typography>
             </Box>
@@ -394,7 +394,7 @@ const TermsAndConditions = () => {
               <Typography variant="body2">
                 Si vous avez des questions ou des préoccupations concernant les
                 présentes conditions, veuillez nous contacter à l'adresse
-                suivante : rayonAfrqiue@gmail.com.
+                suivante : rayon.afrique.shop@gmail.com.
               </Typography>
             </Box>
           </Grid>

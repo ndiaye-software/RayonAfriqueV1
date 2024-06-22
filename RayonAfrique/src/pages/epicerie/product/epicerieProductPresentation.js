@@ -83,9 +83,9 @@ function EpicerieProductPresentation() {
         );
 
         if (response.status === 401 || response.status === 403) {
-          console.log("Erreur 401 403");
+          
           const newAccessToken = await handleRefreshToken();
-          console.log(newAccessToken);
+          
           if (newAccessToken) {
             response = await fetch(
               `${hostname}/api/v1/epicerie/product/read/${idProduct}`,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback} from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
 import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -14,7 +14,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import { visuallyHidden } from "@mui/utils";
-import { Link } from "react-router-dom";
+import { Link as MuiLink} from "react-router-dom";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
@@ -29,6 +29,12 @@ import { Close } from "@material-ui/icons";
 import { Grid } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { styled } from "@mui/material/styles";
+
+const Link = styled(MuiLink)(({ theme }) => ({
+  color: "inherit",
+  textDecoration: "none",
+}));
 
 export function createData(
   id,
@@ -261,9 +267,9 @@ export default function EnhancedTable() {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
       });
-  
+
       if (response.ok) {
         const { accessToken } = await response.json();
         localStorage.setItem("accessToken", accessToken);
@@ -287,44 +293,49 @@ export default function EnhancedTable() {
     const fetchData = async () => {
       try {
         const accessToken = localStorage.getItem("accessToken");
-  
+
         if (!accessToken) {
           setError("Access token is missing");
           return;
         }
-  
-        let response = await fetch(`${hostname}/api/v1/epicerie/productEpicerie/read`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-  
+
+        let response = await fetch(
+          `${hostname}/api/v1/epicerie/productEpicerie/read`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+
         if (response.status === 401 || response.status === 403) {
           // Token expired or unauthorized, attempt to refresh token
-          console.log("Token expired or unauthorized. Refreshing token...");
           const newAccessToken = await handleRefreshToken();
-  
+
           if (newAccessToken) {
             // Retry fetching data with the new access token
-            response = await fetch(`${hostname}/api/v1/epicerie/productEpicerie/read`, {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${newAccessToken}`,
-              },
-            });
+            response = await fetch(
+              `${hostname}/api/v1/epicerie/productEpicerie/read`,
+              {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${newAccessToken}`,
+                },
+              }
+            );
           } else {
             throw new Error("Failed to refresh token");
           }
         }
-  
+
         if (!response.ok) {
           const data = await response.json();
           throw new Error(data.message);
         }
-  
+
         const formData = await response.json();
         setFormData(formData);
         setError(null);
@@ -333,7 +344,7 @@ export default function EnhancedTable() {
         setError("Failed to fetch data. Please try again later.");
       }
     };
-  
+
     fetchData();
   }, [handleRefreshToken]);
 
@@ -508,14 +519,8 @@ export default function EnhancedTable() {
                         }}
                       />
                     </TableCell>
-                    <TableCell
-                      component={Link}
-                      to={`update/${row.id}`}
-                      width="200px"
-                      align="left"
-                    >
-                      {" "}
-                      {row.nom}
+                    <TableCell width="200px" align="left">
+                      <Link to={`update/${row.id}`}>{row.nom}</Link>
                     </TableCell>
                     <TableCell width="200px" align="left">
                       {" "}

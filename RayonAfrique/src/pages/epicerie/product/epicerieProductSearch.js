@@ -118,9 +118,8 @@ function EpicerieProductSearch() {
         });
 
         if (response.status === 401 || response.status === 403) {
-          console.log("Erreur 401 403");
           const newAccessToken = await handleRefreshToken();
-          console.log(newAccessToken);
+
           if (newAccessToken) {
             response = await fetch(`${hostname}/api/v1/epicerie/product/read`, {
               headers: { Authorization: `Bearer ${newAccessToken}` },
@@ -271,7 +270,7 @@ function EpicerieProductSearch() {
                   </Grid>
                 </Box>
               </Box>
-              <Grid xs={12} container spacing={3}>
+              <Grid item xs={12} container spacing={3}>
                 {filteredAndSearchedProducts.length === 0 ? (
                   <Grid
                     display="flex"
@@ -355,6 +354,21 @@ function EpicerieProductSearch() {
                 >
                   Next
                 </Button>
+              </Box>
+              <Box display="flex" justifyContent="center" marginTop="45px">
+                <Box maxWidth="800px">
+                  <Typography variant="body2" fontWeight={700}>
+                    Bienvenue sur la page de découverte de produits de
+                    RayonAfrique. Explorez notre vaste sélection de produits
+                    africains pour enrichir votre offre et attirer davantage de
+                    clients. Nous vous aidons à trouver les meilleurs produits
+                    disponibles sur le marché africain, afin que vous puissiez
+                    proposer des nouveautés et des classiques à vos clients, et
+                    ainsi améliorer votre épicerie. Profitez de notre plateforme
+                    pour accéder facilement à des produits authentiques et de
+                    qualité, et faire rayonner votre épicerie.
+                  </Typography>
+                </Box>
               </Box>
             </Box>
           </Stack>

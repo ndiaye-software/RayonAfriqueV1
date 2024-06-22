@@ -46,59 +46,67 @@ export default function Pricing() {
           {tiers.map((tier) => (
             // Enterprise card is full width at sm breakpoint
             <Grid item key={tier.title} xs={12} sm={6} md={4}>
-              <Card display="flex" justifyContent="space-evenly">
-                <CardHeader
-                  title={tier.title}
-                  subheader={tier.subheader}
-                  titleTypographyProps={{ align: "center" }}
-                  subheaderTypographyProps={{
-                    align: "center",
-                  }}
+              <Card>
+                <Box
                   sx={{
-                    backgroundColor: (theme) =>
-                      theme.palette.mode === "light"
-                        ? theme.palette.grey[200]
-                        : theme.palette.grey[700],
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
                   }}
-                />
-                <CardContent>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "baseline",
-                      mb: 2,
+                >
+                  <CardHeader
+                    title={tier.title}
+                    subheader={tier.subheader}
+                    titleTypographyProps={{ align: "center" }}
+                    subheaderTypographyProps={{
+                      align: "center",
                     }}
-                  >
-                    <Typography
-                      component="h2"
-                      variant="h3"
-                      color="text.primary"
+                    sx={{
+                      backgroundColor: (theme) =>
+                        theme.palette.mode === "light"
+                          ? theme.palette.grey[200]
+                          : theme.palette.grey[700],
+                    }}
+                  />
+                  <CardContent>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "baseline",
+                        mb: 2,
+                      }}
                     >
-                      {tier.price}€
-                    </Typography>
-                    <Typography variant="h6" color="text.secondary">
-                      /mois
-                    </Typography>
-                  </Box>
-                  <ul>
-                    {tier.description.map((line) => (
                       <Typography
-                        component="li"
-                        variant="subtitle1"
-                        align="center"
-                        key={line}
+                        component="h2"
+                        variant="h3"
+                        color="text.primary"
                       >
-                        {line}
+                        {tier.price}€
                       </Typography>
-                    ))}
-                  </ul>
-                </CardContent>
-                <CardActions>
-                  <Button fullWidth variant={tier.buttonVariant}>
-                    {tier.buttonText}
-                  </Button>
-                </CardActions>
+                      <Typography variant="h6" color="text.secondary">
+                        /mois
+                      </Typography>
+                    </Box>
+                    <ul>
+                      {tier.description.map((line) => (
+                        <Typography
+                          component="li"
+                          variant="subtitle1"
+                          align="center"
+                          key={line}
+                        >
+                          {line}
+                        </Typography>
+                      ))}
+                    </ul>
+                  </CardContent>
+                  <CardActions>
+                    <Button fullWidth variant={tier.buttonVariant}>
+                      {tier.buttonText}
+                    </Button>
+                  </CardActions>
+                </Box>
               </Card>
             </Grid>
           ))}

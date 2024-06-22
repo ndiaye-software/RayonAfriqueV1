@@ -15,8 +15,8 @@ import Divider from "@mui/material/Divider";
 import { makeStyles } from "@material-ui/core/styles";
 import { LogoutOutlined } from "@mui/icons-material";
 import logo from "../../images/rayonafrique.svg";
-import { useNavigate } from "react-router-dom";
-import hostname from "../../hostname"; // Assurez-vous que hostname contient l'URL de base de votre backend
+import { Link, useNavigate } from 'react-router-dom';
+import hostname from "../../hostname";
 const drawerWidth = 300;
 
 const useStyles = makeStyles((theme) => ({
@@ -44,14 +44,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function PrimarySearchAppBar(props) {
+const PrimarySearchAppBar = (props) => {
   const navigate = useNavigate();
-
   const Logout = async (event) => {
     event.preventDefault();
     const accessToken = localStorage.getItem("accessToken");
     try {
-      const response = await fetch(`${hostname}/api/v1/user/auth/logout`, { // Vérifiez bien cette URL
+      const response = await fetch(`${hostname}/api/v1/user/auth/logout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -79,7 +78,6 @@ export default function PrimarySearchAppBar(props) {
 
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
-
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
@@ -90,49 +88,40 @@ export default function PrimarySearchAppBar(props) {
         variant="h6"
         sx={{ padding: 2, color: "#922B21", fontWeight: "bold" }}
       >
-        <a href={`/epicerie/`}>
-          <img height="90px" src={`${logo}`} alt="logo" />
-        </a>
+        <Link to="/epicerie/">
+          <img height="90px" src={logo} alt="logo" />
+        </Link>
       </Typography>
       <Divider />
       <List>
-        <a href={`/epicerie/produit`}>
-          <ListItem disablePadding>
-            <ListItemButton sx={{ textAlign: "left" }}>
-              <ListItemText sx={{ color: "black" }} primary="Produit" />
-            </ListItemButton>
-          </ListItem>
-        </a>
+        <ListItem disablePadding>
+          <ListItemButton component={Link} to="/epicerie/produit" sx={{ textAlign: "left" }}>
+            <ListItemText sx={{ color: "black" }} primary="Produit" />
+          </ListItemButton>
+        </ListItem>
 
-        <a href={`/epiceries/profil`}>
-          <ListItem disablePadding>
-            <ListItemButton sx={{ textAlign: "left" }}>
-              <ListItemText sx={{ color: "black" }} primary="Profil" />
-            </ListItemButton>
-          </ListItem>
-        </a>
+        <ListItem disablePadding>
+          <ListItemButton component={Link} to="/epiceries/profil" sx={{ textAlign: "left" }}>
+            <ListItemText sx={{ color: "black" }} primary="Profil" />
+          </ListItemButton>
+        </ListItem>
 
-        <a href={`/epicerie/contact`}>
-          <ListItem disablePadding>
-            <ListItemButton sx={{ textAlign: "left" }}>
-              <ListItemText sx={{ color: "black" }} primary="Contact" />
-            </ListItemButton>
-          </ListItem>
-        </a>
+        <ListItem disablePadding>
+          <ListItemButton component={Link} to="/epicerie/contact" sx={{ textAlign: "left" }}>
+            <ListItemText sx={{ color: "black" }} primary="Contact" />
+          </ListItemButton>
+        </ListItem>
 
-        <a href={`/epicerie/logout`}>
-          <ListItem disablePadding>
-            <ListItemButton sx={{ textAlign: "left" }}>
-              <ListItemText sx={{ color: "black" }} primary="Déconnexion" />
-            </ListItemButton>
-          </ListItem>
-        </a>
+        <ListItem disablePadding>
+          <ListItemButton component={Link} to="/epicerie/logout" sx={{ textAlign: "left" }}>
+            <ListItemText sx={{ color: "black" }} primary="Déconnexion" />
+          </ListItemButton>
+        </ListItem>
       </List>
     </Box>
   );
 
-  const container =
-    window !== undefined ? () => window().document.body : undefined;
+  const container = window !== undefined ? () => window().document.body : undefined;
 
   const classes = useStyles();
 
@@ -164,29 +153,32 @@ export default function PrimarySearchAppBar(props) {
             component="div"
             sx={{ display: { xs: "none", md: "flex" } }}
           >
-            <a href={`/epicerie`}>
-              <img height="90px" src={`${logo}`} alt="logo" />
-            </a>
+            <Link to="/epicerie">
+              <img height="90px" src={logo} alt="logo" />
+            </Link>
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <Button
               className={classes.button}
-              href={`/epicerie/produit`}
+              component={Link}
+              to="/epicerie/produit"
               sx={{ color: "black" }}
             >
               Produit
             </Button>
             <Button
               className={classes.button}
-              href={`/epicerie/profil`}
+              component={Link}
+              to="/epicerie/profil"
               sx={{ color: "black" }}
             >
               Profil
             </Button>
             <Button
               className={classes.button}
-              href={`/epicerie/contact`}
+              component={Link}
+              to="/epicerie/contact"
               sx={{ color: "black" }}
             >
               Contact
@@ -222,3 +214,5 @@ export default function PrimarySearchAppBar(props) {
     </>
   );
 }
+
+export default PrimarySearchAppBar;

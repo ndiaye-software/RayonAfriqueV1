@@ -41,10 +41,7 @@ const About = () => {
   return (
     <div>
       <Helmet>
-        <meta
-          name="description"
-          content="RayonAfrique - A propos"
-        />
+        <meta name="description" content="RayonAfrique - A propos" />
       </Helmet>
       <Navbar />
 
@@ -72,10 +69,17 @@ const About = () => {
             Notre Equipe
           </Typography>
           <Typography variant="body1">
-            Notre équipe est composée de professionnels passionnés et dévoués à
-            mettre en avant la richesse des produits africains. Nous travaillons
+            Notre équipe, composée de professionnels passionnés et dévoués, est
+            déterminée à mettre en avant la richesse des produits africains.
+            Originaires du continent africain, nous comprenons les défis liés à
+            la promotion et aux coûts de fabrication de ces produits, ainsi que
+            l'enthousiasme des entrepreneurs africains dans ce domaine. En tant
+            que jeunes ingénieurs informaticiens dynamiques, notre objectif est
+            de concevoir une plateforme qui permet à chaque épicerie et marque
+            de mettre en valeur leurs produits uniques. Nous travaillons
             ensemble pour vous offrir la meilleure expérience possible en vous
-            connectant avec des produits de qualité.
+            connectant avec des produits de qualité et en facilitant la
+            découverte de produits africains innovants par nos clients.
           </Typography>
         </Box>
         <Box className={classes.imageBox}>

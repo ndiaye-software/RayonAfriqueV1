@@ -253,9 +253,12 @@ const Home = () => {
   return (
     <div>
       <Helmet>
-        <meta name="description" content="RayonAfrique - Produits et épiceries africains" />
+        <meta
+          name="description"
+          content="RayonAfrique - Produits et épiceries africains"
+        />
       </Helmet>
-      
+
       <Navbar />
 
       <Box className={classes.banner}>
@@ -439,103 +442,102 @@ const Home = () => {
               <Typography variant="body2" color="inherit">
                 Vous êtes une épicerie spécialisée sur la vente produits
                 alimentaires d'origines africains ? Faites-vous connaître et
-                attirez de nouveaux clients grâce à notre plateforme !
-                <Box paddingTop="20px" paddingLeft="20px">
-                  <Grid container>
-                    <Grid
-                      item
-                      xs={2}
-                      variant="body2"
-                      color="inherit"
-                      sx={{ display: "flex", alignItems: "center" }}
-                    >
-                      <Accessibility
-                        sx={{
-                          backgroundColor: "#922B21",
-                          borderRadius: "50%",
-                          padding: "5px",
-                          fontSize: "35px",
-                          color: "white",
-                        }}
-                      />
-                    </Grid>
-                    <Grid
-                      item
-                      xs={10}
-                      variant="body2"
-                      color="inherit"
-                      sx={{ display: "flex", alignItems: "center" }}
-                    >
-                      <Typography variant="body2" color="inherit">
-                        Gagner en clientèle en rendant votre épicerie plus
-                        accessible
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  <Grid container paddingTop="20px">
-                    <Grid
-                      item
-                      xs={2}
-                      variant="body2"
-                      color="inherit"
-                      sx={{ display: "flex", alignItems: "center" }}
-                    >
-                      <ShareLocation
-                        sx={{
-                          backgroundColor: "#922B21",
-                          borderRadius: "50%",
-                          padding: "5px",
-                          fontSize: "35px",
-                          color: "white",
-                        }}
-                      />
-                    </Grid>
-                    <Grid
-                      item
-                      xs={10}
-                      variant="body2"
-                      color="inherit"
-                      sx={{ display: "flex", alignItems: "center" }}
-                    >
-                      <Typography variant="body2" color="inherit">
-                        Exposer votre épicerie aux amateurs de produits
-                        africains
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  <Grid container paddingTop="20px">
-                    <Grid
-                      item
-                      xs={2}
-                      variant="body2"
-                      color="inherit"
-                      sx={{ display: "flex", alignItems: "center" }}
-                    >
-                      <Handshake
-                        sx={{
-                          backgroundColor: "#922B21",
-                          borderRadius: "50%",
-                          padding: "5px",
-                          fontSize: "35px",
-                          color: "white",
-                        }}
-                      />
-                    </Grid>
-                    <Grid
-                      item
-                      xs={10}
-                      variant="body2"
-                      color="inherit"
-                      sx={{ display: "flex", alignItems: "center" }}
-                    >
-                      <Typography variant="body2" color="inherit">
-                        Nouez de nouveaux partenariats avec les marques de
-                        produits africains
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Box>
+                attirez de nouveaux clients grâce à notre plateforme !{" "}
               </Typography>
+              <Box paddingTop="20px" paddingLeft="20px">
+                <Grid container>
+                  <Grid
+                    item
+                    xs={2}
+                    variant="body2"
+                    color="inherit"
+                    sx={{ display: "flex", alignItems: "center" }}
+                  >
+                    <Accessibility
+                      sx={{
+                        backgroundColor: "#922B21",
+                        borderRadius: "50%",
+                        padding: "5px",
+                        fontSize: "35px",
+                        color: "white",
+                      }}
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    xs={10}
+                    variant="body2"
+                    color="inherit"
+                    sx={{ display: "flex", alignItems: "center" }}
+                  >
+                    <Typography variant="body2" color="inherit">
+                      Gagner en clientèle en rendant votre épicerie plus
+                      accessible
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid container paddingTop="20px">
+                  <Grid
+                    item
+                    xs={2}
+                    variant="body2"
+                    color="inherit"
+                    sx={{ display: "flex", alignItems: "center" }}
+                  >
+                    <ShareLocation
+                      sx={{
+                        backgroundColor: "#922B21",
+                        borderRadius: "50%",
+                        padding: "5px",
+                        fontSize: "35px",
+                        color: "white",
+                      }}
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    xs={10}
+                    variant="body2"
+                    color="inherit"
+                    sx={{ display: "flex", alignItems: "center" }}
+                  >
+                    <Typography variant="body2" color="inherit">
+                      Exposer votre épicerie aux amateurs de produits africains
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid container paddingTop="20px">
+                  <Grid
+                    item
+                    xs={2}
+                    variant="body2"
+                    color="inherit"
+                    sx={{ display: "flex", alignItems: "center" }}
+                  >
+                    <Handshake
+                      sx={{
+                        backgroundColor: "#922B21",
+                        borderRadius: "50%",
+                        padding: "5px",
+                        fontSize: "35px",
+                        color: "white",
+                      }}
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    xs={10}
+                    variant="body2"
+                    color="inherit"
+                    sx={{ display: "flex", alignItems: "center" }}
+                  >
+                    <Typography variant="body2" color="inherit">
+                      Nouez de nouveaux partenariats avec les marques de
+                      produits africains
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Box>
             </CardContent>
             <Grid
               display="flex"
@@ -569,101 +571,101 @@ const Home = () => {
                 </strong>{" "}
                 pour partager votre marque sur notre plateforme et attirer une
                 toute nouvelle clientèle !
-                <Box paddingTop="20px" paddingLeft="20px">
-                  <Grid container>
-                    <Grid
-                      item
-                      xs={2}
-                      variant="body2"
-                      color="inherit"
-                      sx={{ display: "flex", alignItems: "center" }}
-                    >
-                      <Accessibility
-                        sx={{
-                          backgroundColor: "#922B21",
-                          borderRadius: "50%",
-                          padding: "5px",
-                          fontSize: "35px",
-                          color: "white",
-                        }}
-                      />
-                    </Grid>
-                    <Grid
-                      item
-                      xs={10}
-                      variant="body2"
-                      color="inherit"
-                      sx={{ display: "flex", alignItems: "center" }}
-                    >
-                      <Typography variant="body2" color="inherit">
-                        Rendez l'achat de vos produits plus facile en les
-                        rendant plus accessibles
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  <Grid container paddingTop="20px">
-                    <Grid
-                      item
-                      xs={2}
-                      variant="body2"
-                      color="inherit"
-                      sx={{ display: "flex", alignItems: "center" }}
-                    >
-                      <LiveTv
-                        sx={{
-                          backgroundColor: "#922B21",
-                          borderRadius: "50%",
-                          padding: "5px",
-                          fontSize: "35px",
-                          color: "white",
-                        }}
-                      />
-                    </Grid>
-                    <Grid
-                      item
-                      xs={10}
-                      variant="body2"
-                      color="inherit"
-                      sx={{ display: "flex", alignItems: "center" }}
-                    >
-                      <Typography variant="body2" color="inherit">
-                        Créer des publicités et faÎtes gagner votre marque en
-                        visibilité
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  <Grid container paddingTop="20px">
-                    <Grid
-                      item
-                      xs={2}
-                      variant="body2"
-                      color="inherit"
-                      sx={{ display: "flex", alignItems: "center" }}
-                    >
-                      <Handshake
-                        sx={{
-                          backgroundColor: "#922B21",
-                          borderRadius: "50%",
-                          padding: "5px",
-                          fontSize: "35px",
-                          color: "white",
-                        }}
-                      />
-                    </Grid>
-                    <Grid
-                      item
-                      xs={10}
-                      variant="body2"
-                      color="inherit"
-                      sx={{ display: "flex", alignItems: "center" }}
-                    >
-                      <Typography variant="body2" color="inherit">
-                        Nouez des partenariats avec nos épiceries partenaires
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Box>
               </Typography>
+              <Box paddingTop="20px" paddingLeft="20px">
+                <Grid container>
+                  <Grid
+                    item
+                    xs={2}
+                    variant="body2"
+                    color="inherit"
+                    sx={{ display: "flex", alignItems: "center" }}
+                  >
+                    <Accessibility
+                      sx={{
+                        backgroundColor: "#922B21",
+                        borderRadius: "50%",
+                        padding: "5px",
+                        fontSize: "35px",
+                        color: "white",
+                      }}
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    xs={10}
+                    variant="body2"
+                    color="inherit"
+                    sx={{ display: "flex", alignItems: "center" }}
+                  >
+                    <Typography variant="body2" color="inherit">
+                      Rendez l'achat de vos produits plus facile en les rendant
+                      plus accessibles
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid container paddingTop="20px">
+                  <Grid
+                    item
+                    xs={2}
+                    variant="body2"
+                    color="inherit"
+                    sx={{ display: "flex", alignItems: "center" }}
+                  >
+                    <LiveTv
+                      sx={{
+                        backgroundColor: "#922B21",
+                        borderRadius: "50%",
+                        padding: "5px",
+                        fontSize: "35px",
+                        color: "white",
+                      }}
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    xs={10}
+                    variant="body2"
+                    color="inherit"
+                    sx={{ display: "flex", alignItems: "center" }}
+                  >
+                    <Typography variant="body2" color="inherit">
+                      Créer des publicités et faÎtes gagner votre marque en
+                      visibilité
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid container paddingTop="20px">
+                  <Grid
+                    item
+                    xs={2}
+                    variant="body2"
+                    color="inherit"
+                    sx={{ display: "flex", alignItems: "center" }}
+                  >
+                    <Handshake
+                      sx={{
+                        backgroundColor: "#922B21",
+                        borderRadius: "50%",
+                        padding: "5px",
+                        fontSize: "35px",
+                        color: "white",
+                      }}
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    xs={10}
+                    variant="body2"
+                    color="inherit"
+                    sx={{ display: "flex", alignItems: "center" }}
+                  >
+                    <Typography variant="body2" color="inherit">
+                      Nouez des partenariats avec nos épiceries partenaires
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Box>
             </CardContent>
             <Grid
               display="flex"

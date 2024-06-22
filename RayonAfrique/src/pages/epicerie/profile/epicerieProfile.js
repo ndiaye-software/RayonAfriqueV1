@@ -164,9 +164,9 @@ function EpicerieProfile() {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
       });
-  
+
       if (response.ok) {
         const { accessToken } = await response.json();
         localStorage.setItem("accessToken", accessToken);
@@ -188,7 +188,7 @@ function EpicerieProfile() {
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
-  
+
     const fetchProfileData = async () => {
       try {
         const response = await fetch(
@@ -197,11 +197,10 @@ function EpicerieProfile() {
             headers: { Authorization: `Bearer ${accessToken}` },
           }
         );
-  
+
         if (response.status === 401 || response.status === 403) {
-          console.log("Erreur 401 403");
           const newAccessToken = await handleRefreshToken();
-          console.log(newAccessToken);
+
           if (newAccessToken) {
             const retryResponse = await fetch(
               `${hostname}/api/v1/epicerie/profile/read`,
@@ -210,7 +209,9 @@ function EpicerieProfile() {
               }
             );
             if (!retryResponse.ok) {
-              throw new Error(`Error ${retryResponse.status}: ${retryResponse.statusText}`);
+              throw new Error(
+                `Error ${retryResponse.status}: ${retryResponse.statusText}`
+              );
             }
             const data = await retryResponse.json();
             setFormData({
@@ -225,11 +226,11 @@ function EpicerieProfile() {
             return;
           }
         }
-  
+
         if (!response.ok) {
           throw new Error(`Error ${response.status}: ${response.statusText}`);
         }
-  
+
         const data = await response.json();
         setFormData({
           nameCompany: data.nameCompany || "",
@@ -244,10 +245,10 @@ function EpicerieProfile() {
         console.error(error);
       }
     };
-  
+
     fetchProfileData();
   }, [handleRefreshToken]);
-  
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -499,6 +500,11 @@ function EpicerieProfile() {
                       )}
                       onInputChange={(event, newValue) => setValue(newValue)}
                       onChange={handleAddressChange}
+                      isOptionEqualToValue={(option, value) =>
+                        value
+                          ? option.description === value.description
+                          : option.description === ""
+                      }
                     />
                   </Grid>
                 </Box>

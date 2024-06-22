@@ -146,7 +146,10 @@ function Shop() {
     <>
       <div>
         <Helmet>
-          <meta name="description" content="RayonAfrique - Recherche de produits africains" />
+          <meta
+            name="description"
+            content="RayonAfrique - Recherche de produits africains"
+          />
         </Helmet>
         <Box backgroundColor="#f9fafb">
           <Navbar />
@@ -283,6 +286,22 @@ function Shop() {
                 >
                   Next
                 </Button>
+              </Box>
+              <Box display="flex" justifyContent="center" marginTop="45px">
+                <Box maxWidth="800px">
+                  <Typography variant="body2" fontWeight={700}>
+                    Découvrez RayonAfrique, votre destination en ligne pour des
+                    produits africains uniques et authentiques. Sur notre page
+                    de découverte de produits, trouvez tous les produits
+                    disponibles sur le marché africain, avec une multitude
+                    d'offres telles que le bissap rafraîchissant, le café touba
+                    aromatique, le lakh, le dégué crémeux, la pâte d'arachide
+                    savoureuse, le bâton de manioc, le zanban ... Nos
+                    épiceries partenaires vous offrent une richesse de saveurs
+                    et de produits que vous ne trouverez pas dans les grandes
+                    surfaces. Avec RayonAfrique, soyez plus proche de vos produits préférés !
+                  </Typography>
+                </Box>
               </Box>
             </Box>
           </Stack>

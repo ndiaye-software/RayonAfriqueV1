@@ -59,7 +59,6 @@ function ShopDetail() {
         }
         const data = await response.json();
         setData(data);
-        console.log(data);
         setLoading(false);
       } catch (error) {
         setError(error);
@@ -204,6 +203,25 @@ function ShopDetail() {
                     </Grid>
                   ))}
                 </Grid>
+              </Box>
+              <Box display="flex" justifyContent="center" marginTop="45px">
+                <Box maxWidth="1000px">
+                  <Typography variant="body2" fontWeight={700}>
+                    Chez RayonAfrique, nous sommes fiers de vous présenter notre
+                    vaste réseau d'épiceries partenaires, dédiées à vous offrir
+                    les meilleurs produits africains. Grâce à notre plateforme,
+                    trouver les épiceries vendant le produit que vous recherchez
+                    n'a jamais été aussi simple. Que vous cherchiez du bissap,
+                    du café touba ou tout autre délice africain, nos épiceries
+                    partenaires vous garantissent des produits authentiques et
+                    de qualité. Explorez facilement notre réseau et découvrez de
+                    nouvelles épiceries près de chez vous, toutes engagées à
+                    vous fournir une expérience de shopping unique. Avec
+                    RayonAfrique, accédez à un monde de saveurs africaines en
+                    quelques clics seulement, tout en soutenant nos épiceries
+                    locales.
+                  </Typography>
+                </Box>
               </Box>
               <Box
                 sx={{

@@ -110,7 +110,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       top: "50%",
       left: "50%",
-      justifyContent: "center",
+      textAlign: "center", // Center the text
     },
   },
   section2: {
@@ -141,7 +141,11 @@ const EpicerieHome = () => {
       <section className={classes.banner}>
         <div className={classes.bannerImg}></div>
         <div className={classes.bannerText}>
-          <Typography variant="h1" className={classes.section1_div_h1}>
+          <Typography
+            component="span"
+            variant="h1"
+            className={classes.section1_div_h1}
+          >
             RayonAfrique
           </Typography>
         </div>

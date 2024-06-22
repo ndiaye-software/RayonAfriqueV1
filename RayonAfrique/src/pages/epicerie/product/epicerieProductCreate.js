@@ -234,7 +234,6 @@ function EpicerieProductCreate() {
         >
           <Stack direction="row" justifyContent="space-between">
             <Box
-              container
               flex={4}
               p={{ xs: 0, md: 2 }}
               sx={{ marginBottom: "60px" }}
@@ -245,13 +244,13 @@ function EpicerieProductCreate() {
                 paddingLeft="50px"
                 paddingRight="50px"
               >
-                <Grid container wrap spacing="30px">
+                <Grid container wrap="wrap" spacing={5}>
                   <Grid
+                    item
                     md={7}
                     xs={12}
-                    justifyContent="center"
                     display="flex"
-                    flexDirection="column"
+                    flexdirection="column"
                   >
                     <Box>
                       <img
@@ -284,16 +283,14 @@ function EpicerieProductCreate() {
                   </Grid>
 
                   <Grid
+                    item
                     md={5}
                     xs={12}
                     padding="20px"
-                    maxWidth="600px"
-                    flexDirection="column"
-                    display="flex"
                     spacing={2}
                     container
                   >
-                    <Grid item xs={12} fullWidth>
+                    <Grid item xs={12}>
                       <TextField
                         label="Nom du produit"
                         variant="outlined"
