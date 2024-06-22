@@ -163,7 +163,7 @@ function EpicerieProductCreate() {
 
   const redirectToLogin = () => {
     localStorage.removeItem("accessToken");
-    toast.error("Votre session a expiré. Veuillez vous reconnecter.");
+    
     window.location.href = "/connexion";
   };
 
