@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Stack } from "@mui/material";
 import Box from "@mui/material/Box";
 import Navbar from "../../../components/epicerie/navbarEpicerie";
@@ -161,6 +161,54 @@ function EpicerieProductCreate() {
     });
   };
 
+  const redirectToLogin = () => {
+    localStorage.removeItem("accessToken");
+    toast.error("Votre session a expiré. Veuillez vous reconnecter.");
+    window.location.href = "/connexion";
+  };
+
+  const handleRefreshToken = useCallback(async () => {
+    try {
+      const response = await fetch(`${hostname}/api/v1/epicerie/auth/refresh`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        const { accessToken } = await response.json();
+        localStorage.setItem("accessToken", accessToken);
+        return accessToken;
+      } else {
+        const data = await response.json();
+        if (data.message) {
+          toast.error(data.message);
+        } else {
+          toast("Erreur d'authentification");
+        }
+        redirectToLogin();
+      }
+    } catch (error) {
+      console.error("Erreur lors de la connexion :", error);
+      redirectToLogin();
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+
+      if (!accessToken) {
+        redirectToLogin();
+        return;
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }, [handleRefreshToken]);
+
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -233,11 +281,7 @@ function EpicerieProductCreate() {
           onSubmit={handleSubmit}
         >
           <Stack direction="row" justifyContent="space-between">
-            <Box
-              flex={4}
-              p={{ xs: 0, md: 2 }}
-              sx={{ marginBottom: "60px" }}
-            >
+            <Box flex={4} p={{ xs: 0, md: 2 }} sx={{ marginBottom: "60px" }}>
               <Box
                 marginBottom="35px"
                 marginTop="35px"

@@ -80,6 +80,11 @@ function EpicerieProductAdd() {
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
+
+    if (!accessToken) {
+      redirectToLogin();
+      return;
+    }
   
     const fetchProductData = async () => {
       try {

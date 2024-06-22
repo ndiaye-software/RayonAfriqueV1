@@ -296,6 +296,7 @@ export default function EnhancedTable() {
 
         if (!accessToken) {
           setError("Access token is missing");
+          redirectToLogin();
           return;
         }
 

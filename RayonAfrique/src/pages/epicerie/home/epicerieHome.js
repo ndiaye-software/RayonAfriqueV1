@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useCallback } from "react";
+import hostname from "../../../hostname";
 import Navbar from "../../../components/epicerie/navbarEpicerie";
 import Footer from "../../../components/main/footer";
 import backgroundImage from "../../../images/background.jpg";
@@ -12,7 +13,7 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const useStyles = makeStyles((theme) => ({
@@ -125,6 +126,55 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const EpicerieHome = () => {
+
+  const redirectToLogin = () => {
+    localStorage.removeItem("accessToken");
+    toast.error("Votre session a expiré. Veuillez vous reconnecter.");
+    window.location.href = "/connexion";
+  };
+
+  const handleRefreshToken = useCallback(async () => {
+    try {
+      const response = await fetch(`${hostname}/api/v1/epicerie/auth/refresh`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        const { accessToken } = await response.json();
+        localStorage.setItem("accessToken", accessToken);
+        return accessToken;
+      } else {
+        const data = await response.json();
+        if (data.message) {
+          toast.error(data.message);
+        } else {
+          toast("Erreur d'authentification");
+        }
+        redirectToLogin();
+      }
+    } catch (error) {
+      console.error("Erreur lors de la connexion :", error);
+      redirectToLogin();
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+
+      if (!accessToken) {
+        redirectToLogin();
+        return;
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }, [handleRefreshToken]);
+
   const classes = useStyles();
 
   return (

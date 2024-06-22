@@ -113,6 +113,11 @@ function EpicerieProductSearch() {
     const fetchData = async () => {
       try {
         const accessToken = localStorage.getItem("accessToken");
+
+        if (!accessToken) {
+          redirectToLogin();
+          return;
+        }
         let response = await fetch(`${hostname}/api/v1/epicerie/product/read`, {
           headers: { Authorization: `Bearer ${accessToken}` },
         });

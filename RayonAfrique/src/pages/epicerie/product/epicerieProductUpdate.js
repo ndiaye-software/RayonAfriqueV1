@@ -66,8 +66,18 @@ function EpicerieProductUpdate() {
     name: "",
   });
 
+  const redirectToLogin = () => {
+    localStorage.removeItem("accessToken");
+    toast.error("Votre session a expiré. Veuillez vous reconnecter.");
+    window.location.href = "/connexion";
+  };
+
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) {
+      redirectToLogin();
+      return;
+    }
     fetch(
       `${hostname}/api/v1/epicerie/productEpicerie/read/${idEpicerieProduct}`,
       {

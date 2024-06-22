@@ -189,6 +189,11 @@ function EpicerieProfile() {
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
 
+    if (!accessToken) {
+      redirectToLogin();
+      return;
+    }
+
     const fetchProfileData = async () => {
       try {
         const response = await fetch(
