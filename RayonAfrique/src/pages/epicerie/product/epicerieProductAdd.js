@@ -6,30 +6,13 @@ import Footer from "../../../components/main/footer";
 import { Add } from "@material-ui/icons";
 import { TextField, Button, Grid } from "@material-ui/core";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import { makeStyles } from "@material-ui/core/styles";
 import hostname from "../../../hostname";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Helmet } from "react-helmet";
-
-const useStyles = makeStyles(() => ({
-  Button: {
-    fontWeight: "bolder",
-    color: "white",
-    backgroundColor: "#922B21",
-    width: "250px",
-    minWidth: "250px",
-    marginTop: "20px",
-    padding: "20px",
-    fontSize: "12px",
-
-    "&:hover": {
-      backgroundColor: "#A63F35",
-    },
-  },
-}));
+import useStyles from "../../../styles/pages/epicerie/product/epicerieProductAdd";
 
 const options = [
   { label: "oui", value: true },

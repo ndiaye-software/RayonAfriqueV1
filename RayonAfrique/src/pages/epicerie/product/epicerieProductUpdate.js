@@ -7,7 +7,6 @@ import Save from "@mui/icons-material/Save";
 import { TextField, Button } from "@material-ui/core";
 import { Grid } from "@mui/material";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import { makeStyles } from "@material-ui/core/styles";
 import hostname from "../../../hostname";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -22,23 +21,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import IconButton from "@mui/material/IconButton";
 import "react-toastify/dist/ReactToastify.css";
 import { Helmet } from "react-helmet";
-
-const useStyles = makeStyles(() => ({
-  Button: {
-    fontWeight: "bolder",
-    color: "white",
-    backgroundColor: "#922B21",
-    width: "250px",
-    minWidth: "250px",
-    marginTop: "20px",
-    padding: "20px",
-    fontSize: "12px",
-
-    "&:hover": {
-      backgroundColor: "#A63F35",
-    },
-  },
-}));
+import useStyles from "../../../styles/pages/epicerie/product/epicerieProductUpdate";
 
 const options = [
   { label: "oui", value: true },

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Navbar from "../../../components/epicerie/navbarEpicerie";
 import Footer from "../../../components/main/footer";
-import { makeStyles } from "@material-ui/core/styles";
 import { Stack, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import hostname from "../../../hostname";
@@ -9,25 +8,7 @@ import { useParams } from "react-router-dom";
 import { Button } from "@material-ui/core";
 import { Helmet } from "react-helmet";
 import { ToastContainer, toast } from "react-toastify";
-
-const useStyles = makeStyles(() => ({
-  Button: {
-    fontWeight: "bolder",
-    color: "white",
-    backgroundColor: "#922B21",
-    minWidth: "100px",
-    alignContent: "center",
-    textAlign: "center",
-    padding: "15px",
-    fontSize: "12px",
-    border: "solid",
-    borderColor: "#922B21",
-    "&:hover": {
-      backgroundColor: "#A63F35",
-      boxShadow: "0 0.4rem #dfd9d9",
-    },
-  },
-}));
+import useStyles from "../../../styles/pages/epicerie/product/epicerieProductPresentation";
 
 function EpicerieProductPresentation() {
   const [data, setData] = useState([]);

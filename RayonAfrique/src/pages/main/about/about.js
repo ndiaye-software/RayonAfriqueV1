@@ -3,37 +3,9 @@ import Navbar from "../../../components/main/navbar";
 import Footer from "../../../components/main/footer";
 import mission from "../../../images/mission.jpg";
 import team from "../../../images/teamabout.svg";
-import { makeStyles } from "@material-ui/core/styles";
 import { Box, Typography } from "@material-ui/core";
 import { Helmet } from "react-helmet";
-
-const useStyles = makeStyles((theme) => ({
-  section: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-evenly",
-    padding: "50px",
-    backgroundColor: "#f9fafb",
-  },
-  imageBox: {
-    flex: "1 1 50%", // Adjust the width of the image box as needed
-    padding: "20px",
-    textAlign: "center",
-  },
-  textBox: {
-    flex: "1 1 50%", // Adjust the width of the text box as needed
-    padding: "20px",
-  },
-  image: {
-    maxWidth: "500px",
-    maxHeight: "300px",
-    borderRadius: "10px",
-    [theme.breakpoints.down("xs")]: {
-      maxWidth: "300px",
-    },
-  },
-}));
+import useStyles from "../../../styles/pages/main/about/about";
 
 const About = () => {
   const classes = useStyles();
