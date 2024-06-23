@@ -51,6 +51,8 @@ const createProduct = asyncHandler(async (req, res) => {
     image
   } = req.body;
 
+  console.log(req.body);
+
   const missingFields = [];
   if (!name) missingFields.push("nom produit");
   if (!categoryName && !autreCategory) missingFields.push("catégorie du produit");

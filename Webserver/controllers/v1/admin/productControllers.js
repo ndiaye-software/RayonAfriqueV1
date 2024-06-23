@@ -34,8 +34,6 @@ const createProduct = asyncHandler(async (req, res) => {
     return res.status(404).json({ message: "Access Denied" });
   }
 
-  const imageName = req.file.filename;
-
   const {
     name,
     reference,
@@ -47,6 +45,7 @@ const createProduct = asyncHandler(async (req, res) => {
     autreCategory,
     autreCountry,
     autreLabel,
+    image
   } = req.body;
 
   const missingFields = [];
@@ -55,8 +54,7 @@ const createProduct = asyncHandler(async (req, res) => {
     missingFields.push("catégorie du produit");
   if (!countryName && !autreCountry) missingFields.push("pays du produit");
   if (!labelName && !autreLabel) missingFields.push("marque du produit");
-  if (!imageName || !req.file || !req.file.filename)
-    missingFields.push("image");
+  if (!image) missingFields.push("image");
 
   if (missingFields.length > 0) {
     return res.status(400).json({
@@ -172,7 +170,7 @@ const createProduct = asyncHandler(async (req, res) => {
       reference: StringFormatter(reference),
       ingredients: StringFormatter(ingredients),
       description: StringFormatter(description),
-      image: imageName,
+      image: image,
       category: category._id,
       country: country._id,
       label: label._id,

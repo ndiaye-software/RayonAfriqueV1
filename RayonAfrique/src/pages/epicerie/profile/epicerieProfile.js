@@ -288,23 +288,25 @@ function EpicerieProfile() {
       const cloudinaryData = await cloudinaryResponse.json();
       const imageUrl = cloudinaryData.secure_url;
 
-      const formDataToSend = new FormData();
-      formDataToSend.append("nameCompany", formData.nameCompany);
-      formDataToSend.append("name", formData.name);
-      formDataToSend.append("mail", formData.mail);
-      formDataToSend.append("phone", formData.phone);
-      formDataToSend.append("description", formData.description);
-      formDataToSend.append("image", imageUrl);
-      formDataToSend.append("adresse", formData.adresse);
+      const dataToSend = {
+        image: imageUrl,
+        name: formData.name,
+        nameCompany: formData.nameCompany,
+        mail: formData.mail,
+        phone: formData.phone,
+        description: formData.description,
+        adresse: formData.adresse,
+      };
 
       const response = await fetch(
         `${hostname}/api/v1/epicerie/profile/update`,
         {
           method: "PATCH",
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`,
           },
-          body: formDataToSend,
+          body: JSON.stringify(dataToSend),
         }
       );
 

@@ -245,22 +245,22 @@ function EpicerieProductCreate() {
       const cloudinaryData = await cloudinaryResponse.json();
       const imageUrl = cloudinaryData.secure_url;
 
-      const formDataToSend = new FormData();
-      formDataToSend.append("image", imageUrl);
-      formDataToSend.append("name", formData.name);
-      formDataToSend.append("reference", formData.reference);
-      formDataToSend.append("ingredients", formData.ingredients);
-      formDataToSend.append("description", formData.description);
-      formDataToSend.append("category", formData.category);
-      formDataToSend.append("country", formData.country);
-      formDataToSend.append("label", formData.label);
-      formDataToSend.append("autreCategory", formData.autreCategory);
-      formDataToSend.append("autreCountry", formData.autreCountry);
-      formDataToSend.append("autreLabel", formData.autreLabel);
-
-      for (let pair of formDataToSend.entries()) {
-        console.log(pair[0]+ ': ' + pair[1]);
-      }
+      const dataToSend = {
+        image: imageUrl,
+        name: formData.name,
+        reference: formData.reference,
+        ingredients: formData.ingredients,
+        description: formData.description,
+        category: formData.category,
+        country: formData.country,
+        label: formData.label,
+        autreCategory: formData.autreCategory,
+        autreCountry: formData.autreCountry,
+        autreLabel: formData.autreLabel
+      };
+    
+      console.log(dataToSend);
+    
       const response = await fetch(
         `${hostname}/api/v1/epicerie/product/create`,
         {
@@ -269,7 +269,7 @@ function EpicerieProductCreate() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`,
           },
-          body: JSON.stringify(formDataToSend),
+          body: JSON.stringify(dataToSend),
         }
       );
 
