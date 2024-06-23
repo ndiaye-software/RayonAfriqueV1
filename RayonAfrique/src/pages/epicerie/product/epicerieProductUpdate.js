@@ -198,7 +198,7 @@ function EpicerieProductUpdate() {
                       <Box>
                         {formData.image && (
                           <img
-                            src={require(`../../../images/${formData.image}`)}
+                            src={formData.image}
                             alt="Product"
                             height="300px"
                             width="350px"

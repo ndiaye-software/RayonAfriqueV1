@@ -22,6 +22,7 @@ import { ToastContainer, toast } from "react-toastify";
 import IconButton from "@mui/material/IconButton";
 import "react-toastify/dist/ReactToastify.css";
 import { Helmet } from "react-helmet";
+import { v4 as uuidv4 } from "uuid";
 
 const useStyles = makeStyles((theme) => ({
   section1_div_h1: {
@@ -153,7 +154,7 @@ function EpicerieProfile() {
 
   const redirectToLogin = () => {
     localStorage.removeItem("accessToken");
-    
+
     window.location.href = "/connexion";
   };
 
@@ -265,13 +266,35 @@ function EpicerieProfile() {
     }
 
     try {
+      // 1. Upload image to Cloudinary
+      const formDataImage = new FormData();
+      formDataImage.append("file", formData.image);
+      formDataImage.append("upload_preset", "rayonafrique");
+      formDataImage.append("public_id", uuidv4());
+
+      const cloudinaryResponse = await fetch(
+        "https://api.cloudinary.com/v1_1/dpodybbfe/image/upload",
+        {
+          method: "POST",
+          body: formDataImage,
+          credentials: "omit",
+        }
+      );
+
+      if (!cloudinaryResponse.ok) {
+        throw new Error("Failed to upload image");
+      }
+
+      const cloudinaryData = await cloudinaryResponse.json();
+      const imageUrl = cloudinaryData.secure_url;
+
       const formDataToSend = new FormData();
       formDataToSend.append("nameCompany", formData.nameCompany);
       formDataToSend.append("name", formData.name);
       formDataToSend.append("mail", formData.mail);
       formDataToSend.append("phone", formData.phone);
       formDataToSend.append("description", formData.description);
-      formDataToSend.append("image", formData.image);
+      formDataToSend.append("image", imageUrl);
       formDataToSend.append("adresse", formData.adresse);
 
       const response = await fetch(
@@ -396,7 +419,7 @@ function EpicerieProfile() {
                         />
                       ) : formData.image ? (
                         <img
-                          src={require(`../../../images/${formData.image}`)}
+                          src={formData.image}
                           alt="insérée"
                           height="300px"
                           width="350px"

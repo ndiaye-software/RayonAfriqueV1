@@ -178,7 +178,7 @@ function ShopDetail() {
                       {product.image ? (
                         <ProductShop
                           key={index}
-                          image={require(`../../../images/${product.image}`)}
+                          image={product.image}
                           nomProduit={product.nomProduit}
                           adresse={product.adresse}
                           nomEpicerie={product.nomEpicerie}

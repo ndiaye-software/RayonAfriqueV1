@@ -165,7 +165,7 @@ function EpicerieProductPresentation() {
                   <div>
                     {data.image && (
                       <img
-                        src={require(`../../../images/${data.image}`)}
+                        src={data.image}
                         alt="Product"
                         height="300px"
                         width="350px"

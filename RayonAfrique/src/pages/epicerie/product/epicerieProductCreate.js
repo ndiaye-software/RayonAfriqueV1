@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Helmet } from "react-helmet";
+import { v4 as uuidv4 } from "uuid";
 
 const useStyles = makeStyles(() => ({
   Button: {
@@ -163,7 +164,7 @@ function EpicerieProductCreate() {
 
   const redirectToLogin = () => {
     localStorage.removeItem("accessToken");
-    
+
     window.location.href = "/connexion";
   };
 
@@ -222,8 +223,30 @@ function EpicerieProductCreate() {
     }
 
     try {
+      // 1. Upload image to Cloudinary
+      const formDataImage = new FormData();
+      formDataImage.append("file", formData.image);
+      formDataImage.append("upload_preset", "rayonafrique");
+      formDataImage.append("public_id", uuidv4());
+
+      const cloudinaryResponse = await fetch(
+        "https://api.cloudinary.com/v1_1/dpodybbfe/image/upload",
+        {
+          method: "POST",
+          body: formDataImage,
+          credentials: 'omit',
+        }
+      );
+
+      if (!cloudinaryResponse.ok) {
+        throw new Error("Failed to upload image");
+      }
+
+      const cloudinaryData = await cloudinaryResponse.json();
+      const imageUrl = cloudinaryData.secure_url;
+
       const formDataToSend = new FormData();
-      formDataToSend.append("image", formData.image);
+      formDataToSend.append("image", imageUrl);
       formDataToSend.append("name", formData.name);
       formDataToSend.append("reference", formData.reference);
       formDataToSend.append("ingredients", formData.ingredients);
@@ -234,14 +257,19 @@ function EpicerieProductCreate() {
       formDataToSend.append("autreCategory", formData.autreCategory);
       formDataToSend.append("autreCountry", formData.autreCountry);
       formDataToSend.append("autreLabel", formData.autreLabel);
+
+      for (let pair of formDataToSend.entries()) {
+        console.log(pair[0]+ ': ' + pair[1]);
+      }
       const response = await fetch(
         `${hostname}/api/v1/epicerie/product/create`,
         {
           method: "POST",
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`,
           },
-          body: formDataToSend,
+          body: JSON.stringify(formDataToSend),
         }
       );
 

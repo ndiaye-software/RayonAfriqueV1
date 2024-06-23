@@ -96,7 +96,8 @@ const updateProfile = asyncHandler(async (req, res) => {
       nameCompany,
       description,
       phone,
-      adresse
+      adresse,
+      image
     } = req.body;
 
     if (mail) {
@@ -121,9 +122,8 @@ const updateProfile = asyncHandler(async (req, res) => {
       epicerie.nameCompany = nameCompany;
     }
 
-    if (req.file) {
-      const imageName = req.file.filename;
-      epicerie.image = imageName;
+    if (image) {
+      epicerie.image = image;
     }
 
     if (description) {
@@ -146,8 +146,6 @@ const updateProfile = asyncHandler(async (req, res) => {
     if (adresse) {
       epicerie.longitude = longitude;
     }
-
-    console.log(epicerie);
 
     // Sauvegardez les modifications dans la base de données
     await epicerie.save();

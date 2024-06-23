@@ -19,7 +19,6 @@ function StringFormatter(chaine) {
 }
 
 const createProduct = asyncHandler(async (req, res) => {
-
   if (!req.headers.authorization) {
     res.status(402).json({ error: "Authorization header missing" });
     return;
@@ -38,12 +37,6 @@ const createProduct = asyncHandler(async (req, res) => {
     return res.status(404).json({ message: "Veuillez activez votre compte" });
   }
 
-  if (!req.file) {
-    return res.status(404).json({ message: "Mettez une image." });
-  }
-
-  const imageName = req.file.filename;
-
   const {
     name,
     reference,
@@ -54,7 +47,8 @@ const createProduct = asyncHandler(async (req, res) => {
     label: labelName,
     autreCategory,
     autreCountry,
-    autreLabel
+    autreLabel,
+    image
   } = req.body;
 
   const missingFields = [];
@@ -62,8 +56,7 @@ const createProduct = asyncHandler(async (req, res) => {
   if (!categoryName && !autreCategory) missingFields.push("catégorie du produit");
   if (!countryName && !autreCountry) missingFields.push("pays du produit");
   if (!labelName && !autreLabel) missingFields.push("marque du produit");
-  if (!imageName || !req.file || !req.file.filename) missingFields.push("image");
-
+  if (!image) missingFields.push("image");
 
   if (missingFields.length > 0) {
     return res.status(400).json({
@@ -79,7 +72,6 @@ const createProduct = asyncHandler(async (req, res) => {
       Country.findOne({ countryName }),
     ]);
 
-    // Create new category if not found
     if (!category && autreCategory) {
       const existingCategory = await Category.findOne({ categoryName: autreCategory });
       if (existingCategory) {
@@ -89,67 +81,43 @@ const createProduct = asyncHandler(async (req, res) => {
       category = new Category({ categoryName: autreCategoryFormatted });
       category = await category.save();
     } else if (!category) {
-
-      return res
-        .status(404)
-        .json({ message: `La catégorie '${categoryName}' n'existe pas.` });
+      return res.status(404).json({ message: `La catégorie '${categoryName}' n'existe pas.` });
     }
 
-    // Create new label if not found
     if (!label && autreLabel) {
       const existingLabel = await Label.findOne({ labelName: autreLabel });
       if (existingLabel) {
-  
         return res.status(409).json({ message: `La marque '${autreLabel}' existe déjà. Sélectionnez-le !` });
       }
       const autreLabelFormatted = StringFormatter(autreLabel)
       label = new Label({ labelName: autreLabelFormatted });
       label = await label.save();
     } else if (!label) {
-
-      return res
-        .status(404)
-        .json({ message: `Le label '${labelName}' n'existe pas.` });
+      return res.status(404).json({ message: `Le label '${labelName}' n'existe pas.` });
     }
 
-    // Create new country if not found
     if (!country && autreCountry) {
       const existingCountry = await Country.findOne({ countryName: autreCountry });
       if (existingCountry) {
-  
         return res.status(409).json({ message: `La pays '${autreCountry}' existe déjà. Sélectionnez-le !` });
       }
       const autreCountryFormatted =  StringFormatter(autreCountry)
       country = new Country({ countryName: autreCountryFormatted });
       country = await country.save();
     } else if (!country) {
-
-      return res
-        .status(404)
-        .json({ message: `Le pays '${countryName}' n'existe pas.` });
+      return res.status(404).json({ message: `Le pays '${countryName}' n'existe pas.` });
     }
 
     if (!category) {
-
-      return res
-        .status(404)
-        .json({ message: `La catégorie '${categoryName}' n'existe pas.` });
+      return res.status(404).json({ message: `La catégorie '${categoryName}' n'existe pas.` });
     }
     if (!label) {
-
-      return res
-        .status(404)
-        .json({ message: `Le label '${labelName}' n'existe pas.` });
+      return res.status(404).json({ message: `Le label '${labelName}' n'existe pas.` });
     }
 
     if (!country) {
-
-      return res
-        .status(404)
-        .json({ message: `Le pays '${countryName}' n'existe pas.` });
+      return res.status(404).json({ message: `Le pays '${countryName}' n'existe pas.` });
     }
-
-    // Reformatting the name
 
     let existingProduct = await Product.findOne({
       name,
@@ -165,13 +133,12 @@ const createProduct = asyncHandler(async (req, res) => {
       return res.status(400).json({ message: "Le produit existe déjà." });
     }
 
-
     const product = new Product({
       name : StringFormatter(name),
       reference : StringFormatter(reference),
       ingredients : StringFormatter(ingredients),
       description : StringFormatter(description),
-      image: imageName,
+      image: image,
       category: category._id,
       country: country._id,
       label: label._id,

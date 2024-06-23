@@ -256,7 +256,7 @@ function Shop() {
                       >
                         <Product
                           key={index}
-                          image={require(`../../../images/${val.image}`)}
+                          image={val.image}
                           name={val.name}
                           description={val.description}
                           marque={val.labelName}
