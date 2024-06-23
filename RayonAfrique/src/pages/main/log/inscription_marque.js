@@ -16,7 +16,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Business from "../../../images/business.jpg";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import { makeStyles } from "@material-ui/core/styles";
 import { Accessibility, Handshake, LiveTv, Email } from "@mui/icons-material";
 import InputAdornment from "@mui/material/InputAdornment";
 import { useNavigate } from "react-router-dom";
@@ -24,18 +23,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import hostname from "../../../hostname";
 import { Helmet } from "react-helmet";
+import useStyles from "../../../styles/pages/main/log/inscription_marque";
 
-const useStyles = makeStyles(() => ({
-  section2: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-evenly",
-    backgroundColor: "#f9fafb",
-    padding: "30px",
-    gap: "35px",
-  },
-}));
 
 const defaultTheme = createTheme();
 

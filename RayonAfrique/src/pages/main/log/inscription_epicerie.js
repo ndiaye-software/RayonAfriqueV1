@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import usePlacesAutocomplete from "use-places-autocomplete";
-import { makeStyles } from "@material-ui/core/styles";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -26,44 +25,9 @@ import hostname from "../../../hostname";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Helmet } from "react-helmet";
+import useStyles from "../../../styles/pages/main/log/inscription_epicerie";
 
 var zxcvbn = require("zxcvbn");
-
-const useStyles = makeStyles((theme) => ({
-  strengthPassword: {
-    position: "absolute",
-    width: "0%",
-    height: "5px",
-    bottom: "-8px",
-    left: 0,
-    background: "transparent",
-    transition: "all 300ms ease-in-out",
-    '&[data-score="null"]': {
-      width: 0,
-      background: "red",
-    },
-    '&[data-score="0"]': {
-      width: "5%",
-      background: "#f44336",
-    },
-    '&[data-score="1"]': {
-      width: "25%",
-      background: "#f44336",
-    },
-    '&[data-score="2"]': {
-      width: "50%",
-      background: "#ffeb3b",
-    },
-    '&[data-score="3"]': {
-      width: "75%",
-      background: "#4caf50",
-    },
-    '&[data-score="4"]': {
-      width: "100%",
-      background: "#4caf50",
-    },
-  },
-}));
 
 export default function SignUp() {
   const {

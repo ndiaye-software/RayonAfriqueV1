@@ -12,37 +12,12 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Drawer from "@mui/material/Drawer";
 import Divider from "@mui/material/Divider";
-import { makeStyles } from "@material-ui/core/styles";
 import { LogoutOutlined } from "@mui/icons-material";
 import logo from "../../images/rayonafrique.svg";
 import { Link, useNavigate } from 'react-router-dom';
 import hostname from "../../hostname";
+import useStyles from "../../styles/component/epicerie/navbarEpicerie";
 const drawerWidth = 300;
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-    fontWeight: "bold",
-    fontSize: "20px",
-    fontFamily: "Poppins",
-    textDecoration: "none",
-    color: "black",
-  },
-  button: {
-    flexGrow: 1,
-    fontWeight: 700,
-    fontSize: "13px",
-    textDecoration: "none",
-    color: "black",
-    "&:hover": { color: "#922B21", backgroundColor: "white" },
-  },
-}));
 
 const PrimarySearchAppBar = (props) => {
   const navigate = useNavigate();

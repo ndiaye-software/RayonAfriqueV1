@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "../../../components/main/SidebarShop";
 import Navbar from "../../../components/main/navbar";
 import Footer from "../../../components/main/footer";
-import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Stack, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -11,55 +10,7 @@ import Product from "../../../components/main/product";
 import TextField from "@mui/material/TextField";
 import hostname from "../../../hostname";
 import { Helmet } from "react-helmet";
-
-const useStyles = makeStyles((theme) => ({
-  Box1: {
-    display: "flex",
-    flexDirection: "row",
-    marginBottom: "30px",
-  },
-
-  inputWrapperContainer: {
-    width: "350px",
-    [theme.breakpoints.down("sm")]: {
-      width: "200px",
-    },
-  },
-
-  ButtonSearch: {
-    fontWeight: "bolder",
-    color: "white",
-    backgroundColor: "#922B21",
-    minWidth: "100px",
-    alignContent: "center",
-    textAlign: "center",
-    padding: "15px",
-    fontSize: "12px",
-    border: "solid",
-    borderColor: "#922B21",
-    "&:hover": {
-      backgroundColor: "#A63F35",
-      boxShadow: "0 0.4rem #dfd9d9",
-    },
-  },
-
-  inputWrapper: {
-    "& input": {
-      backgroundColor: "white",
-      border: "solid",
-      fontSize: "1rem",
-      padding: "15px",
-      width: "100%",
-      borderTopLeftRadius: "20px 20px",
-      borderBottomLeftRadius: "20px 20px",
-      color: "black",
-      boxShadow: "0 0.4rem #dfd9d9",
-      "&:focus": {
-        outlineColor: "black",
-      },
-    },
-  },
-}));
+import useStyles from "../../../styles/pages/main/product/shop";
 
 function Shop() {
   const [data, setData] = useState([]);

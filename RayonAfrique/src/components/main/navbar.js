@@ -12,47 +12,12 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Drawer from "@mui/material/Drawer";
 import Divider from "@mui/material/Divider";
-import { makeStyles } from "@material-ui/core/styles";
 import logo from "../../images/rayonafrique.svg";
 import { BookmarkBorderOutlined, PersonOutline } from "@material-ui/icons";
 import Tooltip from "@mui/material/Tooltip";
+import useStyles from "../../styles/component/main/navbar";
 
 const drawerWidth = 300;
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-    fontWeight: "bold",
-    fontSize: "20px",
-    fontFamily: "Poppins",
-    textDecoration: "none",
-    color: "black",
-  },
-  button: {
-    flexGrow: 1,
-    fontWeight: 700,
-    fontSize: "13px",
-    textDecoration: "none",
-    color: "black",
-    "&:hover": { color: "#922B21", backgroundColor: "white" },
-  },
-
-  buttonpro: {
-    flexGrow: 1,
-    fontWeight: 700,
-    fontSize: "13px",
-    textDecoration: "none",
-    color: "white",
-    backgroundColor: "#922B21",
-    "&:hover": { color: "#922B21", backgroundColor: "white" },
-  },
-}));
 
 export default function PrimarySearchAppBar(props) {
   const { window } = props;
