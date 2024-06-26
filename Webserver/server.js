@@ -10,6 +10,7 @@ const corsOptions = require("./config/corsOptions");
 const connectDB = require("./config/dbConn");
 const mongoose = require("mongoose");
 const colors = require("colors");
+const PORT = process.env.PORT || 3500;
 
 /*  Define Routes */
 
@@ -106,6 +107,9 @@ app.use(errorHandler);
 
 mongoose.connection.once("open", () => {
   console.log("Connected to MongoDB");
+  app.listen(PORT, () =>
+    console.log(colors.cyan(`Server running on port ${PORT}`))
+  );
 });
 
 mongoose.connection.on("error", (err) => {
