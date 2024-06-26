@@ -107,9 +107,6 @@ app.use(errorHandler);
 
 mongoose.connection.once("open", () => {
   console.log("Connected to MongoDB");
-  app.listen(PORT, "localhost", () =>
-    console.log(colors.cyan(`Server running on http://localhost:${PORT}`))
-  );
 });
 
 mongoose.connection.on("error", (err) => {
