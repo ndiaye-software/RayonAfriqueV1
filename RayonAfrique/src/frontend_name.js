@@ -1,3 +1,5 @@
-const frontend_name = "http://localhost:3000"
+// frontend
+
+const frontend_name = "https://rayonafrique.onrender.com"
 
 export default frontend_name;
