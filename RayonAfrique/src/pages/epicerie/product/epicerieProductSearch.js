@@ -246,7 +246,7 @@ function EpicerieProductSearch() {
                         Nous n'avons pas trouvé ce produit 😞
                       </Typography>
                       <Button
-                        href="search/create"
+                        href="/epicerie/produit/search/create"
                         fullWidth
                         variant="contained"
                         sx={{

@@ -38,7 +38,7 @@ const EpicerieProduct = () => {
         <Stack backgroundColor="#f9fafb">
           <Box width="300px" marginTop="30px" marginLeft="15px">
             <Button
-              href="produit/search"
+              href="/epicerie/produit/search"
               className={classes.AddButton}
               endIcon={<Add />}
             >
