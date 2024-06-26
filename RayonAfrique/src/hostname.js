@@ -1,5 +1,5 @@
 // backend
 
-const hostname = "https://rayonafrique.onrender.com"
+const hostname = "https://rayonafriqueapi.onrender.com/"
 
 export default hostname;
