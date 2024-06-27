@@ -13,7 +13,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Drawer from "@mui/material/Drawer";
 import Divider from "@mui/material/Divider";
 import logo from "../../images/rayonafrique.svg";
-import { BookmarkBorderOutlined, PersonOutline } from "@material-ui/icons";
+import {  PersonOutline } from "@material-ui/icons";
 import Tooltip from "@mui/material/Tooltip";
 import useStyles from "../../styles/component/main/navbar";
 
@@ -74,18 +74,11 @@ export default function PrimarySearchAppBar(props) {
         <a href="/connexion">
           <ListItem disablePadding>
             <ListItemButton sx={{ textAlign: "left", color: "black" }}>
-              <PersonOutline />
+              <ListItemText sx={{ color: "black" }} primary="Connexion" />
             </ListItemButton>
           </ListItem>
         </a>
 
-        <a href="/cart">
-          <ListItem disablePadding>
-            <ListItemButton sx={{ textAlign: "left", color: "black" }}>
-              <BookmarkBorderOutlined />
-            </ListItemButton>
-          </ListItem>
-        </a>
       </List>
     </Box>
   );
