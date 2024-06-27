@@ -115,24 +115,24 @@ const signUp = asyncHandler(async (req, res) => {
 });
 
 //// Vérification mail
-const updateEpicerieStatus = asyncHandler(async (req, res) => {
+const updateMarqueStatus = asyncHandler(async (req, res) => {
   const { code } = req.body;
 
-  const epicerie = await Epicerie.findOne({ code }).select('-password -phone -description -mail -adresse -longitude -latitude -nameCompany');
+  const marque = await Marque.findOne({ code }).select('-password -phone -description -mail -adresse -longitude -latitude -nameCompany');
 
-  if (!epicerie) {
+  if (!marque) {
     return res.status(404).json({ message: "Code invalide" });
   }
 
-  epicerie.status = "actif";
-  epicerie.code = undefined;
-  await epicerie.save();
+  marque.status = "actif";
+  marque.code = undefined;
+  await marque.save();
 
-  res.json({ message: "Épicerie activée avec succès" });
+  res.json({ message: "Marque activée avec succès" });
 });
 
 
 module.exports = {
   signUp,
-  updateEpicerieStatus
+  updateMarqueStatus
 };
