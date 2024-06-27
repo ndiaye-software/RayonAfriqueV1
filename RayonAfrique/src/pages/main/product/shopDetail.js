@@ -180,8 +180,10 @@ function ShopDetail() {
                           nomEpicerie={product.nomEpicerie}
                           prix={product.prix}
                           distance={product.distance}
-                          longitude={product.longitude}
-                          latitude={product.latitude}
+                          storeLongitude={product.longitude}
+                          storeLatitude={product.latitude}
+                          userLatitude={userPosition?.latitude}
+                          userLongitude={userPosition?.longitude}
                         />
                       ) : (
                         <ProductShop
@@ -192,8 +194,10 @@ function ShopDetail() {
                           nomEpicerie={product.nomEpicerie}
                           prix={product.prix}
                           distance={product.distance}
-                          longitude={product.longitude}
-                          latitude={product.latitude}
+                          storeLongitude={product.longitude}
+                          storeLatitude={product.latitude}
+                          userLatitude={userPosition?.latitude}
+                          userLongitude={userPosition?.longitude}
                         />
                       )}
                     </Grid>

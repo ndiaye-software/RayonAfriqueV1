@@ -18,12 +18,19 @@ export default function ProductShop({
   adresse,
   prix,
   distance,
-  longitude,
-  latitude
+  storeLongitude,
+  storeLatitude,
+  clientLongitude,
+  clientLatitude
 }) {
+
+  const directionsLink = clientLatitude && clientLongitude 
+    ? `https://www.google.com/maps/dir/?api=1&origin=${clientLatitude},${clientLongitude}&destination=${storeLatitude},${storeLongitude}`
+    : `https://www.google.com/maps/search/?api=1&query=${storeLatitude},${storeLongitude}`;
+
   return (
     <Card sx={{ width: 230, height: "fit-content" }}>
-      <CardActionArea component="a" href={`https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`} target="_blank" rel="noopener noreferrer">
+      <CardActionArea component="a" href={directionsLink} target="_blank" rel="noopener noreferrer">
         <CardMedia
           component="img"
           height="150"
