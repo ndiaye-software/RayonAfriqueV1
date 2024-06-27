@@ -13,7 +13,13 @@ const marqueSchema = new mongoose.Schema({
   nameCompany: {
     type: String,
     required: true,
-  }
+  },
+  code: {
+    type: String,
+  },
+  status: {
+    type: String,
+  },
 });
 
 const Marque = mongoose.model("Marque", marqueSchema);

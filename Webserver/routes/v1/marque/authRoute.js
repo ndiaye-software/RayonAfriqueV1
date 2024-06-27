@@ -3,5 +3,8 @@ const router = express.Router()
 const authController = require('../../../controllers/v1/marque/authController')
 
 router.route('/signUp').post(authController.signUp)
+
+router.route('/verification')
+    .post(authController.updateEpicerieStatus)
     
 module.exports = router

@@ -8,25 +8,26 @@ const emailvalidator = require("email-validator");
 
 //Inscription
 const transporter = nodemailer.createTransport({
-    service: "Gmail",
-    auth: {
-      user: "rayon.afrique.shop@gmail.com",
-      pass: process.env.PASSWORD_EMAIL,
-    },
-  });
+  service: "Gmail",
+  auth: {
+    user: "rayon.afrique.shop@gmail.com",
+    pass: process.env.PASSWORD_EMAIL,
+  },
+});
+
+const generateCode = asyncHandler(async () => {
+  const code = Math.floor(1000 + Math.random() * 9000);
+  return code;
+});
 
 const signUp = asyncHandler(async (req, res) => {
-  const {
-    name,
-    mail,
-    nameCompany,
-  } = req.body;
+  const { name, mail, nameCompany } = req.body;
 
   const missingFields = [];
   if (!name) missingFields.push("nom de l'épicerie");
   if (!mail) missingFields.push("adresse e-mail");
   if (!nameCompany) missingFields.push("nom de la société");
-  
+
   if (missingFields.length > 0) {
     return res.status(400).json({
       message: `Les champs suivants sont requis: ${missingFields.join(", ")}`,
@@ -37,10 +38,9 @@ const signUp = asyncHandler(async (req, res) => {
     // Check for duplicate mail
     const duplicate = await Marque.findOne({ mail })
       .collation({ locale: "en", strength: 2 })
-      .select(' -nameCompany')
+      .select(" -nameCompany")
       .lean()
       .exec();
-
 
     if (duplicate) {
       return res.status(409).json({ message: "Vous êtes déjà enregistré !" });
@@ -50,11 +50,15 @@ const signUp = asyncHandler(async (req, res) => {
       return res.status(409).json({ message: "L'email n'est pas valide" });
     }
 
+    const code = await generateCode();
+
     // Créer un nouvel utilisateur
     const newMarque = new Marque({
       name,
       mail,
-      nameCompany
+      nameCompany,
+      status : "inactif",
+      code : code
     });
 
     // Sauvegarder l'utilisateur dans la base de données
@@ -88,6 +92,7 @@ const signUp = asyncHandler(async (req, res) => {
           <p>Nous sommes ravis de vous accueillir, <strong>${name}</strong>.</p>
           <p>Votre adresse e-mail est : <strong>${mail}</strong></p>
           <p>Votre marque est : <strong>${nameCompany}</strong></p>
+          <p>Votre code de confirmation est : <strong>${code}</strong></p>
           <p>N'hésitez pas à nous contacter si vous avez des questions.</p>
           <p>Cordialement,</p>
           <p>L'équipe de notre site</p>
@@ -109,6 +114,25 @@ const signUp = asyncHandler(async (req, res) => {
   }
 });
 
+//// Vérification mail
+const updateEpicerieStatus = asyncHandler(async (req, res) => {
+  const { code } = req.body;
+
+  const epicerie = await Epicerie.findOne({ code }).select('-password -phone -description -mail -adresse -longitude -latitude -nameCompany');
+
+  if (!epicerie) {
+    return res.status(404).json({ message: "Code invalide" });
+  }
+
+  epicerie.status = "actif";
+  epicerie.code = undefined;
+  await epicerie.save();
+
+  res.json({ message: "Épicerie activée avec succès" });
+});
+
+
 module.exports = {
-  signUp
+  signUp,
+  updateEpicerieStatus
 };

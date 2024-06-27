@@ -27,7 +27,8 @@ import MessageEnvoyéEpicerie from "./pages/epicerie/contact/message_sent";
 import MessageNonEnvoyéEpicerie from "./pages/epicerie/contact/message_not_sent";
 import EpicerieProductPresentation from "./pages/epicerie/product/epicerieProductPresentation";
 import EpicerieProductCreate from "./pages/epicerie/product/epicerieProductCreate";
-import VerificationMail from "./pages/main/log/mail_verification";
+import VerificationMailEpicerie from "./pages/main/log/mail_verification_epicerie";
+import VerificationMailMarque from "./pages/main/log/mail_verification_marque";
 import InscriptionMarque from "./pages/main/log/inscription_marque";
 import ValidationEpicerie from "./pages/main/log/validation_epicerie";
 import ValidationMarque from "./pages/main/log/validation_marque";
@@ -55,8 +56,9 @@ function App() {
           <Route path="/connexion" element={<Connexion />} />
           <Route path="/inscription/epicerie" element={<InscriptionEpicerie />}/>
           <Route path="/inscription/marque" element={<InscriptionMarque />}/>
-          <Route path="/inscription/marque/validation" element={<ValidationMarque/>}/>
-          <Route path="/inscription/epicerie/verification" element={<VerificationMail />}/>
+          <Route path="/inscription/marque/verification" element={<VerificationMailMarque/>}/>
+          <Route path="/inscription/marque/verification/validation" element={<ValidationMarque/>}/>
+          <Route path="/inscription/epicerie/verification" element={<VerificationMailEpicerie />}/>
           <Route path="/inscription/epicerie/verification/validation" element={<ValidationEpicerie />}/>
           <Route path="/business" element={<Business />} />
           <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
