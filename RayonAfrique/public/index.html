@@ -44,14 +44,11 @@
           document.head.appendChild(script);
         });
       }
-
-      setTimeout(() => {
         loadGoogleMapsAPI()
           .then(() => {})
           .catch((error) => {
             console.error("Error loading Google Maps API:", error);
-          });
-      }, 1000); // Adjust delay as needed
+          }); // Adjust delay as needed
     </script>
   </head>
   <body>
