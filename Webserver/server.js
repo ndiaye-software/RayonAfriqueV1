@@ -11,6 +11,8 @@ const connectDB = require("./config/dbConn");
 const mongoose = require("mongoose");
 const colors = require("colors");
 const PORT = process.env.PORT || 3500;
+const DATABASE_URI = process.env.DATABASE_URI;
+
 
 /*  Define Routes */
 
@@ -105,8 +107,14 @@ app.all("*", (req, res) => {
 
 app.use(errorHandler);
 
-mongoose.connection.once("open", () => {
-  console.log("Connected to MongoDB");
+mongoose.connect(DATABASE_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  tls: true,
+});
+
+mongoose.connection.once('open', () => {
+  console.log('Connected to MongoDB');
   app.listen(PORT, () =>
     console.log(colors.cyan(`Server running on port ${PORT}`))
   );
