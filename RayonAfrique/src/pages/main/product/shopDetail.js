@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../../../components/main/navbar";
 import Footer from "../../../components/main/footer";
-import { Grid, Stack, Typography } from "@mui/material";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import { Grid, Stack, Typography, Box, Button } from "@mui/material";
 import ProductShop from "../../../components/main/ProductShop";
 import { useParams } from "react-router-dom";
 import hostname from "../../../hostname";
@@ -18,10 +16,14 @@ function ShopDetail() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const [userPosition, setUserPosition] = useState(null);
 
+  // Utiliser useEffect pour appeler getUserPosition lors du montage
   useEffect(() => {
+    getUserPosition();
+  }, []);
+
+  const getUserPosition = () => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -35,7 +37,7 @@ function ShopDetail() {
     } else {
       console.log("La géolocalisation n'est pas prise en charge.");
     }
-  }, []);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,22 +66,6 @@ function ShopDetail() {
 
     fetchData();
   }, [name, userPosition]);
-
-  const getUserPosition = () => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setUserPosition({ latitude, longitude });
-        },
-        (error) => {
-          console.error("Erreur de géolocalisation :", error);
-        }
-      );
-    } else {
-      console.log("La géolocalisation n'est pas prise en charge.");
-    }
-  };
 
   const productsPerPage = 9;
   const totalPages = Math.ceil(data.length / productsPerPage);
@@ -171,35 +157,19 @@ function ShopDetail() {
                       lg={4}
                       key={index}
                     >
-                      {product.image ? (
-                        <ProductShop
-                          key={index}
-                          image={product.image}
-                          nomProduit={product.nomProduit}
-                          adresse={product.adresse}
-                          nomEpicerie={product.nomEpicerie}
-                          prix={product.prix}
-                          distance={product.distance}
-                          storeLongitude={product.longitude}
-                          storeLatitude={product.latitude}
-                          userLatitude={userPosition?.latitude}
-                          userLongitude={userPosition?.longitude}
-                        />
-                      ) : (
-                        <ProductShop
-                          key={index}
-                          image={null}
-                          nomProduit={product.nomProduit}
-                          adresse={product.adresse}
-                          nomEpicerie={product.nomEpicerie}
-                          prix={product.prix}
-                          distance={product.distance}
-                          storeLongitude={product.longitude}
-                          storeLatitude={product.latitude}
-                          userLatitude={userPosition?.latitude}
-                          userLongitude={userPosition?.longitude}
-                        />
-                      )}
+                      <ProductShop
+                        key={index}
+                        image={product.image || null}
+                        nomProduit={product.nomProduit}
+                        adresse={product.adresse}
+                        nomEpicerie={product.nomEpicerie}
+                        prix={product.prix}
+                        distance={product.distance}
+                        storeLongitude={product.longitude}
+                        storeLatitude={product.latitude}
+                        clientLatitude={userPosition?.latitude}
+                        clientLongitude={userPosition?.longitude}
+                      />
                     </Grid>
                   ))}
                 </Grid>
