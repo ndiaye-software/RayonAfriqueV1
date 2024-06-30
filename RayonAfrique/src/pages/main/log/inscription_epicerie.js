@@ -171,7 +171,7 @@ export default function SignUp() {
               sx={{ mt: 3 }}
             >
               <Grid container spacing={2}>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     required
                     fullWidth
@@ -183,7 +183,7 @@ export default function SignUp() {
                     onChange={handleChange}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     required
                     fullWidth
@@ -256,7 +256,7 @@ export default function SignUp() {
                   />
                 </Grid>
 
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                   <FormControl fullWidth variant="outlined">
                     <OutlinedInput
                       id="password1"
@@ -285,7 +285,7 @@ export default function SignUp() {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                   <FormControl fullWidth variant="outlined">
                     <OutlinedInput
                       id="password2"

@@ -89,7 +89,7 @@ export default function SignInSide() {
       <Navbar />
       <Grid container component="main">
         <CssBaseline />
-        <Grid item xs={false} sm={4} md={6}>
+        <Grid item xs={12} sm={12} md={6}>
           <div className={classes.section2}>
             <Card sx={{ maxWidth: 425 }}>
               <CardMedia component="img" height="250" image={`${Business}`} />
@@ -215,7 +215,7 @@ export default function SignInSide() {
             </Card>
           </div>
         </Grid>
-        <Grid item xs={12} sm={6} md={6} component={Paper} elevation={6} square>
+        <Grid item xs={12} sm={12} md={6} component={Paper} elevation={6} square>
           <Box
             sx={{
               my: 8,
