@@ -41,21 +41,20 @@ export default function Connexion() {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify(formData),
       });
 
       if (response.ok) {
         const data = await response.json();
-        
-        const  accessToken  = data.accessToken;
+
+        const accessToken = data.accessToken;
         localStorage.setItem("accessToken", accessToken);
 
-
-        if ((data.status === "actif")) {
+        if (data.status === "actif") {
           navigate(`/epicerie`);
         }
-        if ((data.status === "inactif" || data.status === null)) {
+        if (data.status === "inactif" || data.status === null) {
           navigate(`/connexion/verification`);
         }
       } else {
@@ -76,9 +75,19 @@ export default function Connexion() {
       <Helmet>
         <meta
           name="description"
-          content="RayonAfrique - connexion - épicerie"
+          content="Connexion à RayonAfrique - Accédez à votre compte pour découvrir et acheter des produits africains authentiques, ou gérer vos ventes si vous êtes un vendeur."
+        />
+        <meta
+          name="keywords"
+          content="RayonAfrique, connexion, se connecter, compte utilisateur, produits africains, épicerie africaine, marques africaines"
+        />
+        <meta name="author" content="RayonAfrique" />
+        <meta
+          property="og:image"
+          content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png"
         />
       </Helmet>
+
       <Navbar />
       <Grid container sx={{ minHeight: "100vh" }}>
         <Container

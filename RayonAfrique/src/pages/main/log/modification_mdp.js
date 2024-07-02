@@ -108,8 +108,21 @@ export default function Modification() {
   return (
     <div>
       <Helmet>
-        <meta name="description" content="RayonAfrique - modification mot de passe" />
+        <meta
+          name="description"
+          content="Modification de mot de passe sur RayonAfrique - Changez votre mot de passe actuel pour sécuriser davantage votre compte et protéger vos informations personnelles."
+        />
+        <meta
+          name="keywords"
+          content="RayonAfrique, modification mot de passe, changement mot de passe, sécurité compte, protection des données, mise à jour mot de passe"
+        />
+        <meta name="author" content="RayonAfrique" />
+        <meta
+          property="og:image"
+          content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png"
+        />
       </Helmet>
+
       <Navbar />
       <Grid container sx={{ minHeight: "100vh" }}>
         <Container

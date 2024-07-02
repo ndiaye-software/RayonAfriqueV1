@@ -105,9 +105,19 @@ function ShopDetail() {
         <Helmet>
           <meta
             name="description"
-            content="RayonAfrique - Géolocalisation de produits africains"
+            content="Détails du produit - Découvrez où trouver ce produit parmi les épiceries et marques africaines proposées par RayonAfrique. Achetez des produits authentiques africains."
+          />
+          <meta
+            name="keywords"
+            content="RayonAfrique, détails du produit, épicerie africaine, marques africaines, produits africains, acheter en ligne, produits authentiques africains"
+          />
+          <meta name="author" content="RayonAfrique" />
+          <meta
+            property="og:image"
+            content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png"
           />
         </Helmet>
+
         <Box>
           <Navbar />
           <Stack

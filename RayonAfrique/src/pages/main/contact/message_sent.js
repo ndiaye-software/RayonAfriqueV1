@@ -5,15 +5,27 @@ import MailSent from "../../../images/mail_sent.svg";
 import { Helmet } from "react-helmet";
 import useStyles from "../../../styles/pages/main/contact/message_sent";
 
-
 const MessageEnvoyé = () => {
   const classes = useStyles();
 
   return (
     <div>
       <Helmet>
-        <meta name="description" content="RayonAfrique - Message envoyé succès" />
+        <meta
+          name="description"
+          content="Message envoyé avec succès sur RayonAfrique - Merci de nous avoir contactés. Nous vous répondrons dans les plus brefs délais."
+        />
+        <meta
+          name="keywords"
+          content="RayonAfrique, message envoyé, contact réussi, support client, confirmation message"
+        />
+        <meta name="author" content="RayonAfrique" />
+        <meta
+          property="og:image"
+          content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png"
+        />
       </Helmet>
+
       <div sx={{ minHeight: "100vh" }}>
         <Navbar />
         <div className={classes.section1}>

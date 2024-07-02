@@ -11,7 +11,19 @@ const MessageEnvoyéEpicerie = () => {
   return (
     <div>
       <Helmet>
-        <meta name="description" content="RayonAfrique - epicerie - Succès envoi message" />
+        <meta
+          name="description"
+          content="Message envoyé avec succès sur RayonAfrique - Merci de nous avoir contactés. Nous vous répondrons dans les plus brefs délais."
+        />
+        <meta
+          name="keywords"
+          content="RayonAfrique, message envoyé, contact réussi, support client, confirmation message"
+        />
+        <meta name="author" content="RayonAfrique" />
+        <meta
+          property="og:image"
+          content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png"
+        />
       </Helmet>
       <div sx={{ minHeight: "100vh" }}>
         <Navbar />

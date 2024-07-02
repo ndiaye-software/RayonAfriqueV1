@@ -8,7 +8,6 @@ import { Add } from "@material-ui/icons";
 import { Helmet } from "react-helmet";
 import useStyles from "../../../styles/pages/epicerie/product/epicerieProduct";
 
-
 const EpicerieProduct = () => {
   const classes = useStyles();
 
@@ -17,9 +16,19 @@ const EpicerieProduct = () => {
       <Helmet>
         <meta
           name="description"
-          content="RayonAfrique - epicerie - produit"
+          content="Produits de l'épicerie sur RayonAfrique - Découvrez les produits proposés par cette épicerie africaine. Achetez des produits authentiques et explorez notre sélection variée."
+        />
+        <meta
+          name="keywords"
+          content="RayonAfrique, produits épicerie, produits africains, épicerie africaine, acheter en ligne, produits authentiques africains, marché africain"
+        />
+        <meta name="author" content="RayonAfrique" />
+        <meta
+          property="og:image"
+          content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png"
         />
       </Helmet>
+
       <Navbar />
 
       <section className={classes.banner}>

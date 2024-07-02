@@ -31,7 +31,16 @@ const Professionnel = () => {
       <Helmet>
         <meta
           name="description"
-          content="RayonAfrique - marque et épiceries africaines - professionels"
+          content="RayonAfrique - Votre plateforme idéale pour les marques et épiceries africaines. Rejoignez-nous pour exposer vos produits à un large public et développer votre activité. Profitez d'une visibilité accrue et d'une clientèle passionnée par les produits authentiques africains."
+        />
+        <meta
+          name="keywords"
+          content="marché africain, épicerie africaine, produits africains, nourriture africaine, vente en ligne Afrique, marques africaines, produits authentiques africains, commerce africain, exposition de produits africains"
+        />
+        <meta name="author" content="RayonAfrique" />
+        <meta
+          property="og:image"
+          content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png"
         />
       </Helmet>
       <Navbar />

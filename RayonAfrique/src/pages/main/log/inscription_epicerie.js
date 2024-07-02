@@ -135,9 +135,19 @@ export default function SignUp() {
       <Helmet>
         <meta
           name="description"
-          content="RayonAfrique - inscription épicerie"
+          content="Inscription des épiceries sur RayonAfrique - Rejoignez notre plateforme pour vendre vos produits africains à un large public. Inscrivez votre épicerie dès aujourd'hui."
+        />
+        <meta
+          name="keywords"
+          content="RayonAfrique, inscription épicerie, vendre produits africains, épicerie africaine, commerce africain, rejoindre plateforme"
+        />
+        <meta name="author" content="RayonAfrique" />
+        <meta
+          property="og:image"
+          content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png"
         />
       </Helmet>
+
       <Navbar />
       <Grid container sx={{ minHeight: "100vh" }}>
         <Container

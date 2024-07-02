@@ -69,8 +69,21 @@ export default function Suggestion() {
   return (
     <div>
       <Helmet>
-        <meta name="description" content="RayonAfrique - Suggestion de produits africains" />
+        <meta
+          name="description"
+          content="Suggestions de produits - Aidez-nous à améliorer RayonAfrique en suggérant de nouveaux produits africains que vous aimeriez voir sur notre plateforme."
+        />
+        <meta
+          name="keywords"
+          content="RayonAfrique, suggestion de produits, épicerie africaine, marques africaines, produits africains, améliorer la plateforme"
+        />
+        <meta name="author" content="RayonAfrique" />
+        <meta
+          property="og:image"
+          content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png"
+        />
       </Helmet>
+
       <Navbar />
       <Grid container sx={{ minHeight: "100vh" }}>
         <Container

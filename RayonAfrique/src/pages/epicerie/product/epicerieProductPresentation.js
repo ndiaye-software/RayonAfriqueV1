@@ -19,7 +19,7 @@ function EpicerieProductPresentation() {
 
   const redirectToLogin = () => {
     localStorage.removeItem("accessToken");
-    
+
     window.location.href = "/connexion";
   };
 
@@ -68,9 +68,8 @@ function EpicerieProductPresentation() {
         );
 
         if (response.status === 401 || response.status === 403) {
-          
           const newAccessToken = await handleRefreshToken();
-          
+
           if (newAccessToken) {
             response = await fetch(
               `${hostname}/api/v1/epicerie/product/read/${idProduct}`,
@@ -119,9 +118,19 @@ function EpicerieProductPresentation() {
         <Helmet>
           <meta
             name="description"
-            content="RayonAfrique - epicerie africaine - présentation produit africain"
+            content="Présentation du produit de l'épicerie sur RayonAfrique - Découvrez les détails et spécificités de ce produit africain proposé par cette épicerie."
+          />
+          <meta
+            name="keywords"
+            content="RayonAfrique, présentation produit, épicerie africaine, produits authentiques africains, détails produit, marché africain"
+          />
+          <meta name="author" content="RayonAfrique" />
+          <meta
+            property="og:image"
+            content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png"
           />
         </Helmet>
+
         <Box backgroundColor="#f9fafb">
           <Navbar />
           <Stack
@@ -181,7 +190,7 @@ function EpicerieProductPresentation() {
               </Box>
             </Box>
           </Stack>
-          
+
           <div>
             <ToastContainer theme="colored" />
           </div>

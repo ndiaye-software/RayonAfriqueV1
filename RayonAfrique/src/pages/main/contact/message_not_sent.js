@@ -13,9 +13,19 @@ const MessageNonEnvoyé = () => {
       <Helmet>
         <meta
           name="description"
-          content="RayonAfrique - Echec envoi message"
+          content="Échec de l'envoi du message sur RayonAfrique - Votre message n'a pas pu être envoyé. Veuillez réessayer ou contacter notre support pour obtenir de l'aide."
+        />
+        <meta
+          name="keywords"
+          content="RayonAfrique, message non envoyé, échec envoi message, problème message, support client"
+        />
+        <meta name="author" content="RayonAfrique" />
+        <meta
+          property="og:image"
+          content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png"
         />
       </Helmet>
+
       <div sx={{ minHeight: "100vh" }}>
         <Navbar />
         <div className={classes.section1}>

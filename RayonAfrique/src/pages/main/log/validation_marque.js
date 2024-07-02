@@ -5,7 +5,6 @@ import SuccessImage from "../../../images/success.svg";
 import { Helmet } from "react-helmet";
 import useStyles from "../../../styles/pages/main/log/validation_marque";
 
-
 const ValidationMarque = () => {
   const classes = useStyles();
 
@@ -14,9 +13,19 @@ const ValidationMarque = () => {
       <Helmet>
         <meta
           name="description"
-          content="RayonAfrique - validation inscription marque"
+          content="Validation de marque sur RayonAfrique - Votre marque a été validée avec succès. Vous pouvez maintenant commencer à vendre vos produits africains sur notre plateforme."
+        />
+        <meta
+          name="keywords"
+          content="RayonAfrique, validation marque, marques africaines, vente produits africains, confirmation marque, démarrer vente"
+        />
+        <meta name="author" content="RayonAfrique" />
+        <meta
+          property="og:image"
+          content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png"
         />
       </Helmet>
+
       <div sx={{ minHeight: "100vh" }}>
         <Navbar />
         <div className={classes.section1}>

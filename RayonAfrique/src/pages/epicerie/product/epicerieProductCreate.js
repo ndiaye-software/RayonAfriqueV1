@@ -209,7 +209,10 @@ function EpicerieProductCreate() {
       // 1. Upload image to Cloudinary
       const formDataImage = new FormData();
       formDataImage.append("file", formData.image);
-      formDataImage.append("upload_preset", process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET);
+      formDataImage.append(
+        "upload_preset",
+        process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET
+      );
       formDataImage.append("public_id", uuidv4());
 
       const cloudinaryResponse = await fetch(
@@ -217,7 +220,7 @@ function EpicerieProductCreate() {
         {
           method: "POST",
           body: formDataImage,
-          credentials: 'omit',
+          credentials: "omit",
         }
       );
 
@@ -239,11 +242,11 @@ function EpicerieProductCreate() {
         label: formData.label,
         autreCategory: formData.autreCategory,
         autreCountry: formData.autreCountry,
-        autreLabel: formData.autreLabel
+        autreLabel: formData.autreLabel,
       };
-    
+
       console.log(dataToSend);
-    
+
       const response = await fetch(
         `${hostname}/api/v1/epicerie/product/create`,
         {
@@ -282,9 +285,19 @@ function EpicerieProductCreate() {
         <Helmet>
           <meta
             name="description"
-            content="RayonAfrique - epicerie africaine - création produit africain"
+            content="Création de produit pour l'épicerie sur RayonAfrique - Créez de nouveaux produits authentiques africains à vendre sur notre plateforme et atteignez un large public."
+          />
+          <meta
+            name="keywords"
+            content="RayonAfrique, créer produit, épicerie africaine, produits authentiques africains, vendre en ligne, création catalogue, vendre produits africains"
+          />
+          <meta name="author" content="RayonAfrique" />
+          <meta
+            property="og:image"
+            content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png"
           />
         </Helmet>
+
         <Navbar />
         <Box
           sx={{ backgroundColor: "#f9fafb" }}

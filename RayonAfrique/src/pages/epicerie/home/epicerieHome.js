@@ -16,10 +16,9 @@ import "react-toastify/dist/ReactToastify.css";
 import useStyles from "../../../styles/pages/epicerie/home/epicerieHome";
 
 const EpicerieHome = () => {
-
   const redirectToLogin = () => {
     localStorage.removeItem("accessToken");
-    
+
     window.location.href = "/connexion";
   };
 
@@ -72,7 +71,16 @@ const EpicerieHome = () => {
       <Helmet>
         <meta
           name="description"
-          content="RayonAfrique - epicerie africaine - homepage"
+          content="Tableau de bord de l'épicerie sur RayonAfrique - Gérez facilement vos produits authentiques africains et votre profil. Optimisez vos ventes et connectez-vous avec une clientèle passionnée par la culture africaine."
+        />
+        <meta
+          name="keywords"
+          content="RayonAfrique, tableau de bord épicerie, gestion produits, gestion profil, épicerie africaine, produits authentiques africains, vendre en ligne, marché africain, optimisation des ventes"
+        />
+        <meta name="author" content="RayonAfrique" />
+        <meta
+          property="og:image"
+          content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png"
         />
       </Helmet>
 

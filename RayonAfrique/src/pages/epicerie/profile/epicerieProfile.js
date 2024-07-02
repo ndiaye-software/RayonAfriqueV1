@@ -174,7 +174,10 @@ function EpicerieProfile() {
       // 1. Upload image to Cloudinary
       const formDataImage = new FormData();
       formDataImage.append("file", formData.image);
-      formDataImage.append("upload_preset", process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET);
+      formDataImage.append(
+        "upload_preset",
+        process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET
+      );
       formDataImage.append("public_id", uuidv4());
 
       const cloudinaryResponse = await fetch(
@@ -274,9 +277,19 @@ function EpicerieProfile() {
         <Helmet>
           <meta
             name="description"
-            content="RayonAfrique - epicerie africaine - Profil "
+            content="Profil de l'épicerie sur RayonAfrique - Découvrez plus sur cette épicerie africaine et ses produits authentiques. Connectez-vous pour gérer votre profil et votre catalogue."
+          />
+          <meta
+            name="keywords"
+            content="RayonAfrique, profil épicerie, épicerie africaine, produits authentiques africains, gérer profil, vendre en ligne, marché africain, gestion catalogue"
+          />
+          <meta name="author" content="RayonAfrique" />
+          <meta
+            property="og:image"
+            content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png"
           />
         </Helmet>
+
         <Navbar />
         <section className={classes.banner}>
           <div className={classes.bannerImg}></div>

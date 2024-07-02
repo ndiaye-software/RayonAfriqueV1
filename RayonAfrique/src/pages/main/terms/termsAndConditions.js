@@ -22,12 +22,23 @@ const TermsAndConditions = () => {
 
   return (
     <div>
+      
       <Helmet>
         <meta
           name="description"
-          content="RayonAfrique - Conditions générales"
+          content="Termes de confidentialité de RayonAfrique - Découvrez comment nous protégeons vos informations personnelles et respectons votre vie privée lors de votre utilisation de notre plateforme."
+        />
+        <meta
+          name="keywords"
+          content="RayonAfrique, termes de confidentialité, protection des données, vie privée, informations personnelles, sécurité des données"
+        />
+        <meta name="author" content="RayonAfrique" />
+        <meta
+          property="og:image"
+          content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png"
         />
       </Helmet>
+
       <Navbar />
 
       <section className={classes.section}>

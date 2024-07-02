@@ -38,9 +38,19 @@ export default function Authentification() {
       <Helmet>
         <meta
           name="description"
-          content="RayonAfrique - Authentification"
+          content="Authentification sur RayonAfrique - Connectez-vous à votre compte pour accéder à vos informations et gérer vos achats ou ventes de produits africains."
+        />
+        <meta
+          name="keywords"
+          content="RayonAfrique, authentification, connexion, se connecter, compte utilisateur, produits africains, épicerie africaine, marques africaines"
+        />
+        <meta name="author" content="RayonAfrique" />
+        <meta
+          property="og:image"
+          content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png"
         />
       </Helmet>
+
       <Navbar />
       <Grid container>
         <Container

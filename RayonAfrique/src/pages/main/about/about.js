@@ -13,8 +13,21 @@ const About = () => {
   return (
     <div>
       <Helmet>
-        <meta name="description" content="RayonAfrique - A propos" />
+        <meta
+          name="description"
+          content="À propos de RayonAfrique - Découvrez notre mission de promouvoir les produits authentiques africains. Nous connectons les marques et épiceries africaines avec des clients passionnés par la culture africaine, offrant une plateforme pour exposer et vendre des produits de qualité."
+        />
+        <meta
+          name="keywords"
+          content="RayonAfrique, À propos de nous, mission de RayonAfrique, épicerie africaine, produits africains, marques africaines, commerce africain, produits authentiques africains"
+        />
+        <meta name="author" content="RayonAfrique" />
+        <meta
+          property="og:image"
+          content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png"
+        />
       </Helmet>
+
       <Navbar />
 
       <section className={classes.section}>

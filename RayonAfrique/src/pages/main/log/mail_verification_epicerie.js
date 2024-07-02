@@ -67,8 +67,21 @@ export default function VerificationMail() {
   return (
     <div>
       <Helmet>
-        <meta name="description" content="RayonAfrique - verification mail" />
+        <meta
+          name="description"
+          content="Vérification d'email pour épiceries sur RayonAfrique - Confirmez votre adresse email pour activer votre compte épicerie et commencer à vendre vos produits africains sur notre plateforme."
+        />
+        <meta
+          name="keywords"
+          content="RayonAfrique, vérification email, épicerie africaine, activation compte, confirmation email, vendre produits africains"
+        />
+        <meta name="author" content="RayonAfrique" />
+        <meta
+          property="og:image"
+          content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png"
+        />
       </Helmet>
+
       <Navbar />
       <Grid container sx={{ minHeight: "100vh" }}>
         <Container
@@ -133,15 +146,9 @@ export default function VerificationMail() {
                 Valider
               </Button>
             </Box>
-            <Box
-                justifyContent="space-evenly"
-                display="flex"
-                marginTop="30px"
-              >
-                <Typography>
-                  Veuillez vérifier votre boîte mail 📧 !
-                </Typography>
-              </Box>
+            <Box justifyContent="space-evenly" display="flex" marginTop="30px">
+              <Typography>Veuillez vérifier votre boîte mail 📧 !</Typography>
+            </Box>
           </Box>
         </Container>
       </Grid>

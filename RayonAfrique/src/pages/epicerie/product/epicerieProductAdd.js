@@ -28,7 +28,7 @@ function EpicerieProductAdd() {
 
   const redirectToLogin = () => {
     localStorage.removeItem("accessToken");
-    
+
     window.location.href = "/connexion";
   };
 
@@ -39,9 +39,9 @@ function EpicerieProductAdd() {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
       });
-  
+
       if (response.ok) {
         const { accessToken } = await response.json();
         localStorage.setItem("accessToken", accessToken);
@@ -68,7 +68,7 @@ function EpicerieProductAdd() {
       redirectToLogin();
       return;
     }
-  
+
     const fetchProductData = async () => {
       try {
         const response = await fetch(
@@ -77,8 +77,8 @@ function EpicerieProductAdd() {
             headers: { Authorization: `Bearer ${accessToken}` },
           }
         );
-  
-        if (response.status === 401 || response.status === 403) {;
+
+        if (response.status === 401 || response.status === 403) {
           const newAccessToken = await handleRefreshToken();
           if (newAccessToken) {
             const retryResponse = await fetch(
@@ -88,28 +88,29 @@ function EpicerieProductAdd() {
               }
             );
             if (!retryResponse.ok) {
-              throw new Error(`Error ${retryResponse.status}: ${retryResponse.statusText}`);
+              throw new Error(
+                `Error ${retryResponse.status}: ${retryResponse.statusText}`
+              );
             }
             const data = await retryResponse.json();
             setData(data);
             return;
           }
         }
-  
+
         if (!response.ok) {
           throw new Error(`Error ${response.status}: ${response.statusText}`);
         }
-  
+
         const data = await response.json();
         setData(data);
       } catch (error) {
         console.error(error);
       }
     };
-  
+
     fetchProductData();
   }, [idProduct, handleRefreshToken]);
-  
 
   const [disponibilité, setDispo] = React.useState(options[0]?.label || "");
 
@@ -189,12 +190,22 @@ function EpicerieProductAdd() {
   return (
     <>
       <div>
-      <Helmet>
+        <Helmet>
           <meta
             name="description"
-            content="RayonAfrique - epicerie africaine - Ajout"
+            content="Ajout de produit pour l'épicerie sur RayonAfrique - Ajoutez de nouveaux produits authentiques africains à votre catalogue sur notre plateforme pour attirer plus de clients."
+          />
+          <meta
+            name="keywords"
+            content="RayonAfrique, ajouter produit, épicerie africaine, produits authentiques africains, catalogue épicerie, vendre produits africains"
+          />
+          <meta name="author" content="RayonAfrique" />
+          <meta
+            property="og:image"
+            content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png"
           />
         </Helmet>
+
         <Navbar />
         <Box sx={{ backgroundColor: "#f9fafb" }}>
           <Stack direction="column" justifyContent="center">

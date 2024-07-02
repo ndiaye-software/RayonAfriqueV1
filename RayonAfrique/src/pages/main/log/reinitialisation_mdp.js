@@ -67,8 +67,21 @@ export default function Reinitialisation() {
   return (
     <div>
       <Helmet>
-        <meta name="description" content="RayonAfrique - réinitialisation mot de passe" />
+        <meta
+          name="description"
+          content="Réinitialisation de mot de passe sur RayonAfrique - Entrez votre email pour recevoir un lien de réinitialisation de votre mot de passe et retrouver l'accès à votre compte."
+        />
+        <meta
+          name="keywords"
+          content="RayonAfrique, réinitialisation mot de passe, mot de passe oublié, récupération compte, sécurité compte, réinitialiser mot de passe"
+        />
+        <meta name="author" content="RayonAfrique" />
+        <meta
+          property="og:image"
+          content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png"
+        />
       </Helmet>
+
       <Navbar />
       <Grid container>
         <Container

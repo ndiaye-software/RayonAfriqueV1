@@ -152,9 +152,19 @@ function EpicerieProductUpdate() {
         <Helmet>
           <meta
             name="description"
-            content="RayonAfrique - epicerie africaine - modification produit africain"
+            content="Modification de produit pour l'épicerie sur RayonAfrique - Mettez à jour les détails de ce produit africain pour attirer plus de clients et augmenter vos ventes sur notre plateforme."
+          />
+          <meta
+            name="keywords"
+            content="RayonAfrique, modifier produit, épicerie africaine, produits authentiques africains, mise à jour produit, gestion catalogue"
+          />
+          <meta name="author" content="RayonAfrique" />
+          <meta
+            property="og:image"
+            content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png"
           />
         </Helmet>
+
         <Navbar />
         {formData && (
           <Box sx={{ backgroundColor: "#f9fafb" }}>

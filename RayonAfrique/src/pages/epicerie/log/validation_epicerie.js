@@ -15,7 +15,16 @@ const ApproveEpicerie = () => {
       <Helmet>
         <meta
           name="description"
-          content="RayonAfrique - validation inscription épicerie"
+          content="Validation d'épicerie sur RayonAfrique - Votre épicerie a été validée avec succès. Vous pouvez maintenant commencer à vendre vos produits africains sur notre plateforme."
+        />
+        <meta
+          name="keywords"
+          content="RayonAfrique, validation épicerie, épicerie africaine, vente produits africains, confirmation épicerie, démarrer vente"
+        />
+        <meta name="author" content="RayonAfrique" />
+        <meta
+          property="og:image"
+          content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png"
         />
       </Helmet>
       <div sx={{ minHeight: "100vh" }}>

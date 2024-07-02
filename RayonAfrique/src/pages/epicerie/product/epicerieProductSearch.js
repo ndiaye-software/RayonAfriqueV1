@@ -27,7 +27,7 @@ function EpicerieProductSearch() {
 
   const redirectToLogin = () => {
     localStorage.removeItem("accessToken");
-    
+
     window.location.href = "/connexion";
   };
 
@@ -167,9 +167,19 @@ function EpicerieProductSearch() {
         <Helmet>
           <meta
             name="description"
-            content="RayonAfrique - epicerie africaine - recherche produit africain"
+            content="Recherche de produits du marché africain sur RayonAfrique - Explorez notre sélection de produits authentiques africains proposés par différentes épiceries"
+          />
+          <meta
+            name="keywords"
+            content="RayonAfrique, recherche produit, marché africain, produits épicerie, épicerie africaine, produits authentiques africains"
+          />
+          <meta name="author" content="RayonAfrique" />
+          <meta
+            property="og:image"
+            content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png"
           />
         </Helmet>
+
         <Box backgroundColor="#f9fafb">
           <Navbar />
           <Stack

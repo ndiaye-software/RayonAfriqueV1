@@ -25,7 +25,6 @@ import hostname from "../../../hostname";
 import { Helmet } from "react-helmet";
 import useStyles from "../../../styles/pages/main/log/inscription_marque";
 
-
 const defaultTheme = createTheme();
 
 export default function SignInSide() {
@@ -84,8 +83,21 @@ export default function SignInSide() {
   return (
     <ThemeProvider theme={defaultTheme}>
       <Helmet>
-        <meta name="description" content="RayonAfrique - inscription marque" />
+        <meta
+          name="description"
+          content="Inscription des marques sur RayonAfrique - Rejoignez notre plateforme pour vendre vos produits authentiques africains à un large public. Inscrivez votre marque dès aujourd'hui."
+        />
+        <meta
+          name="keywords"
+          content="RayonAfrique, inscription marque, vendre produits africains, marques africaines, commerce africain, rejoindre plateforme"
+        />
+        <meta name="author" content="RayonAfrique" />
+        <meta
+          property="og:image"
+          content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png"
+        />
       </Helmet>
+
       <Navbar />
       <Grid container component="main">
         <CssBaseline />
@@ -215,7 +227,15 @@ export default function SignInSide() {
             </Card>
           </div>
         </Grid>
-        <Grid item xs={12} sm={12} md={6} component={Paper} elevation={6} square>
+        <Grid
+          item
+          xs={12}
+          sm={12}
+          md={6}
+          component={Paper}
+          elevation={6}
+          square
+        >
           <Box
             sx={{
               my: 8,

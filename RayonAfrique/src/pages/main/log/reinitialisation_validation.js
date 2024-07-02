@@ -14,9 +14,19 @@ const ValidationReinitialisation = () => {
         <Helmet>
           <meta
             name="description"
-            content="RayonAfrique - réinitialisation validation"
+            content="Validation de réinitialisation de mot de passe sur RayonAfrique - Votre mot de passe a été réinitialisé avec succès. Vous pouvez maintenant vous connecter avec votre nouveau mot de passe."
+          />
+          <meta
+            name="keywords"
+            content="RayonAfrique, réinitialisation mot de passe, mot de passe réinitialisé, validation réinitialisation, sécurité compte, connexion"
+          />
+          <meta name="author" content="RayonAfrique" />
+          <meta
+            property="og:image"
+            content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png"
           />
         </Helmet>
+
         <Navbar />
         <div className={classes.section1}>
           <img
