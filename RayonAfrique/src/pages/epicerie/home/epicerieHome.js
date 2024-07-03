@@ -162,11 +162,11 @@ const EpicerieHome = () => {
           <ToastContainer theme="colored" />
         </div>
 
-        <Typography variant="h1" className={classes.header1}>
+        {/*<Typography variant="h1" className={classes.header1}>
           Pricing
         </Typography>
 
-        <Pricing />
+        <Pricing />*/}
       </div>
 
       <Footer />
