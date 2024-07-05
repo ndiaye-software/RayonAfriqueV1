@@ -61,14 +61,14 @@ export default function Contact() {
     <ThemeProvider theme={defaultTheme}>
       <Helmet>
         <meta
-          name="description"
+          property="og:description"
           content="Contactez RayonAfrique - Nous sommes là pour répondre à toutes vos questions concernant nos produits africains. N'hésitez pas à nous contacter pour toute demande d'information, partenariat ou assistance."
         />
         <meta
-          name="keywords"
+          property="og:keywords"
           content="RayonAfrique, contact, support client, assistance, partenariat, questions, informations, produits africains, épicerie africaine, marques africaines"
         />
-        <meta name="author" content="RayonAfrique" />
+        <meta property="og:author" content="RayonAfrique" />
         <meta
           property="og:image"
           content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png"
