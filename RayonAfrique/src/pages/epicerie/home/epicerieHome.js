@@ -2,7 +2,6 @@ import React, { useEffect, useCallback } from "react";
 import hostname from "../../../hostname";
 import Navbar from "../../../components/epicerie/navbarEpicerie";
 import Footer from "../../../components/main/footer";
-import Pricing from "../../../components/epicerie/pricing";
 import { Typography } from "@material-ui/core";
 import profil from "../../../images/profil.jpg";
 import productEpicerie from "../../../images/productEpicerie.jpg";
