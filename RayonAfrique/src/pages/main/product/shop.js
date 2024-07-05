@@ -9,7 +9,6 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Product from "../../../components/main/product";
 import TextField from "@mui/material/TextField";
 import hostname from "../../../hostname";
-import { Helmet } from "react-helmet";
 import useStyles from "../../../styles/pages/main/product/shop";
 
 function Shop() {
@@ -96,7 +95,7 @@ function Shop() {
   return (
     <>
       <div>
-        <Helmet>
+        <head>
           <meta
             name="description"
             content="Boutique RayonAfrique - Découvrez une large gamme de produits proposés par les épiceries et les marques africaines. Achetez des produits authentiques africains en ligne."
@@ -110,7 +109,7 @@ function Shop() {
             property="og:image"
             content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png"
           />
-        </Helmet>
+        </head>
 
         <Box backgroundColor="#f9fafb">
           <Navbar />
