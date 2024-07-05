@@ -22,13 +22,14 @@ import {
 } from "@mui/icons-material";
 import map from "../../../images/map.svg";
 import shopping from "../../../images/shopping.svg";
+import { Helmet } from "react-helmet";
 
 const Home = () => {
   const classes = useStyles();
 
   return (
     <div>
-      <head>
+      <Helmet>
         <meta
           name="description"
           content=" Découvrez une large gamme de produits et épiceries africains authentiques. Notre mission est de vous faire découvrir tous les produits du marché africain dans votre localité"
@@ -38,8 +39,11 @@ const Home = () => {
           content="marché africain, épicerie africaine, produits africains, nourriture africaine"
         />
         <meta name="author" content="RayonAfrique" />
-        <meta property="og:image" content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png" />
-      </head>
+        <meta
+          property="og:image"
+          content="https://res.cloudinary.com/dpodybbfe/image/upload/v1719949488/rayonafrique_wsbbxn.png"
+        />
+      </Helmet>
 
       <Navbar />
 
