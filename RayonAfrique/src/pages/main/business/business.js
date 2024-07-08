@@ -167,7 +167,7 @@ const Professionnel = () => {
               </Typography>
               <Typography variant="body2" color="inherit">
                 Vous êtes une épicerie spécialisée sur la vente produits
-                d'origines africains ? Faites-vous connaître et attirez de
+                d'origines africaines ? Faites-vous connaître et attirez de
                 nouveaux clients grâce à notre plateforme !
               </Typography>
               <Box paddingTop="20px" paddingLeft="20px">
