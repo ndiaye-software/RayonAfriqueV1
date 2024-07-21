@@ -53,9 +53,10 @@ function EpicerieProfile() {
     setValue(newValue);
     setFormData((prevFormData) => ({
       ...prevFormData,
-      adresse: newValue.description || "",
+      adresse: newValue ? newValue.description : "",
     }));
   };
+
 
   const redirectToLogin = () => {
     localStorage.removeItem("accessToken");
