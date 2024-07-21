@@ -3,7 +3,7 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
-import { Facebook, Audiotrack} from "@mui/icons-material";
+import { Facebook, Audiotrack, LinkedIn} from "@mui/icons-material";
 import { Box } from "@mui/material";
 
 export default function Footer() {
@@ -59,6 +59,9 @@ export default function Footer() {
               sx={{ pl: 1, pr: 1 }}
             >
               <Audiotrack />
+            </Link>
+            <Link href="https://www.linkedin.com/company/rayonafrique" color="inherit">
+              <LinkedIn />
             </Link>
           </Grid>
         </Grid>
